@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chart Champ Portfolio</title>
+    <meta
+      name="description"
+      content="Local static portfolio dashboard for Discord community review."
+    >
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="data/twelve-data-config.js" defer></script>
+    <script src="data/portfolio-data.js" defer></script>
+    <script src="assets/app.js" defer></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="dashboard-header" aria-labelledby="page-title">
+        <div>
+          <h1 id="page-title">Chart Champ Portfolio</h1>
+          <p class="header-copy">
+            Starter portfolio with equal 25% allocations.
+          </p>
+        </div>
+        <aside class="status-panel" aria-label="Portfolio status">
+          <div class="status-heading">
+            <span class="status-dot"></span>
+            <span>Local static v1</span>
+          </div>
+          <span id="started-date">Started pending</span>
+          <strong id="last-updated">Last updated pending</strong>
+        </aside>
+      </header>
+
+      <section class="summary-grid" aria-label="Portfolio summary">
+        <article class="metric-card metric-card-primary">
+          <span class="metric-label">Portfolio Return</span>
+          <strong class="metric-value" id="portfolio-return">--</strong>
+          <span class="metric-context">Since Apr 1, 2026</span>
+        </article>
+        <article class="metric-card performance-panel">
+          <div class="performance-panel-heading">
+            <span class="metric-label">Performance</span>
+            <span class="metric-context">Period return</span>
+          </div>
+          <div class="period-list" id="period-performance-list"></div>
+        </article>
+        <article class="metric-card metric-card-holdings">
+          <span class="metric-label">Holdings</span>
+          <strong class="metric-value" id="holdings-count">--</strong>
+          <span class="metric-context">Current positions</span>
+        </article>
+      </section>
+
+      <section class="dashboard-band" aria-labelledby="holdings-heading">
+        <div class="section-heading holdings-heading">
+          <div>
+            <p class="eyebrow">Portfolio summary</p>
+            <h2 id="holdings-heading">Holdings Table</h2>
+          </div>
+          <p id="portfolio-note" class="section-note"></p>
+          <label class="search-field" for="ticker-search">
+            <span>Search ticker</span>
+            <input id="ticker-search" type="search" autocomplete="off">
+          </label>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Ticker</th>
+                <th scope="col">Asset Class</th>
+                <th scope="col">Allocation</th>
+                <th scope="col">Latest Price</th>
+                <th scope="col">Day Change</th>
+                <th scope="col">Total Return</th>
+                <th scope="col">Public Note</th>
+              </tr>
+            </thead>
+            <tbody id="holdings-body"></tbody>
+          </table>
+        </div>
+        <p class="empty-state" id="empty-state" hidden>No holdings match that search.</p>
+      </section>
+
+      <div class="two-column">
+        <section class="dashboard-band" aria-labelledby="allocation-heading">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Allocation breakdown</p>
+              <h2 id="allocation-heading">Target Weights</h2>
+            </div>
+          </div>
+          <div class="allocation-panel">
+            <div class="allocation-donut" id="allocation-donut" role="img" aria-label="Portfolio allocation chart">
+              <span>100%</span>
+            </div>
+            <div class="allocation-list" id="allocation-list"></div>
+          </div>
+        </section>
+
+        <section class="dashboard-band" aria-labelledby="segment-heading">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Market segment</p>
+              <h2 id="segment-heading">Segment Allocation</h2>
+            </div>
+          </div>
+          <div class="allocation-panel">
+            <div class="allocation-donut" id="segment-donut" role="img" aria-label="Market segment allocation chart">
+              <span>100%</span>
+            </div>
+            <div class="allocation-list" id="segment-list"></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="dashboard-band" aria-labelledby="decision-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Decision log</p>
+            <h2 id="decision-heading">Portfolio Notes</h2>
+          </div>
+          <p class="section-note">Portfolio context for community review.</p>
+        </div>
+        <div class="decision-list" id="decision-list"></div>
+      </section>
+    </main>
+
+    <footer class="compliance-footer">
+      For educational purposes only. Not financial advice.
+    </footer>
+  </body>
+</html>

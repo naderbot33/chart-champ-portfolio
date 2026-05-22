@@ -5,6 +5,7 @@
   const segmentColors = {
     Stocks: "#255e91",
     Crypto: "#16745f",
+    Cash: "#66727f",
     Bonds: "#6b5b95",
     Commodities: "#b67713"
   };
@@ -69,6 +70,13 @@
     return ((latest - reference) / reference) * 100;
   };
 
+  const displayHoldingPrice = (holding) => {
+    if (holding.quoteEnabled === false && Number.isFinite(holding.marketValue)) {
+      return formatMoney(holding.marketValue);
+    }
+    return formatMoney(holding.latestPrice);
+  };
+
   const parsePrice = (value) => Number.parseFloat(value);
 
   const getApiKey = () => {
@@ -118,6 +126,21 @@
     const referenceKey = baseData.portfolio.referenceDate;
     const enriched = await Promise.all(
       baseData.holdings.map(async (holding) => {
+        if (holding.quoteEnabled === false) {
+          return {
+            holding,
+            rows: [
+              {
+                datetime: referenceKey,
+                close: holding.latestPrice
+              }
+            ],
+            latestDate: referenceKey,
+            latestPrice: holding.latestPrice,
+            referencePrice: holding.referencePrice,
+            dayChangePct: 0
+          };
+        }
         const rows = await fetchTwelveDataRows(holding.ticker, apiKey);
         const latest = rows[0];
         const previous = rows[1] || latest;
@@ -134,7 +157,11 @@
       })
     );
 
-    const latestTimestamp = `${enriched[0].latestDate}T16:00:00-04:00`;
+    const latestDate = enriched
+      .map((item) => item.latestDate)
+      .sort()
+      .at(-1);
+    const latestTimestamp = `${latestDate}T16:00:00-04:00`;
     return {
       holdings: enriched.map(({ holding, latestPrice, referencePrice, dayChangePct }) => ({
         ...holding,
@@ -243,6 +270,7 @@
     document.getElementById("holdings-count").textContent = String(publicHoldings.length);
     document.getElementById("started-date").textContent = `Started ${formatDate(baseData.portfolio.referenceDate)}`;
     document.getElementById("last-updated").textContent = `Last updated ${formatTimestamp(dataset.timestamp)}`;
+    document.getElementById("portfolio-return-context").textContent = `Since ${formatDate(baseData.portfolio.referenceDate)}`;
     document.getElementById("portfolio-note").textContent = baseData.portfolio.displayNote;
 
     const holdingsBody = document.getElementById("holdings-body");
@@ -263,7 +291,7 @@
               </td>
               <td><span class="tag">${holding.assetClass}</span></td>
               <td>${holding.allocationPct.toFixed(0)}%</td>
-              <td>${formatMoney(holding.latestPrice)}</td>
+              <td>${displayHoldingPrice(holding)}</td>
               <td class="${dayClass}">${formatPercent(holding.dayChangePct)}</td>
               <td class="${returnClass}">${formatPercent(holding.totalReturnPct)}</td>
               <td>${holding.publicNote}</td>
@@ -306,7 +334,7 @@
       })
       .join("");
 
-    const segmentOrder = ["Stocks", "Crypto", "Bonds", "Commodities"];
+    const segmentOrder = ["Stocks", "Cash", "Crypto", "Bonds", "Commodities"];
     const segmentTotals = segmentOrder.reduce((totals, segment) => ({ ...totals, [segment]: 0 }), {});
     enrichedHoldings.forEach((holding) => {
       const segment = segmentOrder.includes(holding.marketSegment) ? holding.marketSegment : "Stocks";
@@ -346,6 +374,8 @@
             <div class="decision-copy">
               <strong>${decision.type}</strong>
               <span>${decision.rationale}</span>
+              ${decision.details ? `<ul>${decision.details.map((detail) => `<li>${detail}</li>`).join("")}</ul>` : ""}
+              ${decision.chartUrl ? `<a href="${decision.chartUrl}" target="_blank" rel="noopener noreferrer">View chart note</a>` : ""}
             </div>
             <span class="tag">${decision.ticker}</span>
           </article>

@@ -1,6 +1,6 @@
-# Public Portfolio Dashboard
+# Chart Champ Portfolio
 
-Local static first version of the Chart Champ Portfolio page.
+Static public portfolio dashboard for the Chart Champ community.
 
 ## Files
 
@@ -10,18 +10,17 @@ Local static first version of the Chart Champ Portfolio page.
 - `data/portfolio-data.js` - starter portfolio data plus sourced static fallback prices.
 - `data/twelve-data-config.js` - local Twelve Data API key config.
 
-## Current Data Mode
+## Current Portfolio
 
-The first version uses the starter fake portfolio:
+Updated May 22, 2026:
 
-- 25% SPY
-- 25% QQQ
-- 25% NVDA
-- 25% AAPL
-- Purchase date: April 1, 2026
+- $10,000 total portfolio
+- $5,000 cash
+- $5,000 SQQQ
+- SQQQ entry: $40.86
+- Purchase date: May 22, 2026
 
-Prices use the Twelve Data API when a local API key is configured. If no key is
-available, the page falls back to the sourced static snapshot in
+The public page uses the sourced static snapshot in
 `data/portfolio-data.js`.
 
 ## Future API Path

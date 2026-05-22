@@ -549,6 +549,25 @@ tbody tr:hover {
   gap: 5px;
 }
 
+.decision-copy ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.decision-copy a {
+  width: max-content;
+  color: var(--blue);
+  font-size: 0.9rem;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.decision-copy a:hover {
+  text-decoration: underline;
+}
+
 .compliance-footer {
   width: 100%;
   max-width: 1212px;

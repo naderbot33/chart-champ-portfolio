@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Watchlists</title>
+    <meta
+      name="description"
+      content="Discord community watchlists with support, resistance, weekly EMA context, and concise ticker notes."
+    >
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="data/watchlist-data.js" defer></script>
+    <script src="assets/app.js" defer></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="app-header" aria-labelledby="page-title">
+        <div class="header-copy-wrap">
+          <p class="eyebrow">Discord research dashboard</p>
+          <h1 id="page-title">Watchlists</h1>
+          <p class="header-copy">
+            Ticker notes, key levels, weekly EMA context, and concise analysis for the community watchlists.
+          </p>
+        </div>
+        <aside class="status-panel" aria-label="Watchlist status">
+          <span class="status-label">Coverage</span>
+          <strong id="coverage-count">-- tickers</strong>
+          <span id="last-updated">Last updated pending</span>
+        </aside>
+      </header>
+
+      <section class="control-band" aria-label="Search and filters">
+        <label class="search-field" for="ticker-search">
+          <span>Search</span>
+          <input
+            id="ticker-search"
+            type="search"
+            placeholder="Ticker or company name"
+            autocomplete="off"
+          >
+        </label>
+        <div class="filter-group" id="filter-group" aria-label="Watchlist filters">
+          <button class="filter-button active" type="button" data-filter="all">All</button>
+          <button class="filter-button" type="button" data-filter="stocks">Stocks</button>
+          <button class="filter-button" type="button" data-filter="crypto">Crypto</button>
+          <button class="filter-button" type="button" data-filter="needs-chart">Needs Chart</button>
+          <button class="filter-button" type="button" data-filter="reviewed">Reviewed</button>
+        </div>
+      </section>
+
+      <section class="summary-grid" aria-label="Watchlist summary">
+        <article class="metric-card">
+          <span class="metric-label">Tickers</span>
+          <strong class="metric-value" id="ticker-count">--</strong>
+          <span class="metric-note">Total records</span>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Reviewed</span>
+          <strong class="metric-value" id="reviewed-count">--</strong>
+          <span class="metric-note">Charts with notes</span>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Pending</span>
+          <strong class="metric-value" id="pending-count">--</strong>
+          <span class="metric-note">Need chart review</span>
+        </article>
+        <article class="metric-card wide">
+          <span class="metric-label">EMA Rule</span>
+          <strong class="rule-text">Bullish above EMA, neutral near EMA, bearish below EMA.</strong>
+          <span class="metric-note" id="ema-band-note">Neutral band pending</span>
+        </article>
+      </section>
+
+      <div class="workspace-grid">
+        <section class="table-section" aria-labelledby="table-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Ticker index</p>
+              <h2 id="table-heading">Community Watchlists</h2>
+            </div>
+            <span class="result-count" id="result-count">-- results</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Ticker</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">List</th>
+                  <th scope="col">EMA Trend</th>
+                  <th scope="col">Levels</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="watchlist-body"></tbody>
+            </table>
+          </div>
+          <p class="empty-state" id="empty-state" hidden>No tickers match that search.</p>
+        </section>
+
+        <section class="detail-panel" id="detail-panel" aria-labelledby="detail-heading">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow" id="detail-list-name">Watchlist</p>
+              <h2 id="detail-heading">Select a Ticker</h2>
+            </div>
+            <span class="status-chip" id="detail-status">Pending</span>
+          </div>
+          <div class="chart-preview" id="chart-preview" aria-label="Chart preview"></div>
+          <div class="level-grid">
+            <div>
+              <span class="detail-label">Support</span>
+              <div class="level-list" id="support-list"></div>
+            </div>
+            <div>
+              <span class="detail-label">Resistance</span>
+              <div class="level-list" id="resistance-list"></div>
+            </div>
+          </div>
+          <div class="ema-grid" id="ema-grid"></div>
+          <div class="analysis-stack" id="analysis-stack"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="compliance-footer">
+      For educational purposes only. Not financial advice.
+    </footer>
+  </body>
+</html>

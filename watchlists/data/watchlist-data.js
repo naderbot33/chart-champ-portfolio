@@ -1,35 +1,44 @@
 window.WATCHLIST_DATA = {
   metadata: {
     title: "Watchlists",
-    updatedAt: "2026-05-27T00:00:00-07:00",
+    updatedAt: "2026-05-28T00:00:00-07:00",
     neutralBandPct: 1,
-    defaultChartStatus: "needs-chart"
+    defaultChartStatus: "queued",
+    fundamentalsScale: ["Very Strong", "Strong", "Moderate", "Weak", "Very Weak"]
   },
   names: {
     AAOI: "Applied Optoelectronics",
     ADBE: "Adobe",
     AGNC: "AGNC Investment",
+    AMC: "AMC Entertainment Holdings",
     ASAN: "Asana",
     ASML: "ASML Holding",
     ASTS: "AST SpaceMobile",
     AUR: "Aurora Innovation",
     BABA: "Alibaba Group",
     BMNR: "BitMine Immersion Technologies",
+    BMR: "Beamr Imaging",
     BTG: "B2Gold",
     CEG: "Constellation Energy",
     CLF: "Cleveland-Cliffs",
     CRCL: "Circle Internet Group",
     DPRO: "Draganfly",
+    DJIA: "Global X Dow 30 Covered Call ETF",
     GME: "GameStop",
+    GLDI: "Gold Shares Covered Call ETN",
     GOLD: "Barrick Mining",
-    HASI: "HASI",
+    HASI: "HA Sustainable Infrastructure Capital",
     HD: "Home Depot",
     HOOD: "Robinhood Markets",
     HOLO: "MicroCloud Hologram",
     IREN: "IREN Limited",
+    IAUI: "iShares Gold Strategy ETF",
+    IWMI: "NEOS Russell 2000 High Income ETF",
     LAC: "Lithium Americas",
+    LGI: "Lazard Global Total Return and Income Fund",
     META: "Meta Platforms",
     MGNX: "MacroGenics",
+    MPT: "Medical Properties Trust",
     MRVL: "Marvell Technology",
     MSFT: "Microsoft",
     MSTR: "Strategy",
@@ -38,6 +47,8 @@ window.WATCHLIST_DATA = {
     NBIS: "Nebius Group",
     NFLX: "Netflix",
     NVO: "Novo Nordisk",
+    NOW: "ServiceNow",
+    NUKZ: "Range Nuclear Renaissance Index ETF",
     NU: "Nu Holdings",
     NVAX: "Novavax",
     NVDA: "NVIDIA",
@@ -58,7 +69,7 @@ window.WATCHLIST_DATA = {
     RUM: "Rumble",
     SCHD: "Schwab U.S. Dividend Equity ETF",
     SLV: "iShares Silver Trust",
-    SNAP: "Snap",
+    SNAP: "Snapchat",
     SOFI: "SoFi Technologies",
     SONO: "Sonos",
     SOUN: "SoundHound AI",
@@ -74,18 +85,19 @@ window.WATCHLIST_DATA = {
     UPST: "Upstart",
     VIX: "Cboe Volatility Index",
     WIX: "Wix.com",
-    XOM: "Exxon Mobil"
+    XOM: "Exxon Mobil",
+    XLEI: "NEOS Energy High Income ETF"
   },
   lists: [
     {
       id: "crypto",
-      label: "Discord crypto",
+      label: "Crypto",
       assetClass: "Crypto-linked",
       tickers: ["MSTZ", "MSTR", "IREN", "CRCL", "BMNR"]
     },
     {
       id: "stocks",
-      label: "Discord stocks",
+      label: "Stocks",
       assetClass: "Stocks",
       tickers: [
         "MSFT",
@@ -157,6 +169,7 @@ window.WATCHLIST_DATA = {
         "VIX",
         "NOW",
         "ASML",
+        "AMC",
         "NUKZ",
         "ADBE",
         "TSM",
@@ -165,57 +178,134 @@ window.WATCHLIST_DATA = {
         "SPGI",
         "ASTS"
       ]
+    },
+    {
+      id: "commodities",
+      label: "Commodities",
+      assetClass: "Commodities",
+      tickers: []
+    },
+    {
+      id: "bonds",
+      label: "Bonds",
+      assetClass: "Bonds",
+      tickers: []
     }
   ],
   overrides: {
     IREN: {
       tags: ["bitcoin infrastructure", "high beta"],
-      chartStatus: "needs-chart",
-      shortTerm:
-        "Awaiting chart review. Add current support, resistance, weekly 7 EMA, and price location before publishing a directional note.",
-      longTerm:
-        "Awaiting chart review. Longer-term view should separate trend strength from volatility and dilution risk.",
-      fundamentals:
+      chartStatus: "queued",
+      fundamentalsRating: "Pending",
+      fundamentalsRationale:
         "Company-level note pending. Keep the summary focused on business model, balance sheet sensitivity, and execution risk.",
-      risk:
+      risks:
         "High-beta equity. Avoid treating crypto correlation as a complete thesis."
     },
     MSTR: {
       tags: ["bitcoin treasury", "high beta"],
-      chartStatus: "needs-chart",
-      fundamentals:
+      chartStatus: "queued",
+      fundamentalsRating: "Pending",
+      fundamentalsRationale:
         "Fundamental note should separate operating software business context from bitcoin treasury exposure."
     },
     BTG: {
       name: "B2Gold",
       tags: ["gold miner"],
-      chartStatus: "needs-chart",
-      fundamentals:
+      chartStatus: "queued",
+      fundamentalsRating: "Pending",
+      fundamentalsRationale:
         "Keep in stocks as B2Gold. Add production, gold-price sensitivity, and jurisdiction notes after review."
     },
     HOOD: {
       tags: ["brokerage", "crypto exposure"],
-      chartStatus: "needs-chart",
-      fundamentals:
+      chartStatus: "queued",
+      fundamentalsRating: "Pending",
+      fundamentalsRationale:
         "Keep in stocks unless the Discord mention is specifically about crypto business exposure."
     },
     PYPL: {
       tags: ["payments", "crypto exposure"],
-      chartStatus: "needs-chart",
-      fundamentals:
+      chartStatus: "queued",
+      fundamentalsRating: "Pending",
+      fundamentalsRationale:
         "Keep in stocks unless the Discord mention is specifically about crypto business exposure."
     },
     SOFI: {
       tags: ["fintech"],
-      chartStatus: "needs-chart",
-      fundamentals:
+      chartStatus: "queued",
+      fundamentalsRating: "Pending",
+      fundamentalsRationale:
         "Keep in stocks unless the Discord mention is specifically about crypto business exposure."
     },
     NU: {
       tags: ["fintech"],
-      chartStatus: "needs-chart",
-      fundamentals:
+      chartStatus: "queued",
+      fundamentalsRating: "Pending",
+      fundamentalsRationale:
         "Keep in stocks unless the Discord mention is specifically about crypto business exposure."
+    },
+    META: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/META/124486p0ez9b",
+      chartImageUrl: "assets/charts/META.png",
+      chartCapturedAt: "2026-05-28 12:45 AM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 631.99,
+      weekly7Ema: 623.53,
+      weekly200Ema: 579.07,
+      support: [584.19],
+      resistance: [640.01, 683.62, 743.38],
+      fundamentalsRating: "Very Strong",
+      fundamentalsRationale: [
+        "Large profitable advertising platform with durable app reach across Facebook, Instagram, Messenger, and WhatsApp.",
+        "Strong cash generation gives Meta room to fund AI infrastructure while still supporting buybacks and strategic investment.",
+        "Ad targeting, Reels monetization, and AI-driven ranking remain important drivers for the core Family of Apps business.",
+        "Reality Labs remains a drag, but the core business is strong enough to absorb long-duration product bets."
+      ],
+      risks: [
+        "AI infrastructure spending could pressure margins if revenue growth does not keep pace with capex and operating expense growth.",
+        "Regulatory and privacy pressure remain persistent risks, especially around data usage, advertising, and platform rules.",
+        "Advertising demand is cyclical, so a weaker consumer or business spending backdrop could pressure revenue growth.",
+        "Reality Labs losses and metaverse investment can weigh on sentiment if investors question the payoff timeline."
+      ],
+      catalysts: [
+        "Quarterly earnings, guidance, and management commentary on AI capex are likely to remain major stock catalysts.",
+        "Improvement in AI ad tools, recommendation systems, and Reels monetization could support stronger advertising efficiency.",
+        "WhatsApp monetization, business messaging, and new AI assistant/product integrations can add incremental growth optionality.",
+        "Capital return updates, cost discipline, and margin commentary may influence how investors value the core business."
+      ]
+    },
+    AMC: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/AMC/124486p17quy",
+      chartImageUrl: "assets/charts/AMC.png",
+      chartCapturedAt: "2026-05-28 1:07 AM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 1.59,
+      weekly7Ema: 1.47,
+      weekly200Ema: 3.2,
+      support: [1.24, 0.93],
+      resistance: [1.95, 2.37],
+      fundamentalsRating: "Weak",
+      fundamentalsRationale: [
+        "The theatrical recovery helps revenue, but AMC still carries a highly leveraged capital structure.",
+        "Operating performance remains sensitive to box office quality, release schedules, and consumer discretionary spending.",
+        "Debt service, lease obligations, and refinancing needs limit financial flexibility compared with stronger balance sheets.",
+        "Recent improvement is encouraging, but sustained profitability and positive free cash flow need to become more consistent."
+      ],
+      risks: [
+        "High debt load and refinancing risk remain central issues for the equity.",
+        "Share dilution risk can resurface if the company needs additional capital.",
+        "Box office volatility and weak release slates can pressure attendance, concessions, and operating leverage.",
+        "Meme-stock sentiment can create sharp price swings that are disconnected from fundamentals."
+      ],
+      catalysts: [
+        "Stronger box office releases and higher attendance can improve revenue and investor sentiment.",
+        "Debt reduction, refinancing progress, or lower interest expense would be meaningful balance sheet catalysts.",
+        "Improved concession sales, premium formats, and theater-level margins could support cash flow.",
+        "Earnings updates, liquidity commentary, and management guidance remain important event catalysts."
+      ]
     }
   }
 };

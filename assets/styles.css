@@ -40,6 +40,34 @@ body {
   padding: 32px 16px 24px;
 }
 
+.site-tabs {
+  display: inline-flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 5px;
+  background: #e7ece9;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.site-tab {
+  min-height: 36px;
+  padding: 8px 14px;
+  border-radius: calc(var(--radius) - 2px);
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  font-weight: 780;
+  text-decoration: none;
+}
+
+.site-tab:hover,
+.site-tab:focus-visible,
+.site-tab.active {
+  background: var(--panel);
+  color: var(--green);
+  outline: none;
+}
+
 .dashboard-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
@@ -616,6 +644,16 @@ tbody tr:hover {
 @media (max-width: 640px) {
   .page-shell {
     padding: 18px 10px 24px;
+  }
+
+  .site-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .site-tab {
+    text-align: center;
   }
 
   .dashboard-header {

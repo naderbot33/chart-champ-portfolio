@@ -6,31 +6,36 @@
     <title>Watchlists</title>
     <meta
       name="description"
-      content="Discord community watchlists with support, resistance, weekly EMA context, and concise ticker notes."
+      content="Searchable watchlist notes with charts, support, resistance, weekly EMA trends, fundamentals, risks, and catalysts."
     >
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="assets/styles.css">
-    <script src="data/watchlist-data.js" defer></script>
-    <script src="assets/app.js" defer></script>
+    <link rel="stylesheet" href="assets/styles.css?v=20260528-live">
+    <script src="data/watchlist-data.js?v=20260528-live" defer></script>
+    <script src="assets/app.js?v=20260528-live" defer></script>
   </head>
   <body>
     <main class="page-shell">
+      <nav class="site-tabs" aria-label="Site sections">
+        <a class="site-tab" href="https://naderbot33.github.io/chart-champ-portfolio/">Portfolio</a>
+        <a
+          class="site-tab active"
+          href="https://naderbot33.github.io/chart-champ-portfolio/watchlists/"
+          aria-current="page"
+        >
+          Watchlists
+        </a>
+      </nav>
+
       <header class="app-header" aria-labelledby="page-title">
         <div class="header-copy-wrap">
-          <p class="eyebrow">Discord research dashboard</p>
           <h1 id="page-title">Watchlists</h1>
-          <p class="header-copy">
-            Ticker notes, key levels, weekly EMA context, and concise analysis for the community watchlists.
-          </p>
         </div>
-        <aside class="status-panel" aria-label="Watchlist status">
-          <span class="status-label">Coverage</span>
-          <strong id="coverage-count">-- tickers</strong>
+        <aside class="status-panel" aria-label="Last updated">
           <span id="last-updated">Last updated pending</span>
         </aside>
       </header>
 
-      <section class="control-band" aria-label="Search and filters">
+      <section class="control-band" aria-label="Ticker search">
         <label class="search-field" for="ticker-search">
           <span>Search</span>
           <input
@@ -40,81 +45,36 @@
             autocomplete="off"
           >
         </label>
-        <div class="filter-group" id="filter-group" aria-label="Watchlist filters">
-          <button class="filter-button active" type="button" data-filter="all">All</button>
-          <button class="filter-button" type="button" data-filter="stocks">Stocks</button>
-          <button class="filter-button" type="button" data-filter="crypto">Crypto</button>
-          <button class="filter-button" type="button" data-filter="needs-chart">Needs Chart</button>
-          <button class="filter-button" type="button" data-filter="reviewed">Reviewed</button>
-        </div>
-      </section>
-
-      <section class="summary-grid" aria-label="Watchlist summary">
-        <article class="metric-card">
-          <span class="metric-label">Tickers</span>
-          <strong class="metric-value" id="ticker-count">--</strong>
-          <span class="metric-note">Total records</span>
-        </article>
-        <article class="metric-card">
-          <span class="metric-label">Reviewed</span>
-          <strong class="metric-value" id="reviewed-count">--</strong>
-          <span class="metric-note">Charts with notes</span>
-        </article>
-        <article class="metric-card">
-          <span class="metric-label">Pending</span>
-          <strong class="metric-value" id="pending-count">--</strong>
-          <span class="metric-note">Need chart review</span>
-        </article>
-        <article class="metric-card wide">
-          <span class="metric-label">EMA Rule</span>
-          <strong class="rule-text">Bullish above EMA, neutral near EMA, bearish below EMA.</strong>
-          <span class="metric-note" id="ema-band-note">Neutral band pending</span>
-        </article>
       </section>
 
       <div class="workspace-grid">
-        <section class="table-section" aria-labelledby="table-heading">
-          <div class="section-heading">
+        <section class="search-results" id="search-results-panel" aria-labelledby="results-heading" hidden>
+          <div class="section-heading compact">
             <div>
-              <p class="eyebrow">Ticker index</p>
-              <h2 id="table-heading">Community Watchlists</h2>
+              <p class="eyebrow">Results</p>
+              <h2 id="results-heading">Matches</h2>
             </div>
             <span class="result-count" id="result-count">-- results</span>
           </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Ticker</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">List</th>
-                  <th scope="col">EMA Trend</th>
-                  <th scope="col">Levels</th>
-                  <th scope="col">Status</th>
-                </tr>
-              </thead>
-              <tbody id="watchlist-body"></tbody>
-            </table>
-          </div>
-          <p class="empty-state" id="empty-state" hidden>No tickers match that search.</p>
+          <div class="result-list" id="watchlist-results"></div>
+          <p class="empty-state" id="empty-state" hidden>No published ticker notes match that search.</p>
         </section>
 
-        <section class="detail-panel" id="detail-panel" aria-labelledby="detail-heading">
+        <section class="detail-panel" id="detail-panel" aria-labelledby="detail-heading" hidden>
           <div class="section-heading compact">
             <div>
               <p class="eyebrow" id="detail-list-name">Watchlist</p>
               <h2 id="detail-heading">Select a Ticker</h2>
             </div>
-            <span class="status-chip" id="detail-status">Pending</span>
           </div>
           <div class="chart-preview" id="chart-preview" aria-label="Chart preview"></div>
           <div class="level-grid">
             <div>
-              <span class="detail-label">Support</span>
+              <span class="detail-label">Support Levels</span>
               <div class="level-list" id="support-list"></div>
             </div>
             <div>
-              <span class="detail-label">Resistance</span>
+              <span class="detail-label">Resistance Levels</span>
               <div class="level-list" id="resistance-list"></div>
             </div>
           </div>

@@ -71,11 +71,21 @@
     return ((latest - reference) / reference) * 100;
   };
 
-  const displayHoldingPrice = (holding) => {
+  const currentHoldingValue = (holding) => {
     if (holding.quoteEnabled === false && Number.isFinite(holding.marketValue)) {
-      return formatMoney(holding.marketValue);
+      return holding.marketValue;
     }
-    return formatMoney(holding.latestPrice);
+    if (Number.isFinite(holding.shares) && Number.isFinite(holding.latestPrice)) {
+      return holding.shares * holding.latestPrice;
+    }
+    if (Number.isFinite(holding.marketValue)) {
+      return holding.marketValue;
+    }
+    return holding.latestPrice;
+  };
+
+  const displayHoldingValue = (holding) => {
+    return formatMoney(currentHoldingValue(holding));
   };
 
   const parsePrice = (value) => Number.parseFloat(value);
@@ -168,6 +178,7 @@
         latestPrice,
         referencePrice,
         dayChangePct,
+        marketValue: currentHoldingValue({ ...holding, latestPrice }),
         dataSource: "Twelve Data"
       })),
       performance: buildPerformance(enriched, latestTimestamp),
@@ -256,6 +267,7 @@
         latestPrice,
         referencePrice,
         dayChangePct,
+        marketValue: currentHoldingValue({ ...holding, latestPrice }),
         dataSource: livePrices.provider || "Scheduled quote snapshot"
       })),
       performance: buildPerformance(enriched, latestTimestamp),
@@ -355,8 +367,7 @@
       .join("");
 
     document.getElementById("holdings-count").textContent = String(publicHoldings.length);
-    document.getElementById("started-date").textContent = `Started ${formatDate(baseData.portfolio.referenceDate)}`;
-    document.getElementById("last-updated").textContent = `Last updated ${formatTimestamp(dataset.timestamp)}`;
+    document.getElementById("last-updated").textContent = formatTimestamp(dataset.timestamp);
     document.getElementById("portfolio-return-context").textContent = `Since ${formatDate(baseData.portfolio.referenceDate)}`;
     document.getElementById("portfolio-note").textContent = baseData.portfolio.displayNote;
 
@@ -378,7 +389,7 @@
               </td>
               <td><span class="tag">${holding.assetClass}</span></td>
               <td>${holding.allocationPct.toFixed(0)}%</td>
-              <td>${displayHoldingPrice(holding)}</td>
+              <td>${displayHoldingValue(holding)}</td>
               <td class="${dayClass}">${formatPercent(holding.dayChangePct)}</td>
               <td class="${returnClass}">${formatPercent(holding.totalReturnPct)}</td>
               <td>${holding.publicNote}</td>

@@ -9,11 +9,11 @@
       content="Local static portfolio dashboard for Discord community review."
     >
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="assets/styles.css?v=20260528-portfolio-status">
     <script src="data/twelve-data-config.js" defer></script>
     <script src="data/portfolio-data.js" defer></script>
     <script src="data/live-prices.js?v=20260528-api" defer></script>
-    <script src="assets/app.js?v=20260528-api" defer></script>
+    <script src="assets/app.js?v=20260528-portfolio-value" defer></script>
   </head>
   <body>
     <main class="page-shell">
@@ -34,12 +34,12 @@
         <div>
           <h1 id="page-title">Chart Champ Portfolio</h1>
           <p class="header-copy">
-            Current portfolio: $5,000 cash and $5,000 in SQQQ entered at $40.86 on May 22, 2026.
+            Started with a $10,000 portfolio on May 22, 2026.
           </p>
         </div>
         <aside class="status-panel" aria-label="Portfolio status">
-          <span id="started-date">Started pending</span>
-          <strong id="last-updated">Last updated pending</strong>
+          <span class="status-label">Last updated</span>
+          <strong id="last-updated">Pending</strong>
         </aside>
       </header>
 
@@ -82,7 +82,7 @@
                 <th scope="col">Ticker</th>
                 <th scope="col">Asset Class</th>
                 <th scope="col">Allocation</th>
-                <th scope="col">Latest / Value</th>
+                <th scope="col">Value</th>
                 <th scope="col">Day Change</th>
                 <th scope="col">Total Return</th>
                 <th scope="col">Public Note</th>

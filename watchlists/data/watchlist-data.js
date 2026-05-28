@@ -248,7 +248,7 @@ window.WATCHLIST_DATA = {
     META: {
       chartStatus: "published",
       chartUrl: "https://share.trendspider.com/chart/META/124486p0ez9b",
-      chartImageUrl: "assets/charts/META.png",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p0ez9b.png",
       chartCapturedAt: "2026-05-28 12:45 AM EDT",
       updatedAt: "2026-05-28",
       currentPrice: 631.99,
@@ -279,7 +279,7 @@ window.WATCHLIST_DATA = {
     AMC: {
       chartStatus: "published",
       chartUrl: "https://share.trendspider.com/chart/AMC/124486p17quy",
-      chartImageUrl: "assets/charts/AMC.png",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p17quy.png",
       chartCapturedAt: "2026-05-28 1:07 AM EDT",
       updatedAt: "2026-05-28",
       currentPrice: 1.59,

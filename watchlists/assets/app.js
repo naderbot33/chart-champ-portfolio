@@ -88,6 +88,7 @@
           fundamentalsRationale: "Pending.",
           risks: "Pending.",
           catalysts: "Pending.",
+          recentUpdates: [],
           tags: []
         };
 
@@ -347,6 +348,51 @@
       .map((item) => `<li>${escapeHtml(item)}</li>`)
       .join("")}</ul>`;
 
+  const renderRecentUpdates = (updates = []) => {
+    const updateList = Array.isArray(updates) ? updates.filter(Boolean) : [];
+    if (!updateList.length) return "";
+
+    return `
+      <article class="analysis-block recent-updates">
+        <span class="detail-label">Recent Updates</span>
+        ${updateList
+          .map((update) => {
+            const sections = Array.isArray(update.sections) ? update.sections : [];
+            return `
+              <div class="update-entry">
+                <h3>
+                  ${escapeHtml(update.title || "Update")}
+                  ${update.timeframe ? `<span>&mdash; ${escapeHtml(update.timeframe)}</span>` : ""}
+                </h3>
+                ${
+                  update.price || update.summary
+                    ? `<p class="update-summary">${
+                        update.price ? `<strong>Price: ${escapeHtml(update.price)}</strong>` : ""
+                      }${
+                        update.summary
+                          ? `${update.price ? " &mdash; " : ""}${escapeHtml(update.summary)}`
+                          : ""
+                      }</p>`
+                    : ""
+                }
+                ${sections
+                  .map(
+                    (section) => `
+                      <div class="update-section">
+                        <h4>${escapeHtml(section.heading || "Details")}</h4>
+                        ${renderAnalysisList(section.items || [])}
+                      </div>
+                    `
+                  )
+                  .join("")}
+              </div>
+            `;
+          })
+          .join("")}
+      </article>
+    `;
+  };
+
   const renderAnalysis = (record) => {
     const items = [
       ["Fundamentals", record.fundamentalsRationale],
@@ -354,8 +400,9 @@
       ["Catalysts", record.catalysts]
     ];
 
-    return items
-      .map(
+    return [
+      renderRecentUpdates(record.recentUpdates),
+      ...items.map(
         ([label, text]) => `
           <article class="analysis-block">
             <span class="detail-label">${label}</span>
@@ -364,6 +411,8 @@
           </article>
         `
       )
+    ]
+      .filter(Boolean)
       .join("");
   };
 

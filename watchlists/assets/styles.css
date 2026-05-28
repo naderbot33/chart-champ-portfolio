@@ -601,6 +601,47 @@ tr.selected td {
   padding: 12px;
 }
 
+.recent-updates {
+  background: #f5faf7;
+  border-color: #c8d9d0;
+}
+
+.update-entry {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.update-entry h3,
+.update-section h4 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.96rem;
+  line-height: 1.3;
+}
+
+.update-entry h3 {
+  font-weight: 840;
+}
+
+.update-entry h3 span {
+  color: var(--muted);
+  font-weight: 760;
+}
+
+.update-summary {
+  margin: 0;
+}
+
+.update-section {
+  display: grid;
+  gap: 2px;
+}
+
+.update-section .analysis-list {
+  margin-top: 4px;
+}
+
 .analysis-list {
   margin: 8px 0 0;
   padding-left: 18px;

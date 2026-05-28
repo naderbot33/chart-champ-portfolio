@@ -1,7 +1,7 @@
 window.WATCHLIST_DATA = {
   metadata: {
     title: "Watchlists",
-    updatedAt: "2026-05-28T00:00:00-07:00",
+    updatedAt: "2026-05-28T12:11:00-07:00",
     neutralBandPct: 1,
     defaultChartStatus: "queued",
     fundamentalsScale: ["Very Strong", "Strong", "Moderate", "Weak", "Very Weak"]
@@ -458,6 +458,76 @@ window.WATCHLIST_DATA = {
         "Improvement in AI ad tools, recommendation systems, and Reels monetization could support stronger advertising efficiency.",
         "WhatsApp monetization, business messaging, and new AI assistant/product integrations can add incremental growth optionality.",
         "Capital return updates, cost discipline, and margin commentary may influence how investors value the core business."
+      ]
+    },
+    QQQ: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/QQQ/124486puxzrv",
+      chartImageUrl: "assets/charts/QQQ.png",
+      chartCapturedAt: "2026-05-28 2:59 PM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 735.53,
+      weekly7Ema: 694.02,
+      weekly200Ema: 518.46,
+      support: [722.84, 719.9, 706.57, 678.88],
+      resistance: [745.98, 796.19],
+      fundamentalsRating: "Strong",
+      fundamentalsRationale: [
+        "QQQ is a diversified Nasdaq-100 ETF with heavy exposure to large profitable technology and communication services leaders.",
+        "The strongest holdings have durable cash flow, AI and cloud exposure, and strong balance sheets.",
+        "Fundamentals are strong at the index level, but concentration in mega-cap growth stocks keeps valuation and positioning risk elevated.",
+        "Because QQQ is an ETF, the rating reflects the quality, earnings power, and concentration risk of the underlying holdings rather than a single company."
+      ],
+      risks: [
+        "Mega-cap technology concentration can increase downside if AI, cloud, or semiconductor leadership weakens.",
+        "Higher rates or valuation compression can pressure long-duration growth stocks even when company fundamentals remain strong.",
+        "Index performance depends heavily on a small group of large constituents, so narrow leadership can create sharper reversals.",
+        "A break below the $719.90-$722.84 support area would weaken the short-term setup and could invite a deeper pullback."
+      ],
+      catalysts: [
+        "Mega-cap earnings, AI infrastructure spending updates, and cloud demand commentary are the main fundamental catalysts.",
+        "Semiconductor strength, software guidance, and large platform capex plans can influence Nasdaq-100 sentiment.",
+        "Macro data, Treasury yields, and Fed-rate expectations remain important for growth-stock multiples.",
+        "A sustained move through $745.98 would keep the next major resistance zone at $796.19 in focus."
+      ],
+      recentUpdates: [
+        {
+          title: "QQQ Update",
+          timeframe: "Daily",
+          price: "~$735.53",
+          summary:
+            "QQQ remains strong and is pushing toward the next major resistance level at $745.98. Price is still above the short-term support area near $719.90-$722.84, keeping bulls in control for now.",
+          sections: [
+            {
+              heading: "Context for the Move",
+              items: [
+                "QQQ has continued trending higher after breaking out from the March/April reversal.",
+                "Momentum remains strong, but price is getting closer to a major fib resistance level at $745.98.",
+                "Williams %R is still elevated, so the trend is bullish, but the move is also starting to look extended."
+              ]
+            },
+            {
+              heading: "Key Levels",
+              items: [
+                "Support: $722.84 -> $719.90 -> $706.57 -> $678.88",
+                "Resistance: $745.98 -> $796.19"
+              ]
+            },
+            {
+              heading: "Signals",
+              items: [
+                "Bullish: QQQ is holding above the $719.90-$722.84 support area and remains in a strong uptrend. As long as that area holds, $745.98 remains the next upside target.",
+                "Bearish: Price is nearing $745.98 resistance after a strong rally. A rejection there could trigger a pullback toward $722.84 or $719.90."
+              ]
+            },
+            {
+              heading: "Bias",
+              items: [
+                "Bullish short-term while QQQ holds above $719.90-$722.84, but cautious into $745.98 resistance."
+              ]
+            }
+          ]
+        }
       ]
     },
     AMC: {

@@ -11,6 +11,7 @@ window.WATCHLIST_DATA = {
     ADBE: "Adobe",
     AGNC: "AGNC Investment",
     AMC: "AMC Entertainment Holdings",
+    AMD: "Advanced Micro Devices",
     ASAN: "Asana",
     ASML: "ASML Holding",
     ASTS: "AST SpaceMobile",
@@ -107,6 +108,7 @@ window.WATCHLIST_DATA = {
         "BABA",
         "NFLX",
         "AUR",
+        "AMD",
         "DPRO",
         "SPCE",
         "INTC",
@@ -394,6 +396,37 @@ window.WATCHLIST_DATA = {
         "800G and 1.6T optics, Ethernet switching, interconnect, and custom XPU program updates can support the growth case.",
         "Guidance revisions for fiscal 2027 and fiscal 2028 will likely drive sentiment.",
         "Updates on Celestial AI and XConn integration could influence confidence in Marvell's AI platform strategy."
+      ]
+    },
+    AMD: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/AMD/124486p53aid",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p53aid.png",
+      chartCapturedAt: "2026-05-28 2:56 AM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 490.5,
+      weekly7Ema: 409.57,
+      weekly200Ema: 187.14,
+      support: [465.79, 401.89],
+      resistance: [500, 530, 550],
+      fundamentalsRating: "Very Strong",
+      fundamentalsRationale: [
+        "AMD is now driven primarily by data center growth, with Q1 2026 revenue up sharply year over year and Data Center revenue up 57%.",
+        "EPYC CPUs and AMD Instinct GPU shipments are benefiting from AI infrastructure demand across cloud, enterprise, and hyperscale customers.",
+        "The company generated strong non-GAAP earnings and record quarterly free cash flow, with cash and short-term investments well above total debt.",
+        "The fundamentals are very strong because AMD combines AI accelerator upside, server CPU share gains, and improving profitability."
+      ],
+      risks: [
+        "AI accelerator competition remains intense, especially versus NVIDIA and custom silicon programs from hyperscale customers.",
+        "Supply constraints, packaging capacity, HBM availability, and execution on MI450/Helios ramps can affect revenue timing.",
+        "Export controls, tariffs, and China-related restrictions can pressure data center GPU revenue and customer mix.",
+        "Client, gaming, and embedded demand remain cyclical, so weakness outside data center can still affect consolidated growth."
+      ],
+      catalysts: [
+        "Earnings, data center revenue growth, and MI350/MI450 shipment commentary are the key catalysts.",
+        "Large AI customer deployments, including Meta-related Instinct GPU plans, can improve visibility into 2026 and 2027 demand.",
+        "EPYC server share gains, cloud instance launches, and enterprise AI adoption can support revenue diversification.",
+        "Guidance for gross margin, free cash flow, and data center supply scaling will influence how the market values the AI ramp."
       ]
     },
     META: {

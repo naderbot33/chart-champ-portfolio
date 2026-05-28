@@ -307,6 +307,15 @@
     weekDate.setDate(weekDate.getDate() - 7);
     const monthDate = new Date(latestDate);
     monthDate.setMonth(monthDate.getMonth() - 1);
+    const inceptionKey = baseData.portfolio.referenceDate;
+
+    const periodReference = (item, targetDate) => {
+      const targetKey = toDateKey(targetDate);
+      if (targetKey <= inceptionKey) {
+        return { close: item.holding.referencePrice };
+      }
+      return findOnOrBefore(item.rows, targetDate);
+    };
 
     const periodReturn = (resolver) => {
       return enriched.reduce((sum, item) => {
@@ -320,8 +329,8 @@
       dayPct: enriched.reduce((sum, item) => {
         return sum + item.dayChangePct * (item.holding.allocationPct / 100);
       }, 0),
-      weekPct: periodReturn((item) => findOnOrBefore(item.rows, weekDate)),
-      monthPct: periodReturn((item) => findOnOrBefore(item.rows, monthDate)),
+      weekPct: periodReturn((item) => periodReference(item, weekDate)),
+      monthPct: periodReturn((item) => periodReference(item, monthDate)),
       ytdPct: periodReturn((item) => {
         return { close: item.holding.referencePrice };
       })

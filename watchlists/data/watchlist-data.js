@@ -54,6 +54,7 @@ window.WATCHLIST_DATA = {
     NVDA: "NVIDIA",
     O: "Realty Income",
     OSUR: "OraSure Technologies",
+    ORCL: "Oracle",
     PARR: "Par Pacific",
     PCOR: "Procore Technologies",
     PDD: "PDD Holdings",
@@ -168,6 +169,7 @@ window.WATCHLIST_DATA = {
         "SOX",
         "VIX",
         "NOW",
+        "ORCL",
         "ASML",
         "AMC",
         "NUKZ",
@@ -247,9 +249,9 @@ window.WATCHLIST_DATA = {
     },
     META: {
       chartStatus: "published",
-      chartUrl: "https://share.trendspider.com/chart/META/124486p0ez9b",
-      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p0ez9b.png",
-      chartCapturedAt: "2026-05-28 12:45 AM EDT",
+      chartUrl: "https://share.trendspider.com/chart/META/124486p3672w",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p3672w.png",
+      chartCapturedAt: "2026-05-28 2:02 AM EDT",
       updatedAt: "2026-05-28",
       currentPrice: 631.99,
       weekly7Ema: 623.53,
@@ -278,9 +280,9 @@ window.WATCHLIST_DATA = {
     },
     AMC: {
       chartStatus: "published",
-      chartUrl: "https://share.trendspider.com/chart/AMC/124486p17quy",
-      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p17quy.png",
-      chartCapturedAt: "2026-05-28 1:07 AM EDT",
+      chartUrl: "https://share.trendspider.com/chart/AMC/124486p34ww6",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p34ww6.png",
+      chartCapturedAt: "2026-05-28 2:01 AM EDT",
       updatedAt: "2026-05-28",
       currentPrice: 1.59,
       weekly7Ema: 1.47,
@@ -305,6 +307,37 @@ window.WATCHLIST_DATA = {
         "Debt reduction, refinancing progress, or lower interest expense would be meaningful balance sheet catalysts.",
         "Improved concession sales, premium formats, and theater-level margins could support cash flow.",
         "Earnings updates, liquidity commentary, and management guidance remain important event catalysts."
+      ]
+    },
+    ORCL: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/ORCL/124486p3wrpt",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p3wrpt.png",
+      chartCapturedAt: "2026-05-28 2:23 AM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 190.96,
+      weekly7Ema: 182.89,
+      weekly200Ema: 152.82,
+      support: [127.97],
+      resistance: [198.6, 257.97, 322.53],
+      fundamentalsRating: "Strong",
+      fundamentalsRationale: [
+        "Large profitable enterprise software and cloud platform with durable database, applications, and infrastructure demand.",
+        "Recent results showed strong cloud growth, led by Oracle Cloud Infrastructure and AI-related demand.",
+        "Remaining performance obligations are very large, giving Oracle strong forward revenue visibility if capacity is delivered on schedule.",
+        "The fundamentals are strong, but the rating stops short of Very Strong because AI cloud expansion requires heavy capital spending and execution."
+      ],
+      risks: [
+        "Large AI infrastructure commitments require major data center capacity, GPU supply, and disciplined capital allocation.",
+        "Debt, interest expense, and high capex can pressure free cash flow if cloud revenue conversion is slower than expected.",
+        "Competition from hyperscale cloud providers remains intense across infrastructure, database, and enterprise applications.",
+        "The stock can be sensitive to RPO quality, cloud margin commentary, and whether AI demand turns into profitable revenue."
+      ],
+      catalysts: [
+        "Earnings updates, cloud revenue growth, and OCI demand commentary should remain the main catalysts.",
+        "Progress converting AI cloud backlog into recognized revenue could support confidence in the growth story.",
+        "Large customer wins, multicloud database traction, and capacity expansion updates can improve investor sentiment.",
+        "Guidance for FY2027 revenue, capex, and margins will be important for how the market values the AI cloud buildout."
       ]
     }
   }

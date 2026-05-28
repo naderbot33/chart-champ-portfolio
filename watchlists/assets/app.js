@@ -4,6 +4,10 @@
   const formatter = new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 2
   });
+  const currencyFormatter = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 
   const state = {
     query: "",
@@ -44,7 +48,7 @@
 
   const formatPrice = (value) => {
     if (!Number.isFinite(value)) return "Pending";
-    return `$${formatter.format(value)}`;
+    return `$${currencyFormatter.format(value)}`;
   };
 
   const unique = (items) => Array.from(new Set(items));

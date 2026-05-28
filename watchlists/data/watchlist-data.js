@@ -31,6 +31,7 @@ window.WATCHLIST_DATA = {
     HD: "Home Depot",
     HOOD: "Robinhood Markets",
     HOLO: "MicroCloud Hologram",
+    INTC: "Intel",
     IREN: "IREN Limited",
     IAUI: "iShares Gold Strategy ETF",
     IWMI: "NEOS Russell 2000 High Income ETF",
@@ -108,6 +109,7 @@ window.WATCHLIST_DATA = {
         "AUR",
         "DPRO",
         "SPCE",
+        "INTC",
         "WIX",
         "TSLA",
         "MRVL",
@@ -197,12 +199,35 @@ window.WATCHLIST_DATA = {
   overrides: {
     IREN: {
       tags: ["bitcoin infrastructure", "high beta"],
-      chartStatus: "queued",
-      fundamentalsRating: "Pending",
-      fundamentalsRationale:
-        "Company-level note pending. Keep the summary focused on business model, balance sheet sensitivity, and execution risk.",
-      risks:
-        "High-beta equity. Avoid treating crypto correlation as a complete thesis."
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/IREN/124486p40l9x",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p40l9x.png",
+      chartCapturedAt: "2026-05-28 2:26 AM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 67.13,
+      weekly7Ema: 55.47,
+      weekly200Ema: 38.26,
+      support: [63.55, 54.11, 50.15, 30.92],
+      resistance: [73.33, 79.38],
+      fundamentalsRating: "Moderate",
+      fundamentalsRationale: [
+        "IREN has a clearer AI cloud growth path after announcing a large NVIDIA contract and expanded AI data center plans.",
+        "The business is still in transition from bitcoin mining toward AI cloud, so current financials can look uneven during the buildout.",
+        "Large power and data center assets are valuable, but execution depends on GPU deployment, financing, and customer ramp timing.",
+        "Bitcoin mining exposure keeps the stock high beta even as AI cloud becomes a larger part of the story."
+      ],
+      risks: [
+        "High sensitivity to bitcoin price, mining economics, power costs, and crypto equity sentiment.",
+        "AI cloud expansion requires major capex, reliable GPU supply, and customer conversion from contracted capacity to billable revenue.",
+        "Financing needs, share issuance, or debt terms could pressure holders if growth requires more capital than expected.",
+        "Execution risk is elevated because the company is scaling a newer AI cloud business while managing legacy mining assets."
+      ],
+      catalysts: [
+        "GPU deployment updates, AI cloud ARR progress, and customer contract announcements are the most important catalysts.",
+        "NVIDIA partnership details, financing progress, and data center capacity milestones could shift investor confidence.",
+        "Bitcoin price strength can still support mining economics and sentiment while the AI cloud ramp develops.",
+        "Quarterly updates on revenue mix, adjusted EBITDA, cash, and capex plans will be key for judging the transition."
+      ]
     },
     MSTR: {
       tags: ["bitcoin treasury", "high beta"],
@@ -246,6 +271,130 @@ window.WATCHLIST_DATA = {
       fundamentalsRating: "Pending",
       fundamentalsRationale:
         "Keep in stocks unless the Discord mention is specifically about crypto business exposure."
+    },
+    SPCE: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/SPCE/124486p42mfu",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p42mfu.png",
+      chartCapturedAt: "2026-05-28 2:27 AM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 3.77,
+      weekly7Ema: 3.1,
+      weekly200Ema: 14.43,
+      support: [2.32],
+      resistance: [4.05, 4.5, 6.66],
+      fundamentalsRating: "Very Weak",
+      fundamentalsRationale: [
+        "Virgin Galactic remains a pre-revenue commercial spaceflight turnaround with very limited current revenue.",
+        "Cash burn is improving, but the business still depends on completing vehicle testing and restarting commercial operations.",
+        "The balance sheet gives some runway, yet future funding or dilution risk remains meaningful if timelines slip.",
+        "Fundamentals are very weak until recurring commercial flights, revenue, and unit economics become visible."
+      ],
+      risks: [
+        "Flight-test delays, certification issues, or vehicle development problems could push revenue timing further out.",
+        "Cash burn and capital needs can lead to dilution through equity offerings or debt conversions.",
+        "Demand for premium space tourism is unproven at scale and may be sensitive to economic conditions.",
+        "Operational or safety setbacks would be material for both fundamentals and market confidence."
+      ],
+      catalysts: [
+        "Delta-class ground testing, flight-test timing, and first commercial spaceflight updates are the main catalysts.",
+        "Cash burn, liquidity, and debt reduction updates can change how investors view runway risk.",
+        "Ticket sales, backlog quality, and pricing updates would help define the revenue opportunity.",
+        "Any credible milestone that shortens the path to recurring flights could improve sentiment."
+      ]
+    },
+    INTC: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/INTC/124486p48qdt",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p48qdt.png",
+      chartCapturedAt: "2026-05-28 2:32 AM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 119.7,
+      weekly7Ema: 103.88,
+      weekly200Ema: 39.67,
+      support: [98.28, 89.87, 75.95, 67.8, 51.26, 38.39],
+      resistance: [120.3, 133.91],
+      fundamentalsRating: "Moderate",
+      fundamentalsRationale: [
+        "Intel has a large CPU franchise and Q1 2026 showed better revenue growth, stronger non-GAAP profitability, and AI-related demand.",
+        "The turnaround still depends on manufacturing execution, foundry customer wins, and disciplined cost control.",
+        "Foundry and advanced process investments remain expensive, and GAAP profitability is still pressured by restructuring and buildout costs.",
+        "The fundamentals are improving, but the risk profile is higher than cleaner AI semiconductor leaders."
+      ],
+      risks: [
+        "Foundry execution, process-node delays, and customer adoption are still major swing factors.",
+        "Heavy capital intensity, restructuring costs, and margin pressure can limit free cash flow during the turnaround.",
+        "Competition from AMD, NVIDIA, ARM-based designs, and external foundries remains intense.",
+        "Government funding, tariffs, export controls, and supply-chain constraints can affect timing and profitability."
+      ],
+      catalysts: [
+        "Earnings, gross margin progress, and Q2 guidance will matter for confirming the recovery.",
+        "AI PC, Xeon, packaging, and foundry design-win updates can support the turnaround story.",
+        "18A, 14A, and advanced packaging milestones are key operational catalysts.",
+        "Strategic partnerships and external foundry customer announcements could improve confidence in long-term value."
+      ]
+    },
+    MU: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/MU/124486p49k3i",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p49k3i.png",
+      chartCapturedAt: "2026-05-28 2:33 AM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 917.07,
+      weekly7Ema: 698.84,
+      weekly200Ema: 187.7,
+      support: [762.14, 696.49, 655.88, 590.24],
+      resistance: [934.04, 1040.29],
+      fundamentalsRating: "Very Strong",
+      fundamentalsRationale: [
+        "Micron is benefiting from a very strong memory cycle driven by AI servers, HBM, data center demand, and tighter supply.",
+        "Recent results showed record revenue, very high gross margins, strong earnings, and substantial adjusted free cash flow.",
+        "Cloud memory and core data center growth provide stronger mix quality than a normal commodity memory upcycle.",
+        "The fundamentals are very strong, though memory remains cyclical and capital intensive."
+      ],
+      risks: [
+        "Memory pricing can reverse quickly if supply expands too fast or AI/server demand slows.",
+        "High capex requirements can pressure free cash flow if the cycle turns or utilization weakens.",
+        "Customer concentration, export controls, and China exposure can affect demand and margins.",
+        "The stock may react sharply to HBM share, pricing, and supply-demand commentary."
+      ],
+      catalysts: [
+        "Earnings, forward guidance, HBM demand, and data center revenue mix are the primary catalysts.",
+        "Sustained pricing strength in DRAM and NAND can support margins and cash flow.",
+        "HBM capacity expansion, customer qualifications, and AI platform ramps can extend the cycle.",
+        "Capital allocation updates, dividend policy, and capex discipline may influence valuation."
+      ]
+    },
+    MRVL: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/MRVL/124486p4ff6t",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486p4ff6t.png",
+      chartCapturedAt: "2026-05-28 2:37 AM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 195.94,
+      weekly7Ema: 171.86,
+      weekly200Ema: 83.3,
+      support: [165.34, 152.2],
+      resistance: [200, 221.02],
+      fundamentalsRating: "Strong",
+      fundamentalsRationale: [
+        "Marvell has strong AI data infrastructure exposure through optics, switching, interconnect, and custom silicon.",
+        "Recent results showed record annual revenue, stronger data center demand, and meaningful AI-related bookings momentum.",
+        "Management commentary has pointed to continued growth from custom silicon, optics, and data center infrastructure demand.",
+        "The fundamentals are strong, but valuation, acquisition integration, and AI spending concentration keep the rating below Very Strong."
+      ],
+      risks: [
+        "AI infrastructure demand could normalize if hyperscaler capex slows or customer programs shift.",
+        "Custom silicon and optical programs depend on execution, customer concentration, and product timing.",
+        "Acquisition integration and higher operating expenses can affect margins if growth does not scale as expected.",
+        "Semiconductor cyclicality, supply constraints, and export controls remain ongoing risks."
+      ],
+      catalysts: [
+        "Earnings, data center revenue, and AI-related bookings are the most important catalysts.",
+        "800G and 1.6T optics, Ethernet switching, interconnect, and custom XPU program updates can support the growth case.",
+        "Guidance revisions for fiscal 2027 and fiscal 2028 will likely drive sentiment.",
+        "Updates on Celestial AI and XConn integration could influence confidence in Marvell's AI platform strategy."
+      ]
     },
     META: {
       chartStatus: "published",

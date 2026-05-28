@@ -1,4 +1,4 @@
-window.PORTFOLIO_LIVE_PRICES = {
+{
   "generatedAt": "2026-05-28T14:25:37.236Z",
   "provider": "Yahoo Finance chart API",
   "prices": {
@@ -1022,4 +1022,4 @@ window.PORTFOLIO_LIVE_PRICES = {
       ]
     }
   }
-};
+}

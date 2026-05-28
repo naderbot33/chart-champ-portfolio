@@ -1,6 +1,6 @@
 (async function () {
   const baseData = window.PORTFOLIO_DATA;
-  const livePrices = window.PORTFOLIO_LIVE_PRICES || null;
+  let livePrices = window.PORTFOLIO_LIVE_PRICES || null;
   const twelveDataConfig = window.TWELVE_DATA_CONFIG || {};
   const colors = ["#255e91", "#16745f", "#b67713", "#6b5b95", "#b54848"];
   const segmentColors = {
@@ -92,6 +92,22 @@
 
   const getApiKey = () => {
     return (twelveDataConfig.apiKey || "").trim();
+  };
+
+  const fetchFreshLivePrices = async () => {
+    try {
+      const response = await fetch(`data/live-prices.json?cache=${Date.now()}`, {
+        cache: "no-store"
+      });
+      if (!response.ok) {
+        return livePrices;
+      }
+      const payload = await response.json();
+      return payload?.prices ? payload : livePrices;
+    } catch (error) {
+      console.warn("Fresh portfolio quote snapshot unavailable:", error.message);
+      return livePrices;
+    }
   };
 
   const findOnOrBefore = (rows, targetDate) => {
@@ -493,6 +509,7 @@
 
   let dataset = buildFallbackDataset();
   try {
+    livePrices = await fetchFreshLivePrices();
     const liveDataset = tryLoadLiveSnapshot();
     if (liveDataset) {
       dataset = liveDataset;

@@ -7,6 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const dataPath = path.join(rootDir, "data", "portfolio-data.js");
 const outputPath = path.join(rootDir, "data", "live-prices.js");
+const jsonOutputPath = path.join(rootDir, "data", "live-prices.json");
 
 const toFiniteNumber = (value) => {
   const number = Number(value);
@@ -127,11 +128,10 @@ const main = async () => {
     prices
   };
 
-  await writeFile(
-    outputPath,
-    `window.PORTFOLIO_LIVE_PRICES = ${JSON.stringify(snapshot, null, 2)};\n`,
-    "utf8"
-  );
+  const snapshotJson = JSON.stringify(snapshot, null, 2);
+
+  await writeFile(outputPath, `window.PORTFOLIO_LIVE_PRICES = ${snapshotJson};\n`, "utf8");
+  await writeFile(jsonOutputPath, `${snapshotJson}\n`, "utf8");
   console.log(`Updated ${Object.keys(prices).length} quote snapshot(s).`);
 };
 

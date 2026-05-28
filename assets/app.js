@@ -1,5 +1,6 @@
 (async function () {
   const baseData = window.PORTFOLIO_DATA;
+  const livePrices = window.PORTFOLIO_LIVE_PRICES || null;
   const twelveDataConfig = window.TWELVE_DATA_CONFIG || {};
   const colors = ["#255e91", "#16745f", "#b67713", "#6b5b95", "#b54848"];
   const segmentColors = {
@@ -144,14 +145,13 @@
         const rows = await fetchTwelveDataRows(holding.ticker, apiKey);
         const latest = rows[0];
         const previous = rows[1] || latest;
-        const reference = rows.find((row) => row.datetime === referenceKey) || findOnOrAfter(rows, referenceKey);
 
         return {
           holding,
           rows,
           latestDate: latest.datetime,
           latestPrice: latest.close,
-          referencePrice: reference.close,
+          referencePrice: holding.referencePrice,
           dayChangePct: pctChange(latest.close, previous.close)
         };
       })
@@ -169,6 +169,94 @@
         referencePrice,
         dayChangePct,
         dataSource: "Twelve Data"
+      })),
+      performance: buildPerformance(enriched, latestTimestamp),
+      timestamp: latestTimestamp
+    };
+  };
+
+  const normalizeLiveHistory = (quote, fallbackDate) => {
+    const sourceRows = Array.isArray(quote.history) ? quote.history : [];
+    const rowsByDate = new Map();
+
+    sourceRows.forEach((row) => {
+      const datetime = String(row.datetime || "").slice(0, 10);
+      const close = parsePrice(row.close);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(datetime) && Number.isFinite(close)) {
+        rowsByDate.set(datetime, { datetime, close });
+      }
+    });
+
+    const latestPrice = parsePrice(quote.latestPrice);
+    const latestDate = String(quote.latestDate || "").slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(latestDate) && Number.isFinite(latestPrice)) {
+      rowsByDate.set(latestDate, { datetime: latestDate, close: latestPrice });
+    }
+
+    if (rowsByDate.size === 0 && Number.isFinite(latestPrice)) {
+      rowsByDate.set(fallbackDate, { datetime: fallbackDate, close: latestPrice });
+    }
+
+    return Array.from(rowsByDate.values()).sort((a, b) => b.datetime.localeCompare(a.datetime));
+  };
+
+  const tryLoadLiveSnapshot = () => {
+    if (!livePrices?.prices) {
+      return null;
+    }
+
+    const referenceKey = baseData.portfolio.referenceDate;
+    const snapshotDate = String(livePrices.generatedAt || new Date().toISOString()).slice(0, 10);
+    const enriched = baseData.holdings.map((holding) => {
+      if (holding.quoteEnabled === false) {
+        return {
+          holding,
+          rows: [
+            {
+              datetime: snapshotDate || referenceKey,
+              close: holding.latestPrice
+            }
+          ],
+          latestDate: snapshotDate || referenceKey,
+          latestPrice: holding.latestPrice,
+          referencePrice: holding.referencePrice,
+          dayChangePct: 0
+        };
+      }
+
+      const quote = livePrices.prices[holding.ticker];
+      if (!quote) {
+        throw new Error(`Live quote missing for ${holding.ticker}`);
+      }
+
+      const rows = normalizeLiveHistory(quote, referenceKey);
+      const latest = rows[0];
+      if (!latest) {
+        throw new Error(`Live quote history missing for ${holding.ticker}`);
+      }
+
+      const previousClose = parsePrice(quote.previousClose);
+      const previous = Number.isFinite(previousClose)
+        ? { close: previousClose }
+        : rows.find((row) => row.datetime < latest.datetime) || rows[1] || latest;
+      return {
+        holding,
+        rows,
+        latestDate: latest.datetime,
+        latestPrice: latest.close,
+        referencePrice: holding.referencePrice,
+        dayChangePct: pctChange(latest.close, previous.close)
+      };
+    });
+
+    const latestTimestamp = livePrices.generatedAt || `${snapshotDate || referenceKey}T16:00:00-04:00`;
+    return {
+      holdings: enriched.map(({ holding, latestPrice, referencePrice, dayChangePct }) => ({
+        ...holding,
+        latestPrice,
+        referencePrice,
+        dayChangePct,
+        dataSource: livePrices.provider || "Scheduled quote snapshot"
       })),
       performance: buildPerformance(enriched, latestTimestamp),
       timestamp: latestTimestamp
@@ -223,8 +311,7 @@
       weekPct: periodReturn((item) => findOnOrBefore(item.rows, weekDate)),
       monthPct: periodReturn((item) => findOnOrBefore(item.rows, monthDate)),
       ytdPct: periodReturn((item) => {
-        const referenceKey = baseData.portfolio.referenceDate;
-        return item.rows.find((row) => row.datetime === referenceKey) || findOnOrAfter(item.rows, referenceKey);
+        return { close: item.holding.referencePrice };
       })
     };
   }
@@ -386,10 +473,21 @@
 
   let dataset = buildFallbackDataset();
   try {
-    const twelveDataDataset = await tryLoadTwelveData();
-    if (twelveDataDataset) dataset = twelveDataDataset;
+    const liveDataset = tryLoadLiveSnapshot();
+    if (liveDataset) {
+      dataset = liveDataset;
+    } else {
+      const twelveDataDataset = await tryLoadTwelveData();
+      if (twelveDataDataset) dataset = twelveDataDataset;
+    }
   } catch (error) {
     console.warn("Using fallback portfolio snapshot:", error.message);
+    try {
+      const twelveDataDataset = await tryLoadTwelveData();
+      if (twelveDataDataset) dataset = twelveDataDataset;
+    } catch (apiError) {
+      console.warn("Twelve Data portfolio refresh unavailable:", apiError.message);
+    }
   }
   render(dataset);
 })();

@@ -1,12 +1,12 @@
 window.PORTFOLIO_DATA = {
   metadata: {
     portfolioName: "Chart Champ Portfolio",
-    mode: "public-static-v1",
-    sourceName: "Twelve Data API when configured; static sourced snapshot fallback",
+    mode: "public-api-snapshot",
+    sourceName: "Scheduled quote snapshot with static fallback",
     sourceTimestamp: "2026-05-22T09:00:00-07:00",
     sourceControlWorkbook: "discord-automation-control-center.xlsx",
-    quoteProviderStatus: "Twelve Data adapter enabled when an API key is available",
-    futureQuoteProvider: "Twelve Data",
+    quoteProviderStatus: "GitHub Actions refreshes public quote snapshots on a schedule",
+    futureQuoteProvider: "Scheduled quote snapshot; Twelve Data when configured",
     publicFooter: "For educational purposes only. Not financial advice."
   },
   portfolio: {

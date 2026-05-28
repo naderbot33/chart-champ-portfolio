@@ -146,12 +146,21 @@ h2 {
 
 .status-label,
 .metric-label,
-.detail-label,
 .result-count,
 .metric-note,
 .muted-text {
   color: var(--muted);
   font-size: 0.82rem;
+}
+
+.detail-label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 760;
+  line-height: 1.2;
 }
 
 .status-panel #last-updated {
@@ -571,13 +580,16 @@ tr.selected td {
   width: 100%;
 }
 
+.level-list .level-chip,
+.ema-card strong {
+  font-size: 1rem;
+  font-weight: 820;
+  line-height: 1.2;
+}
+
 .ema-card {
   display: grid;
   gap: 7px;
-}
-
-.ema-card strong {
-  font-size: 1.2rem;
 }
 
 .analysis-stack {

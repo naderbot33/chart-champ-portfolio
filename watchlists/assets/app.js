@@ -404,7 +404,7 @@
   };
 
   const renderMetrics = () => {
-    elements.lastUpdated.textContent = `Last updated ${formatDate(source.metadata.updatedAt)}`;
+    elements.lastUpdated.textContent = formatDate(source.metadata.updatedAt);
   };
 
   const rerender = () => {

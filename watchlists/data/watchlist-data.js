@@ -1,7 +1,7 @@
 window.WATCHLIST_DATA = {
   metadata: {
     title: "Watchlists",
-    updatedAt: "2026-05-28T21:15:00-07:00",
+    updatedAt: "2026-05-29T06:25:00-07:00",
     neutralBandPct: 1,
     defaultChartStatus: "queued",
     fundamentalsScale: ["Very Strong", "Strong", "Moderate", "Weak", "Very Weak"]
@@ -524,6 +524,76 @@ window.WATCHLIST_DATA = {
               heading: "Bias",
               items: [
                 "Bullish short-term while QQQ holds above $719.90-$722.84, but cautious into $745.98 resistance."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    MPT: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/MPT/124486qyce4v",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486qyce4v.png",
+      chartCapturedAt: "2026-05-29 9:22 AM EDT",
+      updatedAt: "2026-05-29",
+      currentPrice: 5.13,
+      weekly7Ema: 5.08,
+      weekly200Ema: 4.42,
+      support: [4.77, 4.42],
+      resistance: [5.81, 6.49],
+      fundamentalsRating: "Weak",
+      fundamentalsRationale: [
+        "Medical Properties Trust is a hospital real estate REIT with a large global portfolio, but the equity remains a turnaround story.",
+        "Q1 2026 showed positive net income and $0.14 of normalized FFO per share, with rent ramps improving at transitioned hospitals.",
+        "The company is still working through elevated leverage, tenant/operator stress, asset sales, and refinancing needs.",
+        "The fundamentals remain weak because balance sheet and tenant risk are still high even as rent collection shows signs of stabilization."
+      ],
+      risks: [
+        "Tenant and operator health remains the biggest risk because hospital rent collection depends on operator profitability and stability.",
+        "Debt, refinancing needs, and interest expense can pressure cash flow and limit flexibility.",
+        "Asset sales, loan repayments, and capital recycling may not happen on expected timing or terms.",
+        "A break below $4.77 would weaken the technical setup and put the weekly 200 EMA near $4.42 back in focus."
+      ],
+      catalysts: [
+        "Progress toward management's target of at least $1 billion in annualized cash rent by year-end 2026 would support the turnaround case.",
+        "Debt repayment, refinancing progress, and successful asset sales can improve balance sheet confidence.",
+        "Earnings updates, normalized FFO trends, and rent collection commentary remain important catalysts.",
+        "A clean breakout above $5.81 would improve the chart and put $6.49 back in focus."
+      ],
+      recentUpdates: [
+        {
+          title: "MPT Update",
+          timeframe: "Daily",
+          price: "~$5.13",
+          summary:
+            "MPT is holding above the $4.77 support level and the rising trendline while hovering near the weekly 7 EMA around $5.08. The short-term setup is stabilizing, but price still needs to reclaim $5.81 to confirm stronger upside.",
+          sections: [
+            {
+              heading: "Context for the Move",
+              items: [
+                "MPT has been basing after the large 2023-2024 selloff, and the recent rebound came after buyers defended the rising trendline and the $4.77 area.",
+                "Price is holding above the weekly 200 EMA near $4.42, which keeps the recovery structure intact for now.",
+                "Williams %R is still mixed instead of firmly bullish, so $5.81 is the first area where buyers need follow-through."
+              ]
+            },
+            {
+              heading: "Key Levels",
+              items: [
+                "Support: $4.77 -> weekly 200 EMA/$4.42 area",
+                "Resistance: $5.81 -> $6.49"
+              ]
+            },
+            {
+              heading: "Signals",
+              items: [
+                "Bullish: MPT is holding above $4.77, the rising trendline, and the weekly 200 EMA, giving buyers a constructive base as long as those levels hold.",
+                "Bearish: Price has repeatedly struggled near the $5.81-$6.49 resistance zone, and a break below $4.77 would weaken the recovery and put the weekly 200 EMA near $4.42 back in play."
+              ]
+            },
+            {
+              heading: "Bias",
+              items: [
+                "Neutral to bullish short-term while MPT holds $4.77, but confirmation needs a clean push through $5.81."
               ]
             }
           ]

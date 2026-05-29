@@ -1,7 +1,7 @@
 window.WATCHLIST_DATA = {
   metadata: {
     title: "Watchlists",
-    updatedAt: "2026-05-28T19:50:00-07:00",
+    updatedAt: "2026-05-28T21:15:00-07:00",
     neutralBandPct: 1,
     defaultChartStatus: "queued",
     fundamentalsScale: ["Very Strong", "Strong", "Moderate", "Weak", "Very Weak"]
@@ -524,6 +524,76 @@ window.WATCHLIST_DATA = {
               heading: "Bias",
               items: [
                 "Bullish short-term while QQQ holds above $719.90-$722.84, but cautious into $745.98 resistance."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    PFE: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/PFE/124486qeli4c",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486qeli4c.png",
+      chartCapturedAt: "2026-05-29 12:10 AM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 26.29,
+      weekly7Ema: 26.2,
+      weekly200Ema: 30.11,
+      support: [26.19, 21.13],
+      resistance: [31.4, 43.18, 51.88],
+      fundamentalsRating: "Moderate",
+      fundamentalsRationale: [
+        "Pfizer remains a large global biopharma company with diversified products, a dividend, and meaningful oncology and vaccine exposure.",
+        "Q1 2026 revenue improved year over year, but COVID product declines and patent-loss exposure still weigh on the broader growth story.",
+        "Launched and acquired products, including Seagen-related oncology assets, are important offsets to legacy revenue pressure.",
+        "The fundamentals are moderate because Pfizer has scale and cash flow, but the market still needs clearer evidence of durable post-COVID growth."
+      ],
+      risks: [
+        "COVID product revenue declines, patent expirations, and payer pressure can limit top-line growth.",
+        "Debt reduction, dividend support, and pipeline investment compete for capital after major acquisitions.",
+        "Clinical, regulatory, and commercial execution risk remains elevated across oncology, vaccines, obesity, and immunology programs.",
+        "A break below $26.19 would weaken the technical setup and put the $21.13 support level back in focus."
+      ],
+      catalysts: [
+        "Earnings, full-year guidance updates, and progress toward de-levering are important financial catalysts.",
+        "Oncology updates from Padcev, Elrexfio, Talzenna, and Seagen-related assets can influence the pipeline story.",
+        "Vaccine updates, including pneumococcal and respiratory programs, can shift sentiment around the non-COVID portfolio.",
+        "A sustained move back above the weekly 200 EMA near $30.11 would improve the technical setup toward $31.40 resistance."
+      ],
+      recentUpdates: [
+        {
+          title: "PFE Update",
+          timeframe: "Weekly",
+          price: "~$26.29",
+          summary:
+            "PFE is trying to stabilize around the $26.19 support level while trading near the weekly 7 EMA around $26.20. The bigger resistance area remains the weekly 200 EMA near $30.11, followed by $31.40.",
+          sections: [
+            {
+              heading: "Context for the Move",
+              items: [
+                "PFE has been in a long-term downtrend since the 2021-2022 highs, but price has started to base above the $21.13 support level.",
+                "The current move is a stabilization attempt around $26.19 support, not a confirmed trend reversal yet.",
+                "Williams %R is still weak, so bulls need a stronger move above the weekly 7 EMA and then the weekly 200 EMA near $30.11."
+              ]
+            },
+            {
+              heading: "Key Levels",
+              items: [
+                "Support: $26.19 -> $21.13",
+                "Resistance: weekly 200 EMA/$30.11 area -> $31.40 -> $43.18 -> $51.88"
+              ]
+            },
+            {
+              heading: "Signals",
+              items: [
+                "Bullish: PFE is holding near $26.19 support and is attempting to stabilize above the weekly 7 EMA. A reclaim of $30.11-$31.40 would improve the setup.",
+                "Bearish: Price remains below the weekly 200 EMA and the larger trend is still weak. Losing $26.19 would likely put $21.13 back in play."
+              ]
+            },
+            {
+              heading: "Bias",
+              items: [
+                "Neutral short-term while PFE holds $26.19, but the bigger trend remains under pressure below $30.11-$31.40 resistance."
               ]
             }
           ]

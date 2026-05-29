@@ -1,7 +1,7 @@
 window.WATCHLIST_DATA = {
   metadata: {
     title: "Watchlists",
-    updatedAt: "2026-05-29T06:25:00-07:00",
+    updatedAt: "2026-05-29T06:31:00-07:00",
     neutralBandPct: 1,
     defaultChartStatus: "queued",
     fundamentalsScale: ["Very Strong", "Strong", "Moderate", "Weak", "Very Weak"]
@@ -237,6 +237,76 @@ window.WATCHLIST_DATA = {
       fundamentalsRating: "Pending",
       fundamentalsRationale:
         "Fundamental note should separate operating software business context from bitcoin treasury exposure."
+    },
+    NFLX: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/NFLX/124486qyjvw0",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486qyjvw0.png",
+      chartCapturedAt: "2026-05-29 9:28 AM EDT",
+      updatedAt: "2026-05-29",
+      currentPrice: 90.18,
+      weekly7Ema: 89.57,
+      weekly200Ema: 77.69,
+      support: [89.57, 86.36, 77.69, 76.29, 62.34],
+      resistance: [90.23, 107.48, 135.36],
+      fundamentalsRating: "Very Strong",
+      fundamentalsRationale: [
+        "Netflix has one of the strongest global streaming platforms, with scale, pricing power, and a large recurring subscription base.",
+        "Q1 2026 revenue grew 16% year over year to $12.25 billion, and operating income rose 18% to roughly $4.0 billion.",
+        "Management maintained full-year 2026 revenue guidance of $50.7-$51.7 billion and a 31.5% operating margin target.",
+        "Advertising remains an important growth lever, with management saying ad revenue is on track to roughly double to about $3 billion in 2026."
+      ],
+      risks: [
+        "Streaming competition remains intense across subscription video, live content, user-generated video, gaming, and mobile entertainment.",
+        "Price increases can support revenue, but they also raise churn risk if consumer budgets weaken or content engagement slips.",
+        "Content timing and amortization can pressure margins quarter to quarter, especially around heavier release periods.",
+        "The stock can be sensitive to valuation, ad-growth execution, foreign exchange, and whether engagement stays strong after price changes."
+      ],
+      catalysts: [
+        "Quarterly earnings, revenue growth, operating margin, and free cash flow updates remain the main catalysts.",
+        "Progress in advertising, ad-tech, live events, gaming, and product changes such as mobile vertical video can support the growth story.",
+        "Major content slate performance, engagement trends, and pricing commentary can shift investor sentiment.",
+        "A clean move above the $90.23 fib area would improve the chart and put $107.48 back in focus."
+      ],
+      recentUpdates: [
+        {
+          title: "NFLX Update",
+          timeframe: "Weekly",
+          price: "~$90.18",
+          summary:
+            "NFLX is testing the 0.382 fib area around $90.23 after bouncing from the 0.5 fib support near $76.29. Price is also sitting near the weekly 7 EMA around $89.57, making this a short-term decision area.",
+          sections: [
+            {
+              heading: "Context for the Move",
+              items: [
+                "The recent move is a rebound from the $76.29-$77.69 area, where buyers defended the 0.5 fib and weekly 200 EMA after the sharp pullback from the $135.36 high.",
+                "NFLX has now rallied back into the 0.382 fib near $90.23, which is the first key level buyers need to reclaim.",
+                "Williams %R has improved from oversold but is cooling again, so momentum is not fully confirmed unless price holds above the $90 area."
+              ]
+            },
+            {
+              heading: "Key Levels",
+              items: [
+                "Support: weekly 7 EMA/$89.57 area -> $86.36 -> weekly 200 EMA/$77.69 -> 0.5 fib/$76.29",
+                "Resistance: 0.382 fib/$90.23 -> $107.48 -> $135.36"
+              ]
+            },
+            {
+              heading: "Signals",
+              items: [
+                "Bullish: NFLX defended the $76.29-$77.69 support zone and reclaimed the weekly 7 EMA. Holding above $90.23 would strengthen the rebound and put $107.48 in play.",
+                "Bearish: Price is still testing resistance at the 0.382 fib. A rejection below $90.23, followed by a loss of $89.57 and $86.36, would increase the risk of another move toward $76.29."
+              ]
+            },
+            {
+              heading: "Bias",
+              items: [
+                "Neutral short-term while NFLX tests $90.23. A clean hold above that level would improve the setup, while rejection keeps the pullback risk active."
+              ]
+            }
+          ]
+        }
+      ]
     },
     BTG: {
       name: "B2Gold",

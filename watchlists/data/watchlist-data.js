@@ -1,7 +1,7 @@
 window.WATCHLIST_DATA = {
   metadata: {
     title: "Watchlists",
-    updatedAt: "2026-05-28T12:11:00-07:00",
+    updatedAt: "2026-05-28T19:50:00-07:00",
     neutralBandPct: 1,
     defaultChartStatus: "queued",
     fundamentalsScale: ["Very Strong", "Strong", "Moderate", "Weak", "Very Weak"]
@@ -524,6 +524,146 @@ window.WATCHLIST_DATA = {
               heading: "Bias",
               items: [
                 "Bullish short-term while QQQ holds above $719.90-$722.84, but cautious into $745.98 resistance."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    SPY: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/SPY/124486pw8nyg",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486pw8nyg.png",
+      chartCapturedAt: "2026-05-28 3:36 PM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 754.99,
+      weekly7Ema: 730.02,
+      weekly200Ema: 586.66,
+      support: [735.97],
+      resistance: [760.52, 795.47, 839.98],
+      fundamentalsRating: "Strong",
+      fundamentalsRationale: [
+        "SPY is a diversified S&P 500 ETF with exposure to large U.S. companies across technology, financials, healthcare, consumer, industrial, and communication services.",
+        "The index has broad earnings power and better sector diversification than single-stock or narrow thematic exposure.",
+        "Mega-cap technology remains an important driver, so concentration risk still matters even though SPY is broader than QQQ.",
+        "The fundamentals are strong at the index level, but valuation, rates, and narrow leadership can still create pullback risk."
+      ],
+      risks: [
+        "Valuation compression can pressure the index if rates rise or earnings expectations cool.",
+        "Mega-cap technology concentration can still drive outsized index moves despite broad S&P 500 diversification.",
+        "Macro data, Fed-rate expectations, credit stress, or weaker labor data can quickly shift risk appetite.",
+        "A break below $735.97 would weaken the short-term setup and could open the door to a deeper pullback."
+      ],
+      catalysts: [
+        "S&P 500 earnings revisions, macro data, inflation prints, and Fed-rate expectations remain the biggest catalysts.",
+        "Mega-cap technology, AI infrastructure spending, and large platform earnings can influence index direction.",
+        "Treasury yields, credit spreads, and dollar trends can affect valuation multiples.",
+        "A sustained move through $760.52 would keep $795.47 and $839.98 in focus as higher resistance levels."
+      ],
+      recentUpdates: [
+        {
+          title: "SPY Update",
+          timeframe: "Daily",
+          price: "~$754.99",
+          summary:
+            "SPY remains strong and is trading above the $735.97 support level. The next key resistance area is $760.52, with higher resistance levels at $795.47 and $839.98 if momentum continues.",
+          sections: [
+            {
+              heading: "Context for the Move",
+              items: [
+                "SPY has continued grinding higher after the April rebound, with buyers still controlling the trend.",
+                "Price is extended after a strong rally, but it has not lost structure yet.",
+                "As long as SPY holds above $735.97, the bullish trend remains intact, but $760.52 is the next level to watch for rejection or exhaustion."
+              ]
+            },
+            {
+              heading: "Key Levels",
+              items: [
+                "Support: $735.97",
+                "Resistance: $760.52 -> $795.47 -> $839.98"
+              ]
+            },
+            {
+              heading: "Signals",
+              items: [
+                "Bullish: SPY is holding above $735.97 and remains in a strong daily uptrend. Holding that level keeps $760.52 in play.",
+                "Bearish: Price is extended after a strong move, and Williams %R is near elevated territory. A rejection near $760.52 could lead to a pullback toward $735.97."
+              ]
+            },
+            {
+              heading: "Bias",
+              items: [
+                "Bullish while SPY holds above $735.97, but cautious into $760.52 resistance."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    NVAX: {
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/NVAX/124486qbrfn5",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486qbrfn5.png",
+      chartCapturedAt: "2026-05-28 10:50 PM EDT",
+      updatedAt: "2026-05-28",
+      currentPrice: 10.32,
+      weekly7Ema: 9.32,
+      weekly200Ema: 7.17,
+      support: [9.98, 9.84, 5.76, 3.64],
+      resistance: [10.31, 15.12, 17.47, 23.86],
+      fundamentalsRating: "Weak",
+      fundamentalsRationale: [
+        "Novavax is a vaccine and adjuvant platform turnaround with meaningful partner optionality through Sanofi, Pfizer, and Matrix-M licensing.",
+        "Q1 2026 results showed a stronger cash position, but revenue remains highly dependent on partner activity, milestone timing, and COVID vaccine demand.",
+        "The company has reduced costs and shifted toward partnership-driven economics, but the revenue base is still less predictable than larger vaccine peers.",
+        "Fundamentals remain weak until recurring revenue, partner royalties, and pipeline economics become more durable."
+      ],
+      risks: [
+        "COVID vaccine demand, variant-selection decisions, and regulatory timing can materially affect revenue.",
+        "Partner forecasts, milestone timing, and Sanofi/Pfizer execution are major drivers outside Novavax's direct control.",
+        "Clinical, manufacturing, and regulatory delays could pressure the Matrix-M and vaccine pipeline story.",
+        "The stock can remain highly volatile because the business is still turnaround-oriented and milestone-sensitive."
+      ],
+      catalysts: [
+        "Sanofi partnership progress, Matrix-M licensing updates, and Pfizer-related milestones are the main business catalysts.",
+        "Seasonal COVID vaccine recommendations, strain-selection updates, and commercial demand can affect near-term sentiment.",
+        "Pipeline updates involving Matrix-M, C. difficile, and additional pharmaceutical partner evaluations could improve the long-term story.",
+        "Cash, expense guidance, royalty visibility, and partner revenue commentary will matter in future earnings updates."
+      ],
+      recentUpdates: [
+        {
+          title: "NVAX Update",
+          timeframe: "Daily",
+          price: "~$10.32",
+          summary:
+            "NVAX is testing a breakout around the $10.31 resistance area. Price is back above the EMA cloud near $9.84-$9.98, so bulls need to hold that zone to keep the breakout attempt alive.",
+          sections: [
+            {
+              heading: "Context for the Move",
+              items: [
+                "NVAX has been building higher lows after holding above the $5.76 support level.",
+                "The current move is being supported by a reclaim of the EMA cloud and a push back into the $10.31 resistance area.",
+                "Williams %R has improved, showing short-term momentum has shifted back toward buyers."
+              ]
+            },
+            {
+              heading: "Key Levels",
+              items: [
+                "Support: EMA cloud/$9.84-$9.98 area -> $5.76 -> $3.64",
+                "Resistance: $10.31 -> $15.12 -> $17.47 -> $23.86"
+              ]
+            },
+            {
+              heading: "Signals",
+              items: [
+                "Bullish: NVAX is above the EMA cloud and pressing into $10.31 resistance. A clean hold above $10.31 would keep $15.12 in play.",
+                "Bearish: $10.31 is still the key breakout test. A failed hold above that level could send price back toward the EMA cloud."
+              ]
+            },
+            {
+              heading: "Bias",
+              items: [
+                "Neutral to bullish short-term if NVAX holds above the EMA cloud and confirms the $10.31 breakout."
               ]
             }
           ]

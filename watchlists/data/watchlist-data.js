@@ -1,7 +1,7 @@
 window.WATCHLIST_DATA = {
   metadata: {
     title: "Watchlists",
-    updatedAt: "2026-05-29T06:31:00-07:00",
+    updatedAt: "2026-05-29T06:40:00-07:00",
     neutralBandPct: 1,
     defaultChartStatus: "queued",
     fundamentalsScale: ["Very Strong", "Strong", "Moderate", "Weak", "Very Weak"]
@@ -332,10 +332,74 @@ window.WATCHLIST_DATA = {
     },
     SOFI: {
       tags: ["fintech"],
-      chartStatus: "queued",
-      fundamentalsRating: "Pending",
-      fundamentalsRationale:
-        "Keep in stocks unless the Discord mention is specifically about crypto business exposure."
+      chartStatus: "published",
+      chartUrl: "https://share.trendspider.com/chart/SOFI/124486qyy0v1",
+      chartImageUrl: "https://d2nbxczldlxikh.cloudfront.net/124486qyy0v1.png",
+      chartCapturedAt: "2026-05-29 9:39 AM EDT",
+      updatedAt: "2026-05-29",
+      currentPrice: 18.34,
+      weekly7Ema: 16.93,
+      weekly200Ema: 14.6,
+      support: [16.93, 14.92, 14.6, 13.3, 8.4, 4.15],
+      resistance: [18.43, 24.65, 28.33, 32.83],
+      fundamentalsRating: "Strong",
+      fundamentalsRationale: [
+        "SoFi is a scaled fintech and digital banking platform with fast member growth, broad product adoption, and improving profitability.",
+        "Q1 2026 adjusted net revenue grew 41% year over year to a record $1.1 billion, while adjusted EBITDA rose 62% to $340 million.",
+        "Member growth remained strong, with total members up 35% year over year to 14.7 million and products up 39% to 22.2 million.",
+        "The fundamentals are strong, but lending cyclicality, credit risk, and valuation keep the rating below Very Strong."
+      ],
+      risks: [
+        "Credit quality, unemployment, funding costs, and loan demand can pressure lending revenue and profitability.",
+        "SoFi is still sensitive to rate expectations, bank regulation, capital requirements, and broader fintech valuation multiples.",
+        "Technology Platform revenue declined year over year in Q1 2026, so segment execution remains an area to monitor.",
+        "A break below the $14.92-$14.60 area would weaken the chart and put the lower $13.30 support level back in focus."
+      ],
+      catalysts: [
+        "Earnings updates, member growth, product growth, adjusted EBITDA, and GAAP profitability remain the main catalysts.",
+        "Loan originations, deposit growth, net interest margin, and credit performance will drive confidence in the lending business.",
+        "New product launches, brokerage, digital assets, and financial services cross-sell can support the broader platform story.",
+        "A clean breakout above $18.43 would improve the chart and put $24.65 back in focus."
+      ],
+      recentUpdates: [
+        {
+          title: "SOFI Update",
+          timeframe: "Weekly",
+          price: "~$18.34",
+          summary:
+            "SOFI is rebounding after defending the $14.92 support area and is now testing the $18.43 resistance level. Price has reclaimed the weekly 7 EMA near $16.93, but bulls still need a clean break above $18.43 to confirm stronger upside.",
+          sections: [
+            {
+              heading: "Context for the Move",
+              items: [
+                "SOFI pulled back sharply after rejecting near the $32.83 high, then found buyers around the $14.92 support zone.",
+                "The rebound is being driven by buyers defending the larger support area and reclaiming the weekly 7 EMA near $16.93.",
+                "Williams %R has bounced from oversold territory, showing momentum is improving, but $18.43 is the first major test for follow-through."
+              ]
+            },
+            {
+              heading: "Key Levels",
+              items: [
+                "Support: weekly 7 EMA/$16.93 area -> $14.92 -> weekly 200 EMA/$14.60 -> $13.30",
+                "Resistance: $18.43 -> $24.65 -> $28.33 -> $32.83"
+              ]
+            },
+            {
+              heading: "Signals",
+              items: [
+                "Bullish: SOFI defended the $14.92 area, reclaimed the weekly 7 EMA, and momentum is improving from oversold. A break above $18.43 would strengthen the rebound toward $24.65.",
+                "Bearish: Price is still testing $18.43 resistance after a sharp pullback. A rejection here could send SOFI back toward the weekly 7 EMA near $16.93 or the $14.92 support zone."
+              ]
+            },
+            {
+              heading: "Bias",
+              items: [
+                "Neutral to bullish short-term while SOFI holds above $16.93, but confirmation needs a clean break above $18.43."
+              ]
+            }
+          ]
+        }
+      ]
     },
     NU: {
       tags: ["fintech"],

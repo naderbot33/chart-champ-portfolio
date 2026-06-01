@@ -1,7 +1,6 @@
 (async function () {
   const baseData = window.PORTFOLIO_DATA;
   let livePrices = window.PORTFOLIO_LIVE_PRICES || null;
-  const twelveDataConfig = window.TWELVE_DATA_CONFIG || {};
   const colors = ["#255e91", "#16745f", "#b67713", "#6b5b95", "#b54848"];
   const segmentColors = {
     Stocks: "#255e91",
@@ -90,10 +89,6 @@
 
   const parsePrice = (value) => Number.parseFloat(value);
 
-  const getApiKey = () => {
-    return (twelveDataConfig.apiKey || "").trim();
-  };
-
   const fetchFreshLivePrices = async () => {
     try {
       const response = await fetch(`data/live-prices.json?cache=${Date.now()}`, {
@@ -113,93 +108,6 @@
   const findOnOrBefore = (rows, targetDate) => {
     const target = toDateKey(targetDate);
     return rows.find((row) => row.datetime <= target) || rows[rows.length - 1];
-  };
-
-  const findOnOrAfter = (rows, targetKey) => {
-    return [...rows].reverse().find((row) => row.datetime >= targetKey) || rows[rows.length - 1];
-  };
-
-  const fetchTwelveDataRows = async (ticker, apiKey) => {
-    const startYear = toLocalDate(baseData.portfolio.referenceDate).getFullYear();
-    const params = new URLSearchParams({
-      symbol: ticker,
-      interval: "1day",
-      start_date: `${startYear}-01-01`,
-      order: "desc",
-      adjust: "splits",
-      dp: "2",
-      apikey: apiKey
-    });
-    const response = await fetch(`https://api.twelvedata.com/time_series?${params.toString()}`);
-    if (!response.ok) {
-      throw new Error(`Twelve Data request failed for ${ticker}`);
-    }
-    const payload = await response.json();
-    if (payload.status === "error" || !Array.isArray(payload.values)) {
-      throw new Error(payload.message || `No Twelve Data values for ${ticker}`);
-    }
-    return payload.values.map((row) => ({
-      datetime: row.datetime.slice(0, 10),
-      close: parsePrice(row.close)
-    }));
-  };
-
-  const tryLoadTwelveData = async () => {
-    const apiKey = getApiKey();
-    if (!twelveDataConfig.enabled || !apiKey) {
-      return null;
-    }
-
-    const referenceKey = baseData.portfolio.referenceDate;
-    const enriched = await Promise.all(
-      baseData.holdings.map(async (holding) => {
-        if (holding.quoteEnabled === false) {
-          return {
-            holding,
-            rows: [
-              {
-                datetime: referenceKey,
-                close: holding.latestPrice
-              }
-            ],
-            latestDate: referenceKey,
-            latestPrice: holding.latestPrice,
-            referencePrice: holding.referencePrice,
-            dayChangePct: 0
-          };
-        }
-        const rows = await fetchTwelveDataRows(holding.ticker, apiKey);
-        const latest = rows[0];
-        const previous = rows[1] || latest;
-
-        return {
-          holding,
-          rows,
-          latestDate: latest.datetime,
-          latestPrice: latest.close,
-          referencePrice: holding.referencePrice,
-          dayChangePct: pctChange(latest.close, previous.close)
-        };
-      })
-    );
-
-    const latestDate = enriched
-      .map((item) => item.latestDate)
-      .sort()
-      .at(-1);
-    const latestTimestamp = `${latestDate}T16:00:00-04:00`;
-    return {
-      holdings: enriched.map(({ holding, latestPrice, referencePrice, dayChangePct }) => ({
-        ...holding,
-        latestPrice,
-        referencePrice,
-        dayChangePct,
-        marketValue: currentHoldingValue({ ...holding, latestPrice }),
-        dataSource: "Twelve Data"
-      })),
-      performance: buildPerformance(enriched, latestTimestamp),
-      timestamp: latestTimestamp
-    };
   };
 
   const normalizeLiveHistory = (quote, fallbackDate) => {
@@ -353,6 +261,44 @@
     };
   }
 
+  const quoteFreshness = (timestamp) => {
+    const parsed = new Date(timestamp).getTime();
+    if (!Number.isFinite(parsed)) {
+      return {
+        label: "Quote freshness unavailable",
+        tone: "stale"
+      };
+    }
+
+    const ageHours = Math.max(0, (Date.now() - parsed) / 36e5);
+    const roundedHours = Math.round(ageHours);
+    const ageLabel =
+      ageHours < 1
+        ? "less than 1 hour old"
+        : ageHours < 48
+          ? `${roundedHours} hour${roundedHours === 1 ? "" : "s"} old`
+          : `${Math.round(ageHours / 24)} days old`;
+
+    if (ageHours > 36) {
+      return {
+        label: `Quote snapshot may be stale (${ageLabel})`,
+        tone: "stale"
+      };
+    }
+
+    if (ageHours > 18) {
+      return {
+        label: `Quote snapshot is delayed (${ageLabel})`,
+        tone: "delayed"
+      };
+    }
+
+    return {
+      label: `Quote snapshot refreshed ${ageLabel}`,
+      tone: "fresh"
+    };
+  };
+
   const render = (dataset) => {
     const publicHoldings = dataset.holdings.filter((holding) => holding.displayPublicly);
     const publicDecisions = baseData.decisions.filter((decision) => decision.displayPublicly);
@@ -393,6 +339,10 @@
 
     document.getElementById("holdings-count").textContent = String(publicHoldings.length);
     document.getElementById("last-updated").textContent = formatTimestamp(dataset.timestamp);
+    const freshness = quoteFreshness(dataset.timestamp);
+    const freshnessEl = document.getElementById("quote-freshness");
+    freshnessEl.textContent = freshness.label;
+    freshnessEl.className = `freshness-note ${freshness.tone}`;
     document.getElementById("portfolio-return-context").textContent = `Since ${formatDate(baseData.portfolio.referenceDate)}`;
     document.getElementById("portfolio-note").textContent = baseData.portfolio.displayNote;
 
@@ -513,18 +463,9 @@
     const liveDataset = tryLoadLiveSnapshot();
     if (liveDataset) {
       dataset = liveDataset;
-    } else {
-      const twelveDataDataset = await tryLoadTwelveData();
-      if (twelveDataDataset) dataset = twelveDataDataset;
     }
   } catch (error) {
     console.warn("Using fallback portfolio snapshot:", error.message);
-    try {
-      const twelveDataDataset = await tryLoadTwelveData();
-      if (twelveDataDataset) dataset = twelveDataDataset;
-    } catch (apiError) {
-      console.warn("Twelve Data portfolio refresh unavailable:", apiError.message);
-    }
   }
   render(dataset);
 })();

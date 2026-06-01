@@ -6,7 +6,7 @@ window.PORTFOLIO_DATA = {
     sourceTimestamp: "2026-05-22T09:00:00-07:00",
     sourceControlWorkbook: "discord-automation-control-center.xlsx",
     quoteProviderStatus: "GitHub Actions refreshes public quote snapshots on a schedule",
-    futureQuoteProvider: "Scheduled quote snapshot; Twelve Data when configured",
+    quoteProvider: "Yahoo Finance chart API via scheduled GitHub Actions snapshot",
     publicFooter: "For educational purposes only. Not financial advice."
   },
   portfolio: {

@@ -10,10 +10,9 @@
     >
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="assets/styles.css?v=20260528-portfolio-status">
-    <script src="data/twelve-data-config.js" defer></script>
     <script src="data/portfolio-data.js" defer></script>
-    <script src="data/live-prices.js?v=20260528-api" defer></script>
-    <script src="assets/app.js?v=20260528-live-json" defer></script>
+    <script src="data/live-prices.js?v=20260601-quotes" defer></script>
+    <script src="assets/app.js?v=20260601-freshness" defer></script>
   </head>
   <body>
     <main class="page-shell">
@@ -40,6 +39,7 @@
         <aside class="status-panel" aria-label="Portfolio status">
           <span class="status-label">Last updated</span>
           <strong id="last-updated">Pending</strong>
+          <span class="freshness-note" id="quote-freshness">Checking quote freshness</span>
         </aside>
       </header>
 

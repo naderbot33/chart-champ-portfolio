@@ -154,6 +154,35 @@ h2 {
   line-height: 1.35;
 }
 
+.freshness-note {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 0.76rem;
+  font-weight: 760;
+  line-height: 1.25;
+}
+
+.freshness-note.fresh {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.freshness-note.delayed {
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+.freshness-note.stale {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
 .status-label {
   color: var(--muted);
   font-size: 0.86rem;

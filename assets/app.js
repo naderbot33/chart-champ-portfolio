@@ -42,6 +42,11 @@
     return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" })
       .format(new Date(p[0], p[1] - 1, p[2]));
   };
+  var dateInZone = function (value, timeZone) {
+    var d = value instanceof Date ? value : new Date(value);
+    if (isNaN(d.getTime())) return "";
+    return new Intl.DateTimeFormat("en-CA", { timeZone: timeZone }).format(d);
+  };
 
   /* ----------------------------- portfolio math ----------------------------- */
   function holdingValue(h) {
@@ -53,6 +58,12 @@
   function holdingReturnPct(h) {
     if (h.assetClass === "Cash" || typeof h.entryPrice !== "number" || h.entryPrice === 0) return 0;
     return ((h.latestPrice - h.entryPrice) / h.entryPrice) * 100;
+  }
+  function holdingContribution(h) {
+    var marketValue = holdingValue(h);
+    var costBasis = typeof h.costBasis === "number" ? h.costBasis : marketValue;
+    var realized = typeof h.realizedPnl === "number" ? h.realizedPnl : 0;
+    return snapMoney(marketValue - costBasis + realized);
   }
 
   /* ----------------------------- live quote snapshot ----------------------------- */
@@ -113,21 +124,67 @@
     return null;
   }
 
-  function portfolioValueOnDate(holdings, date) {
-    return holdings.reduce(function (sum, h) {
-      if (h.assetClass === "Cash") return sum + holdingValue(h);
+  function transactionRows(h) {
+    return (Array.isArray(h.transactions) ? h.transactions : [])
+      .filter(function (tx) {
+        return tx && /^\d{4}-\d{2}-\d{2}$/.test(tx.date || "") &&
+          (tx.type === "buy" || tx.type === "sell") &&
+          finiteNumber(tx.shares) && tx.shares > 0 && finiteNumber(tx.price) && tx.price > 0;
+      })
+      .slice()
+      .sort(function (a, b) { return a.date.localeCompare(b.date); });
+  }
 
-      // Capital earmarked for a later entry remains cash until that entry date.
-      if (h.entryDate && date < h.entryDate) {
-        return sum + (finiteNumber(h.costBasis) ? h.costBasis : 0);
+  function transactionAmount(tx) {
+    return finiteNumber(tx.amount) ? tx.amount : tx.shares * tx.price;
+  }
+
+  function portfolioValueOnDate(portfolio, holdings, date) {
+    var cash = finiteNumber(portfolio.startingValue) ? portfolio.startingValue : 0;
+    var positions = 0;
+
+    holdings.forEach(function (h) {
+      if (h.assetClass === "Cash") return;
+      var transactions = transactionRows(h);
+      var ownedShares = 0;
+      var fallbackPrice = finiteNumber(h.entryPrice) ? h.entryPrice : h.latestPrice;
+
+      if (transactions.length) {
+        transactions.forEach(function (tx) {
+          if (tx.date > date) return;
+          var amount = transactionAmount(tx);
+          fallbackPrice = tx.price;
+          if (tx.type === "buy") {
+            ownedShares += tx.shares;
+            cash -= amount;
+          } else {
+            ownedShares -= tx.shares;
+            cash += amount;
+          }
+        });
+      } else if (!h.entryDate || h.entryDate <= date) {
+        ownedShares = finiteNumber(h.shares) ? h.shares : 0;
+        cash -= finiteNumber(h.costBasis) ? h.costBasis : ownedShares * fallbackPrice;
       }
 
+      if (ownedShares <= 0) return;
       var history = cleanHistory(h.history);
       var close = closeOnOrBefore(history, date);
-      if (!finiteNumber(close)) close = finiteNumber(h.entryPrice) ? h.entryPrice : h.latestPrice;
-      if (finiteNumber(h.shares) && finiteNumber(close)) return sum + h.shares * close;
-      return sum + (finiteNumber(h.costBasis) ? h.costBasis : holdingValue(h));
-    }, 0);
+      if (!finiteNumber(close)) close = fallbackPrice;
+      if (finiteNumber(close)) positions += ownedShares * close;
+    });
+
+    return cash + positions;
+  }
+
+  function latestHistoryDateBefore(holdings, date) {
+    var dates = {};
+    holdings.forEach(function (h) {
+      cleanHistory(h.history).forEach(function (row) {
+        if (row.date < date) dates[row.date] = true;
+      });
+    });
+    return Object.keys(dates).sort().at(-1) || null;
   }
 
   function buildPerformanceSeries(p, holdings) {
@@ -137,6 +194,9 @@
 
     holdings.forEach(function (h) {
       if (h.assetClass === "Cash") return;
+      transactionRows(h).forEach(function (tx) {
+        if (tx.date >= start) dateSet[tx.date] = true;
+      });
       cleanHistory(h.history).forEach(function (row) {
         if (row.date >= start) dateSet[row.date] = true;
       });
@@ -151,7 +211,7 @@
 
     var dates = Object.keys(dateSet).sort();
     var points = dates.map(function (date) {
-      return { date: date, portfolio: portfolioValueOnDate(holdings, date), benchmark: null };
+      return { date: date, portfolio: portfolioValueOnDate(p, holdings, date), benchmark: null };
     });
 
     var baseClose = closeOnOrBefore(benchmarkHistory, start);
@@ -356,9 +416,7 @@
     var rows = holdings.filter(function (h) {
       return h.assetClass !== "Cash";
     }).map(function (h) {
-      var marketValue = holdingValue(h);
-      var costBasis = finiteNumber(h.costBasis) ? h.costBasis : marketValue;
-      return { ticker: h.ticker, value: snapMoney(marketValue - costBasis) };
+      return { ticker: h.ticker, value: holdingContribution(h) };
     }).sort(function (a, b) { return b.value - a.value; });
 
     if (!rows.length) {
@@ -402,6 +460,7 @@
       .filter(function (h) { return h.assetClass === "Cash"; })
       .reduce(function (s, h) { return s + holdingValue(h); }, 0);
     var investedValue = totalValue - cashValue;
+    var realizedPnl = finiteNumber(p.realizedPnl) ? p.realizedPnl : 0;
     var totalReturnAbs = snapMoney(totalValue - p.startingValue);
     var totalReturnPct = p.startingValue ? (totalReturnAbs / p.startingValue) * 100 : 0;
 
@@ -409,11 +468,19 @@
     // Day change weighted by previous-close value: recover each position's prior
     // value from its day % (mv / (1 + day%)), then measure the sleeve's move.
     var dayWeighted = 0;
-    var prevCloseSum = investedHoldings.reduce(function (s, h) {
-      return s + holdingValue(h) / (1 + (h.dayChangePct || 0) / 100);
-    }, 0);
-    if (prevCloseSum > 0) {
-      dayWeighted = (investedValue / prevCloseSum - 1) * 100;
+    var quoteSourceTimestamp = LIVE && (LIVE.sourceTimestamp || LIVE.generatedAt);
+    var sourceDay = quoteSourceTimestamp
+      ? dateInZone(quoteSourceTimestamp, "America/New_York")
+      : "";
+    var previousDate = sourceDay ? latestHistoryDateBefore(investedHoldings, sourceDay) : null;
+    var previousTotalValue = previousDate ? portfolioValueOnDate(p, holdings, previousDate) : 0;
+    if (previousTotalValue > 0) {
+      dayWeighted = (totalValue / previousTotalValue - 1) * 100;
+    } else {
+      var prevCloseSum = investedHoldings.reduce(function (s, h) {
+        return s + holdingValue(h) / (1 + (h.dayChangePct || 0) / 100);
+      }, 0) + cashValue;
+      if (prevCloseSum > 0) dayWeighted = (totalValue / prevCloseSum - 1) * 100;
     }
 
     // metric cards
@@ -425,15 +492,16 @@
     rv.textContent = pct(totalReturnPct);
     rv.className = "metric-value " + tone(totalReturnPct);
     $("#m-total-return-sub").textContent =
-      (totalReturnAbs >= 0 ? "+" : "") + money(totalReturnAbs) + " since inception";
+      (totalReturnAbs >= 0 ? "+" : "") + money(totalReturnAbs) + " since inception" +
+      (realizedPnl ? " · " + (realizedPnl >= 0 ? "+" : "−") + money(Math.abs(realizedPnl)) + " realized" : "");
 
     var dv = $("#m-day");
     dv.textContent = pct(dayWeighted);
     dv.className = "metric-value " + tone(dayWeighted);
 
-    $("#m-positions").textContent = String(holdings.length);
+    $("#m-positions").textContent = String(investedHoldings.length);
     $("#m-positions-sub").textContent =
-      investedHoldings.length + " active · " + (holdings.length - investedHoldings.length) + " cash";
+      investedHoldings.length + " active · " + (holdings.length - investedHoldings.length) + " cash reserve";
 
     // split bar
     var invPct = totalValue ? (investedValue / totalValue) * 100 : 0;
@@ -464,18 +532,14 @@
 
     // positions card grid (hero: % since entry)
     var noteEl = $("#snapshot-note");
-    var quoteSourceTimestamp = LIVE && (LIVE.sourceTimestamp || LIVE.generatedAt);
     if (noteEl) {
       noteEl.textContent = quoteSourceTimestamp
         ? "Prices as of " + fmtSnapshotTime(quoteSourceTimestamp) + " · refreshed twice each weekday"
         : "Prices shown at entry until the first quote snapshot runs.";
     }
     // Label day moves "today" only when the snapshot is from today (US-Eastern).
-    var etDay = function (d) {
-      return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(d);
-    };
-    var snapDay = quoteSourceTimestamp ? etDay(new Date(quoteSourceTimestamp)) : "";
-    var dayLabel = snapDay && snapDay !== etDay(new Date())
+    var snapDay = quoteSourceTimestamp ? dateInZone(quoteSourceTimestamp, "America/New_York") : "";
+    var dayLabel = snapDay && snapDay !== dateInZone(new Date(), "America/New_York")
       ? " on " + fmtDate(snapDay)
       : " today";
     var grid = $("#positions-grid");
@@ -484,10 +548,12 @@
       investedHoldings.forEach(function (h) {
         var mv = holdingValue(h);
         var rpct = holdingReturnPct(h);
-        var gain = snapMoney(mv - (h.costBasis || mv));
+        var gain = holdingContribution(h);
         var weight = totalValue ? (mv / totalValue) * 100 : 0;
         var t = tone(rpct);
-        var since = h.entryDate ? " since " + fmtDate(h.entryDate) : " since entry";
+        var since = finiteNumber(h.realizedPnl) && h.realizedPnl
+          ? " total incl. realized"
+          : (h.entryDate ? " since " + fmtDate(h.entryDate) : " since entry");
         var card = el("article", "pos-card");
         card.setAttribute("data-ticker", h.ticker);
         card.innerHTML =
@@ -560,7 +626,21 @@
     // decisions
     var dl = $("#decision-list");
     dl.innerHTML = "";
-    (p.decisions || []).forEach(function (d) {
+    var pendingDecisions = (p.pendingOrders || []).map(function (order) {
+      return {
+        date: order.date,
+        ticker: order.ticker,
+        action: order.side + " limit order",
+        status: order.status || "Pending",
+        summary: order.note || "This order has not filled and is excluded from portfolio math.",
+        details: [
+          "Order amount: " + money(order.amount),
+          "Limit price: " + money(order.limitPrice),
+          "Estimated shares if filled: " + Number(order.estimatedShares || 0).toFixed(6)
+        ]
+      };
+    });
+    pendingDecisions.concat(p.decisions || []).forEach(function (d) {
       var item = el("article", "decision-item");
       var levels = d.levels || {};
       var lvlHtml = "";

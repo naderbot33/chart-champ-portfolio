@@ -9,10 +9,10 @@
       content="Chart Champ — educational portfolio holdings and community ticker research: bullish and bearish factors, fundamentals, key price levels, and live charts."
     >
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="assets/styles.css?v=20260710-1">
-    <script src="data/app-data.js?v=20260710-1" defer></script>
-    <script src="data/live-prices.js?v=20260710-1" defer></script>
-    <script src="assets/app.js?v=20260710-1" defer></script>
+    <link rel="stylesheet" href="assets/styles.css?v=20260710-2">
+    <script src="data/app-data.js?v=20260710-2" defer></script>
+    <script src="data/live-prices.js?v=20260710-2" defer></script>
+    <script src="assets/app.js?v=20260710-2" defer></script>
   </head>
   <body>
     <main class="page-shell">
@@ -62,9 +62,9 @@
             <span class="metric-sub" id="m-total-return-sub">since inception</span>
           </article>
           <article class="metric-card">
-            <span class="metric-label">Open day change</span>
+            <span class="metric-label">Day change</span>
             <strong class="metric-value" id="m-day">—</strong>
-            <span class="metric-sub">weighted, invested sleeve</span>
+            <span class="metric-sub">vs. prior close · includes filled trades</span>
           </article>
           <article class="metric-card">
             <span class="metric-label">Positions</span>
@@ -106,7 +106,7 @@
               <p class="eyebrow">Return drivers</p>
               <h2 id="contribution-heading">Gain / loss contribution</h2>
             </div>
-            <p class="section-note">Current market value minus cost basis, sorted by holding.</p>
+            <p class="section-note">Open plus realized gain or loss, sorted by holding.</p>
           </div>
           <div class="contribution-chart" id="contribution-chart"></div>
         </section>

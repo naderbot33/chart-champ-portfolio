@@ -110,10 +110,92 @@ function formatTimestamp(timestamp) {
   }).format(new Date(timestamp));
 }
 
+function easternDateKey(value) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date(value));
+}
+
+function transactionRows(holding) {
+  return (Array.isArray(holding.transactions) ? holding.transactions : [])
+    .filter(
+      (transaction) =>
+        transaction &&
+        /^\d{4}-\d{2}-\d{2}$/.test(transaction.date || "") &&
+        ["buy", "sell"].includes(transaction.type) &&
+        Number.isFinite(Number(transaction.shares)) &&
+        Number(transaction.shares) > 0 &&
+        Number.isFinite(Number(transaction.price)) &&
+        Number(transaction.price) > 0
+    )
+    .toSorted((a, b) => a.date.localeCompare(b.date));
+}
+
+function transactionAmount(transaction) {
+  const amount = Number(transaction.amount);
+  return Number.isFinite(amount) ? amount : Number(transaction.shares) * Number(transaction.price);
+}
+
+function closeOnOrBefore(history, date) {
+  let close = null;
+  for (const row of Array.isArray(history) ? history : []) {
+    if (!row || row.date > date) break;
+    if (Number.isFinite(Number(row.close))) close = Number(row.close);
+  }
+  return close;
+}
+
+function portfolioValueOnDate(portfolio, snapshot, date) {
+  let cash = Number(portfolio.startingValue) || 0;
+  let positions = 0;
+
+  for (const holding of portfolio.holdings ?? []) {
+    if (holding.assetClass === "Cash") continue;
+    const ticker = String(holding.ticker).toUpperCase();
+    const quote = snapshot.prices?.[ticker];
+    const transactions = transactionRows(holding);
+    let shares = 0;
+    let fallbackPrice = Number(holding.entryPrice ?? holding.latestPrice ?? 0);
+
+    if (transactions.length) {
+      for (const transaction of transactions) {
+        if (transaction.date > date) continue;
+        const transactionShares = Number(transaction.shares);
+        const amount = transactionAmount(transaction);
+        fallbackPrice = Number(transaction.price);
+        if (transaction.type === "buy") {
+          shares += transactionShares;
+          cash -= amount;
+        } else {
+          shares -= transactionShares;
+          cash += amount;
+        }
+      }
+    } else if (!holding.entryDate || holding.entryDate <= date) {
+      shares = Number(holding.shares ?? 0);
+      cash -= Number(holding.costBasis ?? shares * fallbackPrice);
+    }
+
+    if (shares <= 0) continue;
+    const close = closeOnOrBefore(quote?.history, date) ?? fallbackPrice;
+    positions += shares * close;
+  }
+
+  return cash + positions;
+}
+
+function latestHistoryDateBefore(snapshot, date) {
+  const dates = new Set();
+  for (const quote of Object.values(snapshot.prices ?? {})) {
+    for (const row of Array.isArray(quote?.history) ? quote.history : []) {
+      if (row?.date && row.date < date) dates.add(row.date);
+    }
+  }
+  return [...dates].sort().at(-1) ?? null;
+}
+
 function calculatePortfolio(portfolio, snapshot) {
   const positions = [];
   let currentValue = 0;
-  let previousValue = 0;
+  let fallbackPreviousValue = 0;
   const sourceTimes = [];
   const snapshotFallbackTime = Date.parse(snapshot.sourceTimestamp || snapshot.generatedAt);
 
@@ -123,7 +205,7 @@ function calculatePortfolio(portfolio, snapshot) {
     if (holding.assetClass === "Cash") {
       const value = Number(holding.marketValue ?? costBasis ?? shares);
       currentValue += value;
-      previousValue += value;
+      fallbackPreviousValue += value;
       continue;
     }
 
@@ -139,13 +221,21 @@ function calculatePortfolio(portfolio, snapshot) {
     }
     const marketValue = shares * last;
     currentValue += marketValue;
-    previousValue += shares * prevClose;
+    fallbackPreviousValue += shares * prevClose;
     sourceTimes.push(asOf);
-    positions.push({ ticker, contribution: marketValue - costBasis });
+    positions.push({
+      ticker,
+      contribution: marketValue - costBasis + Number(holding.realizedPnl ?? 0)
+    });
   }
 
   if (!sourceTimes.length) throw new Error("No quoted portfolio positions were found");
   const sourceTimestamp = new Date(Math.min(...sourceTimes)).toISOString();
+  const sourceDate = easternDateKey(sourceTimestamp);
+  const previousDate = latestHistoryDateBefore(snapshot, sourceDate);
+  const previousValue = previousDate
+    ? portfolioValueOnDate(portfolio, snapshot, previousDate)
+    : fallbackPreviousValue;
   const startingValue = Number(portfolio.startingValue);
   const totalReturn = currentValue - startingValue;
   const dayReturn = currentValue - previousValue;

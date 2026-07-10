@@ -691,6 +691,8 @@ tbody tr:hover { background: #f6faf9; }
 }
 
 .status-pill.open { background: var(--green-soft); color: var(--green); }
+.status-pill.filled { background: var(--blue-soft); color: var(--blue); }
+.status-pill.pending { background: var(--amber-soft); color: var(--amber); }
 .status-pill.closed { background: var(--bg-tint); color: var(--muted); }
 .status-pill::before {
   content: "";

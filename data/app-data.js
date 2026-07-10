@@ -27,15 +27,16 @@
  *   fundamentals.rationale, fundamentals.metrics [{ label, value }, ...]
  *
  * ── UPDATE THE PORTFOLIO ───────────────────────────────────────────────────
- * Edit `portfolio.holdings` (set each `latestPrice` to refresh P/L) and add to
- * `portfolio.decisions` (status "Open"/"Closed", optional `details` + `levels`).
+ * Edit `portfolio.holdings`, record every filled buy/sell in the holding's
+ * `transactions`, and add unfilled orders to `portfolio.pendingOrders`.
+ * Use `portfolio.decisions` for the human-readable activity log.
  * Point a holding's `researchKey` at a ticker in research.tickers to link it.
  */
 window.APP_DATA = {
   meta: {
     appName: "Chart Champ",
     tagline: "Portfolio holdings and community ticker research.",
-    updatedAt: "2026-07-09",
+    updatedAt: "2026-07-10",
     complianceFooter: "For educational purposes only. Not financial advice.",
     fundamentalsScale: ["Very Strong", "Strong", "Moderate", "Weak", "Very Weak"],
     riskScale: ["Low", "Moderate", "Elevated", "High", "Very High"]
@@ -49,7 +50,8 @@ window.APP_DATA = {
     disclaimer:
       "Illustrative educational portfolio for community discussion. Holdings and decisions are examples, not a recommendation to buy or sell.",
     displayNote:
-      "A $10,000 educational portfolio opened May 22, 2026 — now a seven-position long book with $3,000 held in cash. Quotes refresh twice each weekday around U.S. market hours; the exact snapshot time is shown with the positions.",
+      "A $10,000 educational portfolio opened May 22, 2026 — now an eight-position long book with $3,300 held in cash after the July 10 rebalance. Quotes refresh twice each weekday around U.S. market hours; the exact snapshot time is shown with the positions.",
+    realizedPnl: 188.70,
     holdings: [
       {
         ticker: "CASH",
@@ -59,11 +61,11 @@ window.APP_DATA = {
         researchKey: null,
         entryPrice: 1,
         latestPrice: 1,
-        shares: 3000,
-        costBasis: 3000,
-        marketValue: 3000,
+        shares: 3300,
+        costBasis: 3300,
+        marketValue: 3300,
         dayChangePct: 0,
-        note: "Dry powder for adds and new positions."
+        note: "Cash after the filled TSM buy and three partial profit-taking sales; the pending META order is excluded."
       },
       {
         ticker: "AAPL",
@@ -74,11 +76,16 @@ window.APP_DATA = {
         entryDate: "2026-06-25",
         entryPrice: 274.98,
         latestPrice: 274.98,
-        shares: 3.636628,
-        costBasis: 1000,
+        shares: 2.358672846843,
+        costBasis: 648.5878594249,
         marketValue: 1000,
         dayChangePct: 0,
-        note: "Core long opened Jun 25, 2026 at $274.98."
+        realizedPnl: 48.5878594249,
+        transactions: [
+          { date: "2026-06-25", type: "buy", shares: 3.636628118409, price: 274.98, amount: 1000 },
+          { date: "2026-07-10", type: "sell", shares: 1.277955271565, price: 313, amount: 400 }
+        ],
+        note: "Core long opened Jun 25; sold $400 at $313 on Jul 10 and kept the balance."
       },
       {
         ticker: "NFLX",
@@ -93,6 +100,9 @@ window.APP_DATA = {
         costBasis: 1000,
         marketValue: 1000,
         dayChangePct: 0,
+        transactions: [
+          { date: "2026-06-25", type: "buy", shares: 14.042971492768, price: 71.21, amount: 1000 }
+        ],
         note: "Core long opened Jun 25, 2026 at $71.21."
       },
       {
@@ -104,11 +114,16 @@ window.APP_DATA = {
         entryDate: "2026-06-25",
         entryPrice: 107.47,
         latestPrice: 107.47,
-        shares: 9.304922,
-        costBasis: 1000,
+        shares: 6.155316004686,
+        costBasis: 661.5118110236,
         marketValue: 1000,
         dayChangePct: 0,
-        note: "Core long opened Jun 25, 2026 at $107.47."
+        realizedPnl: 61.5118110236,
+        transactions: [
+          { date: "2026-06-25", type: "buy", shares: 9.304922303899, price: 107.47, amount: 1000 },
+          { date: "2026-07-10", type: "sell", shares: 3.149606299213, price: 127, amount: 400 }
+        ],
+        note: "Core long opened Jun 25; sold $400 at $127 on Jul 10 and kept the balance."
       },
       {
         ticker: "MSFT",
@@ -123,6 +138,9 @@ window.APP_DATA = {
         costBasis: 1000,
         marketValue: 1000,
         dayChangePct: 0,
+        transactions: [
+          { date: "2026-06-25", type: "buy", shares: 2.834306445213, price: 352.82, amount: 1000 }
+        ],
         note: "Core long opened Jun 25, 2026 at $352.82."
       },
       {
@@ -138,7 +156,10 @@ window.APP_DATA = {
         costBasis: 1000,
         marketValue: 1000,
         dayChangePct: 0,
-        note: "Core long opened Jun 25, 2026 at $543.40."
+        transactions: [
+          { date: "2026-06-25", type: "buy", shares: 1.840264998160, price: 543.40, amount: 1000 }
+        ],
+        note: "Core long opened Jun 25 at $543.40; the $400 limit sell at $677 remains pending and is not reflected in shares or cash."
       },
       {
         ticker: "BABA",
@@ -149,11 +170,16 @@ window.APP_DATA = {
         entryDate: "2026-06-29",
         entryPrice: 96.50,
         latestPrice: 96.50,
-        shares: 10.362694,
-        costBasis: 1000,
+        shares: 5.995882073444,
+        costBasis: 578.6026200873,
         marketValue: 1000,
         dayChangePct: 0,
-        note: "Added Jun 29, 2026 at $96.50."
+        realizedPnl: 78.6026200873,
+        transactions: [
+          { date: "2026-06-29", type: "buy", shares: 10.362694300518, price: 96.50, amount: 1000 },
+          { date: "2026-07-10", type: "sell", shares: 4.366812227074, price: 114.50, amount: 500 }
+        ],
+        note: "Added Jun 29; sold $500 at $114.50 on Jul 10 and kept the balance."
       },
       {
         ticker: "ORCL",
@@ -168,10 +194,75 @@ window.APP_DATA = {
         costBasis: 1000,
         marketValue: 1000,
         dayChangePct: 0,
+        transactions: [
+          { date: "2026-07-02", type: "buy", shares: 7.119971520114, price: 140.45, amount: 1000 }
+        ],
         note: "Added Jul 2, 2026 at $140.45."
+      },
+      {
+        ticker: "TSM",
+        name: "Taiwan Semiconductor",
+        assetClass: "Stock (ADR)",
+        marketSegment: "Stocks",
+        researchKey: null,
+        entryDate: "2026-07-10",
+        entryPrice: 432,
+        latestPrice: 432,
+        shares: 2.314814814815,
+        costBasis: 1000,
+        marketValue: 1000,
+        dayChangePct: 0,
+        transactions: [
+          { date: "2026-07-10", type: "buy", shares: 2.314814814815, price: 432, amount: 1000 }
+        ],
+        note: "Opened Jul 10 at $432; preferred support area was $428, but the entry was missed."
+      }
+    ],
+    pendingOrders: [
+      {
+        date: "2026-07-10",
+        ticker: "META",
+        side: "Sell",
+        amount: 400,
+        limitPrice: 677,
+        estimatedShares: 0.590841949778,
+        status: "Pending",
+        note: "Unfilled limit order; META shares, cost basis, realized P/L, and cash remain unchanged."
       }
     ],
     decisions: [
+      {
+        date: "2026-07-10",
+        ticker: "TSM",
+        action: "Opened",
+        status: "Open",
+        summary:
+          "Bought $1,000 of Taiwan Semiconductor at $432 while it tested a key support area. The preferred entry was $428, but that price was missed.",
+        details: [
+          "TSM — $1,000 @ $432",
+          "Shares added: 2.314815",
+          "Key support area: $428"
+        ],
+        levels: {
+          entry: "$432",
+          stop: "Not specified",
+          target1: "Not specified"
+        }
+      },
+      {
+        date: "2026-07-10",
+        ticker: "BABA / AAPL / PLTR",
+        action: "Took partial profits",
+        status: "Filled",
+        summary:
+          "Trimmed three profitable positions to fund new buys. Filled proceeds totaled $1,300 and realized profit totaled $188.70.",
+        details: [
+          "BABA — sold $500 @ $114.50; 5.995882 shares remain; realized +$78.60",
+          "AAPL — sold $400 @ $313; 2.358673 shares remain; realized +$48.59",
+          "PLTR — sold $400 @ $127; 6.155316 shares remain; realized +$61.51",
+          "Cash after all filled Jul 10 trades: $3,300"
+        ]
+      },
       {
         date: "2026-07-02",
         ticker: "ORCL",

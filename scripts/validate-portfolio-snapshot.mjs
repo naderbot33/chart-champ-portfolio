@@ -78,6 +78,125 @@ function validDateKey(value) {
   return /^\d{4}-\d{2}-\d{2}$/.test(String(value)) && Number.isFinite(Date.parse(`${value}T00:00:00Z`));
 }
 
+function validateLedger(portfolio, errors) {
+  const allHoldings = Array.isArray(portfolio.holdings) ? portfolio.holdings : [];
+  const seen = new Set();
+  const cashHoldings = [];
+  let ledgerCash = Number(portfolio.startingValue);
+  let realizedTotal = 0;
+
+  for (const holding of allHoldings) {
+    const ticker = String(holding?.ticker || "").toUpperCase();
+    if (!ticker) {
+      errors.push("A portfolio holding is missing its ticker");
+      continue;
+    }
+    if (seen.has(ticker)) errors.push(`${ticker} is configured more than once`);
+    seen.add(ticker);
+
+    if (holding.assetClass === "Cash") {
+      cashHoldings.push(holding);
+      continue;
+    }
+
+    const configuredShares = Number(holding.shares);
+    const configuredBasis = Number(holding.costBasis);
+    if (!Number.isFinite(configuredShares) || configuredShares <= 0) {
+      errors.push(`${ticker} shares must be a positive finite number`);
+    }
+    if (!Number.isFinite(configuredBasis) || configuredBasis < 0) {
+      errors.push(`${ticker} cost basis must be a non-negative finite number`);
+    }
+
+    const transactions = (Array.isArray(holding.transactions) ? holding.transactions : [])
+      .slice()
+      .sort((a, b) => String(a?.date || "").localeCompare(String(b?.date || "")));
+    if (!transactions.length) {
+      errors.push(`${ticker} has no executed transaction ledger`);
+      continue;
+    }
+
+    let shares = 0;
+    let basis = 0;
+    let realized = 0;
+    for (const transaction of transactions) {
+      const txShares = Number(transaction?.shares);
+      const price = Number(transaction?.price);
+      const amount = Number.isFinite(Number(transaction?.amount))
+        ? Number(transaction.amount)
+        : txShares * price;
+      if (
+        !validDateKey(transaction?.date) ||
+        !["buy", "sell"].includes(transaction?.type) ||
+        !Number.isFinite(txShares) ||
+        txShares <= 0 ||
+        !Number.isFinite(price) ||
+        price <= 0 ||
+        !Number.isFinite(amount) ||
+        amount <= 0
+      ) {
+        errors.push(`${ticker} has an invalid executed transaction`);
+        continue;
+      }
+
+      if (transaction.type === "buy") {
+        shares += txShares;
+        basis += amount;
+        ledgerCash -= amount;
+      } else {
+        if (txShares > shares + 0.000001) {
+          errors.push(`${ticker} sell transaction exceeds owned shares`);
+          continue;
+        }
+        const soldBasis = shares > 0 ? (basis / shares) * txShares : 0;
+        shares -= txShares;
+        basis -= soldBasis;
+        realized += amount - soldBasis;
+        ledgerCash += amount;
+      }
+    }
+
+    if (Math.abs(shares - configuredShares) > 0.000001) {
+      errors.push(`${ticker} configured shares do not reconcile with executed transactions`);
+    }
+    if (Math.abs(basis - configuredBasis) > 0.02) {
+      errors.push(`${ticker} configured cost basis does not reconcile with executed transactions`);
+    }
+    if (Math.abs(realized - Number(holding.realizedPnl || 0)) > 0.02) {
+      errors.push(`${ticker} realized P/L does not reconcile with executed transactions`);
+    }
+    realizedTotal += realized;
+  }
+
+  if (cashHoldings.length !== 1) {
+    errors.push("Portfolio must contain exactly one cash holding");
+  } else {
+    const cash = cashHoldings[0];
+    const cashValues = [Number(cash.shares), Number(cash.costBasis), Number(cash.marketValue)];
+    if (!cashValues.every(Number.isFinite) || cashValues.some((value) => Math.abs(value - ledgerCash) > 0.02)) {
+      errors.push("Cash fields do not reconcile with executed transactions");
+    }
+  }
+  if (Math.abs(realizedTotal - Number(portfolio.realizedPnl || 0)) > 0.02) {
+    errors.push("Portfolio realized P/L does not reconcile with executed transactions");
+  }
+
+  for (const order of Array.isArray(portfolio.pendingOrders) ? portfolio.pendingOrders : []) {
+    if (
+      order?.status !== "Pending" ||
+      !validDateKey(order?.date) ||
+      !order?.ticker ||
+      !["Buy", "Sell"].includes(order?.side) ||
+      !Number.isFinite(Number(order?.amount)) ||
+      Number(order.amount) <= 0 ||
+      !Number.isFinite(Number(order?.limitPrice)) ||
+      Number(order.limitPrice) <= 0
+    ) {
+      errors.push("A pending order is invalid or incorrectly marked as executed");
+    }
+  }
+}
+
 function githubOutput(values) {
   if (!process.env.GITHUB_OUTPUT) return;
   const content = Object.entries(values)
@@ -142,6 +261,8 @@ function main() {
   );
   const errors = [];
   const warnings = [];
+
+  validateLedger(portfolio, errors);
 
   if (!holdings.length) errors.push("No non-cash holdings are configured");
   if (!validDateKey(portfolio.chartStartDate)) {

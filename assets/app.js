@@ -42,6 +42,10 @@
     return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" })
       .format(new Date(p[0], p[1] - 1, p[2]));
   };
+  var tradingViewUrl = function (value) {
+    var url = String(value || "").trim();
+    return /^https:\/\/(?:www\.)?tradingview\.com\//i.test(url) ? url : "";
+  };
   var dateInZone = function (value, timeZone) {
     var d = value instanceof Date ? value : new Date(value);
     if (isNaN(d.getTime())) return "";
@@ -933,13 +937,13 @@
           console.warn("TradingView widget error:", e && e.message);
         }
       }
-      var url = /^https?:\/\//i.test(t.chartUrl || "")
-        ? t.chartUrl
+      var url = tradingViewUrl(t.chartUrl)
+        ? tradingViewUrl(t.chartUrl)
         : "https://www.tradingview.com/chart/?symbol=" + encodeURIComponent(sym);
       host.innerHTML =
         '<div class="chart-fallback">' +
           "<span>Couldn't load the embedded chart.</span>" +
-          '<a class="text-link" href="' + url + '" target="_blank" rel="noopener noreferrer">' +
+          '<a class="text-link" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' +
           "Open " + esc(t.ticker) + " on TradingView →</a>" +
         "</div>";
     });
@@ -966,13 +970,22 @@
     }).join("");
 
     var tvSym = t.tvSymbol || t.ticker;
-    var replayUrl = /^https?:\/\//i.test(t.chartUrl || "")
-      ? t.chartUrl
-      : "https://www.tradingview.com/chart/?symbol=" + encodeURIComponent(tvSym);
+    var replayUrl = tradingViewUrl(t.chartUrl) ||
+      "https://www.tradingview.com/chart/?symbol=" + encodeURIComponent(tvSym);
+    var postedChartUrl = tradingViewUrl(t.postedChartUrl);
     var chartReady = !!t.chartReady && !!t.tvSymbol;
     var chartAction = chartReady
-      ? '<a class="replay-btn" href="' + replayUrl + '" target="_blank" rel="noopener noreferrer">' +
-        '<span class="ic">⏵</span>Open Bar Replay on TradingView</a>'
+      ? '<div class="chart-actions">' +
+          (postedChartUrl
+            ? '<a class="posted-chart-btn" href="' + esc(postedChartUrl) +
+              '" target="_blank" rel="noopener noreferrer">' +
+              '<span class="ic">↗</span>Open latest #stocks chart' +
+              (t.postedChartDate ? '<span class="posted-date">' + esc(fmtDate(t.postedChartDate)) + "</span>" : "") +
+              "</a>"
+            : "") +
+          '<a class="replay-btn" href="' + esc(replayUrl) + '" target="_blank" rel="noopener noreferrer">' +
+            '<span class="ic">⏵</span>Open Bar Replay on TradingView</a>' +
+        "</div>"
       : '<span class="chart-status">Chart pending analysis</span>';
     var chartHint = chartReady
       ? '<p class="chart-hint">Tip: on TradingView, click the <strong>Replay</strong> button in the top toolbar to step through the chart bar by bar.</p>'

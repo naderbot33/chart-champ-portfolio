@@ -15,6 +15,9 @@
  *   chartUrl    "https://www.tradingview.com/chart/XXXX/"  optional; the "Open Bar
  *               Replay" button opens this exact chart/layout (your drawings). If
  *               omitted, the button opens a generic chart for tvSymbol.
+ *   postedChartUrl  "https://www.tradingview.com/x/XXXX/" optional; the latest
+ *               TradingView chart snapshot posted in ChartChamp #stocks.
+ *   postedChartDate "2026-07-10" optional; date of that #stocks chart post.
  *   chartReady  true | false                false = reserved placeholder, no chart
  *   assetClass  "Stock (ADR)"               free text
  *   sector      "China Internet / E-commerce"
@@ -50,7 +53,7 @@ window.APP_DATA = {
     disclaimer:
       "Illustrative educational portfolio for community discussion. Holdings and decisions are examples, not a recommendation to buy or sell.",
     displayNote:
-      "A $10,000 educational portfolio opened May 22, 2026 — now an eight-position long book with $3,300 held in cash after the July 10 rebalance. Quotes refresh twice each weekday around U.S. market hours; the exact snapshot time is shown with the positions.",
+      "A $10,000 educational portfolio opened May 22, 2026. Quotes refresh twice each weekday around U.S. market hours; the exact snapshot time is shown with the positions.",
     realizedPnl: 188.70,
     holdings: [
       {
@@ -204,7 +207,7 @@ window.APP_DATA = {
         name: "Taiwan Semiconductor",
         assetClass: "Stock (ADR)",
         marketSegment: "Stocks",
-        researchKey: null,
+        researchKey: "TSM",
         entryDate: "2026-07-10",
         entryPrice: 432,
         latestPrice: 432,
@@ -327,6 +330,8 @@ window.APP_DATA = {
         name: "Alibaba Group",
         tvSymbol: "NYSE:BABA",
         chartUrl: "https://www.tradingview.com/chart/5JLhvnvV/",
+        postedChartUrl: "https://www.tradingview.com/x/HiZPMzjF/",
+        postedChartDate: "2026-07-09",
         chartReady: true,
         assetClass: "Stock (ADR)",
         sector: "China Internet / E-commerce",
@@ -421,6 +426,8 @@ window.APP_DATA = {
         ticker: "NFLX",
         name: "Netflix",
         tvSymbol: "NASDAQ:NFLX",
+        postedChartUrl: "https://www.tradingview.com/x/2cOzd8aZ/",
+        postedChartDate: "2026-07-09",
         chartReady: true,
         assetClass: "Stock",
         sector: "Streaming / Media",
@@ -468,6 +475,8 @@ window.APP_DATA = {
         ticker: "PLTR",
         name: "Palantir",
         tvSymbol: "NASDAQ:PLTR",
+        postedChartUrl: "https://www.tradingview.com/x/NjmXGwkE/",
+        postedChartDate: "2026-07-07",
         chartReady: true,
         assetClass: "Stock",
         sector: "Software / AI Platforms",
@@ -516,6 +525,8 @@ window.APP_DATA = {
         ticker: "MSFT",
         name: "Microsoft",
         tvSymbol: "NASDAQ:MSFT",
+        postedChartUrl: "https://www.tradingview.com/x/eRsoQHEt/",
+        postedChartDate: "2026-04-30",
         chartReady: true,
         assetClass: "Stock",
         sector: "Software / Cloud",
@@ -561,6 +572,8 @@ window.APP_DATA = {
         ticker: "META",
         name: "Meta Platforms",
         tvSymbol: "NASDAQ:META",
+        postedChartUrl: "https://www.tradingview.com/x/B1GWwpA0/",
+        postedChartDate: "2026-07-10",
         chartReady: true,
         assetClass: "Stock",
         sector: "Internet / Advertising",
@@ -607,6 +620,8 @@ window.APP_DATA = {
         ticker: "ORCL",
         name: "Oracle",
         tvSymbol: "NYSE:ORCL",
+        postedChartUrl: "https://www.tradingview.com/x/HrdF7U1C/",
+        postedChartDate: "2026-07-08",
         chartReady: true,
         assetClass: "Stock",
         sector: "Software / Cloud Infrastructure",
@@ -643,6 +658,51 @@ window.APP_DATA = {
             { label: "Margins", value: "Solid; capex heavy" },
             { label: "Balance sheet", value: "Leveraged" },
             { label: "Valuation", value: "Re-rated / elevated" }
+          ]
+        }
+      },
+      {
+        ticker: "TSM",
+        name: "Taiwan Semiconductor",
+        tvSymbol: "NYSE:TSM",
+        postedChartUrl: "https://www.tradingview.com/x/a8oSysFT/",
+        postedChartDate: "2026-07-10",
+        chartReady: true,
+        assetClass: "Stock (ADR)",
+        sector: "Semiconductors / Foundry",
+        risk: "Elevated",
+        tags: ["semiconductors", "foundry", "AI infrastructure", "Taiwan"],
+        summary:
+          "The leading semiconductor foundry — central to advanced-chip demand, with cyclical and geopolitical risk.",
+        levels: {
+          support: [
+            { price: "$428", note: "Key support at the lower end of the blue channel" }
+          ],
+          resistance: [
+            { price: "Mid-channel", note: "First upside area if $428 continues to hold" }
+          ]
+        },
+        bullish: [
+          "$428 support is holding at the lower end of the channel for now",
+          "Holding that level keeps the rebound setup intact toward the middle of the channel",
+          "Leadership in advanced chip manufacturing supports long-term AI and high-performance computing demand",
+          "Scale and process expertise create a difficult-to-replicate competitive position"
+        ],
+        bearish: [
+          "A clean break below $428 and channel support would weaken the setup",
+          "Semiconductor demand and capital spending remain cyclical",
+          "Large fabrication investments require sustained utilization and execution",
+          "Taiwan-related geopolitical risk can drive volatility independent of company execution"
+        ],
+        fundamentals: {
+          rating: "Strong",
+          rationale:
+            "Industry-leading manufacturing scale and advanced-process leadership support the long-term case. Cyclicality, capital intensity, and Taiwan geopolitical exposure keep the risk above moderate.",
+          metrics: [
+            { label: "Revenue driver", value: "Advanced-chip demand" },
+            { label: "Margins", value: "Strong for a foundry" },
+            { label: "Capital intensity", value: "High" },
+            { label: "Primary risk", value: "Cycle and geopolitics" }
           ]
         }
       }

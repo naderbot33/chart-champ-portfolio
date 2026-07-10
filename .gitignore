@@ -1,3 +1,13 @@
 .DS_Store
 .preview/
 *.zip
+/.firebase/
+/runtime/
+.env
+.env.*
+!.env.example
+firebase-debug.log
+*-firebase-adminsdk-*.json
+*service-account*.json
+*webhook*.txt
+npm-debug.log*

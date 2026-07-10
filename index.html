@@ -3,142 +3,206 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Chart Champ Portfolio</title>
+    <title>Chart Champ</title>
     <meta
       name="description"
-      content="Local static portfolio dashboard for Discord community review."
+      content="Chart Champ — educational portfolio holdings and community ticker research: bullish and bearish factors, fundamentals, key price levels, and live charts."
     >
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="assets/styles.css?v=20260528-portfolio-status">
-    <script src="data/portfolio-data.js" defer></script>
-    <script src="data/live-prices.js?v=20260601-quotes" defer></script>
-    <script src="assets/app.js?v=20260601-freshness" defer></script>
+    <link rel="stylesheet" href="assets/styles.css?v=20260710-1">
+    <script src="data/app-data.js?v=20260710-1" defer></script>
+    <script src="data/live-prices.js?v=20260710-1" defer></script>
+    <script src="assets/app.js?v=20260710-1" defer></script>
   </head>
   <body>
     <main class="page-shell">
-      <nav class="site-tabs" aria-label="Site sections">
-        <a
-          class="site-tab active"
-          href="https://naderbot33.github.io/chart-champ-portfolio/"
-          aria-current="page"
-        >
-          Portfolio
-        </a>
-        <a class="site-tab" href="https://naderbot33.github.io/chart-champ-portfolio/watchlists/">
-          Watchlists
-        </a>
-      </nav>
-
-      <header class="dashboard-header" aria-labelledby="page-title">
-        <div>
-          <h1 id="page-title">Chart Champ Portfolio</h1>
-          <p class="header-copy">
-            Started with a $10,000 portfolio on May 22, 2026.
-          </p>
+      <header class="app-bar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">◧</span>
+          <div>
+            <strong class="brand-name">Chart Champ</strong>
+            <span class="brand-tag" id="brand-tag">Portfolio &amp; research</span>
+          </div>
         </div>
-        <aside class="status-panel" aria-label="Portfolio status">
-          <span class="status-label">Last updated</span>
-          <strong id="last-updated">Pending</strong>
-          <span class="freshness-note" id="quote-freshness">Checking quote freshness</span>
-        </aside>
+        <nav class="view-tabs" aria-label="Sections">
+          <button class="view-tab active" type="button" data-view="portfolio" aria-pressed="true">
+            Portfolio
+          </button>
+          <button class="view-tab" type="button" data-view="research" aria-pressed="false">
+            Research
+          </button>
+        </nav>
+        <div class="app-bar-meta">
+          <span class="status-label">Updated</span>
+          <strong id="app-updated">—</strong>
+        </div>
       </header>
 
-      <section class="summary-grid" aria-label="Portfolio summary">
-        <article class="metric-card metric-card-primary">
-          <span class="metric-label">Portfolio Return</span>
-          <strong class="metric-value" id="portfolio-return">--</strong>
-          <span class="metric-context" id="portfolio-return-context">Since purchase date</span>
-        </article>
-        <article class="metric-card performance-panel">
-          <div class="performance-panel-heading">
-            <span class="metric-label">Performance</span>
-            <span class="metric-context">Period return</span>
+      <!-- ============================ PORTFOLIO ============================ -->
+      <section class="view view-portfolio active" id="view-portfolio" aria-label="Portfolio">
+        <div class="page-intro">
+          <div>
+            <p class="eyebrow">Educational portfolio</p>
+            <h1 id="portfolio-title">Portfolio</h1>
+            <p class="lead" id="portfolio-lead"></p>
           </div>
-          <div class="period-list" id="period-performance-list"></div>
-        </article>
-        <article class="metric-card metric-card-holdings">
-          <span class="metric-label">Holdings</span>
-          <strong class="metric-value" id="holdings-count">--</strong>
-          <span class="metric-context">Current positions</span>
-        </article>
+        </div>
+
+        <p class="disclaimer-note" id="portfolio-disclaimer"></p>
+
+        <section class="summary-grid" aria-label="Portfolio summary">
+          <article class="metric-card metric-card-value">
+            <span class="metric-label">Total value</span>
+            <strong class="metric-value" id="m-total-value">—</strong>
+            <span class="metric-sub" id="m-total-sub">—</span>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">Total return</span>
+            <strong class="metric-value" id="m-total-return">—</strong>
+            <span class="metric-sub" id="m-total-return-sub">since inception</span>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">Open day change</span>
+            <strong class="metric-value" id="m-day">—</strong>
+            <span class="metric-sub">weighted, invested sleeve</span>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">Positions</span>
+            <strong class="metric-value" id="m-positions">—</strong>
+            <span class="metric-sub" id="m-positions-sub">incl. cash</span>
+          </article>
+        </section>
+
+        <section class="dashboard-band split-band" aria-label="Cash versus invested">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Capital deployment</p>
+              <h2>Cash vs. active positions</h2>
+            </div>
+            <span class="split-legend">
+              <span class="legend-chip invested"><span></span>Invested</span>
+              <span class="legend-chip cash"><span></span>Cash</span>
+            </span>
+          </div>
+          <div class="split-bar" id="split-bar" role="img" aria-label="Cash versus invested split"></div>
+          <div class="split-figures" id="split-figures"></div>
+        </section>
+
+        <section class="dashboard-band performance-band" aria-labelledby="performance-heading">
+          <div class="section-heading chart-section-heading">
+            <div>
+              <p class="eyebrow">Relative performance</p>
+              <h2 id="performance-heading">Portfolio vs. SPY</h2>
+            </div>
+            <div class="series-legend" id="performance-legend" aria-label="Performance chart legend"></div>
+          </div>
+          <div class="performance-chart" id="performance-chart"></div>
+          <p class="chart-caption" id="performance-caption"></p>
+        </section>
+
+        <section class="dashboard-band contribution-band" aria-labelledby="contribution-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Return drivers</p>
+              <h2 id="contribution-heading">Gain / loss contribution</h2>
+            </div>
+            <p class="section-note">Current market value minus cost basis, sorted by holding.</p>
+          </div>
+          <div class="contribution-chart" id="contribution-chart"></div>
+        </section>
+
+        <section class="dashboard-band positions-band" aria-labelledby="positions-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Open positions</p>
+              <h2 id="positions-heading">Change since entry</h2>
+            </div>
+            <p class="section-note" id="snapshot-note"></p>
+          </div>
+          <div class="positions-grid" id="positions-grid"></div>
+        </section>
+
+        <section class="dashboard-band" aria-labelledby="holdings-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Holdings</p>
+              <h2 id="holdings-heading">Detail table</h2>
+            </div>
+            <p class="section-note">Every holding including cash — click a ticker to open its research note.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Ticker</th>
+                  <th scope="col">Class</th>
+                  <th scope="col">Entry</th>
+                  <th scope="col">Last</th>
+                  <th scope="col">Value</th>
+                  <th scope="col">Day</th>
+                  <th scope="col">Return</th>
+                  <th scope="col">Weight</th>
+                  <th scope="col">Note</th>
+                </tr>
+              </thead>
+              <tbody id="holdings-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="dashboard-band" aria-labelledby="decision-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Decision log</p>
+              <h2 id="decision-heading">Trade decisions</h2>
+            </div>
+            <p class="section-note">What was done and why — for community review.</p>
+          </div>
+          <div class="decision-list" id="decision-list"></div>
+        </section>
       </section>
 
-      <section class="dashboard-band" aria-labelledby="holdings-heading">
-        <div class="section-heading holdings-heading">
+      <!-- ============================ RESEARCH ============================ -->
+      <section class="view view-research" id="view-research" aria-label="Ticker research" hidden>
+        <div class="page-intro">
           <div>
-            <p class="eyebrow">Portfolio summary</p>
-            <h2 id="holdings-heading">Holdings Table</h2>
+            <p class="eyebrow">Ticker research</p>
+            <h1>Research</h1>
+            <p class="lead" id="research-lead"></p>
           </div>
-          <p id="portfolio-note" class="section-note"></p>
+        </div>
+
+        <section class="search-band" aria-label="Search tickers">
           <label class="search-field" for="ticker-search">
-            <span>Search ticker</span>
-            <input id="ticker-search" type="search" autocomplete="off">
+            <span class="sr-only">Search ticker or company</span>
+            <input
+              id="ticker-search"
+              type="search"
+              placeholder="Search a ticker or company — try AAPL, Palantir, ORCL"
+              autocomplete="off"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="research-results"
+            >
           </label>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Ticker</th>
-                <th scope="col">Asset Class</th>
-                <th scope="col">Allocation</th>
-                <th scope="col">Value</th>
-                <th scope="col">Day Change</th>
-                <th scope="col">Total Return</th>
-                <th scope="col">Public Note</th>
-              </tr>
-            </thead>
-            <tbody id="holdings-body"></tbody>
-          </table>
-        </div>
-        <p class="empty-state" id="empty-state" hidden>No holdings match that search.</p>
-      </section>
-
-      <div class="two-column">
-        <section class="dashboard-band" aria-labelledby="allocation-heading">
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">Allocation breakdown</p>
-              <h2 id="allocation-heading">Target Weights</h2>
-            </div>
-          </div>
-          <div class="allocation-panel">
-            <div class="allocation-donut" id="allocation-donut" role="img" aria-label="Portfolio allocation chart">
-              <span>100%</span>
-            </div>
-            <div class="allocation-list" id="allocation-list"></div>
-          </div>
+          <div class="research-results" id="research-results" role="listbox" aria-label="Matches" hidden></div>
         </section>
 
-        <section class="dashboard-band" aria-labelledby="segment-heading">
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">Market segment</p>
-              <h2 id="segment-heading">Segment Allocation</h2>
-            </div>
-          </div>
-          <div class="allocation-panel">
-            <div class="allocation-donut" id="segment-donut" role="img" aria-label="Market segment allocation chart">
-              <span>100%</span>
-            </div>
-            <div class="allocation-list" id="segment-list"></div>
-          </div>
-        </section>
-      </div>
+        <p class="disclaimer-note" id="research-disclaimer"></p>
 
-      <section class="dashboard-band" aria-labelledby="decision-heading">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Decision log</p>
-            <h2 id="decision-heading">Portfolio Notes</h2>
-          </div>
-          <p class="section-note">Portfolio context for community review.</p>
+        <div class="research-empty" id="research-empty">
+          <p class="eyebrow">Browse</p>
+          <h2>Pick a ticker to open the note</h2>
+          <div class="chip-row" id="research-chiprow"></div>
         </div>
-        <div class="decision-list" id="decision-list"></div>
+
+        <article class="ticker-detail" id="ticker-detail" hidden></article>
       </section>
     </main>
 
-    <footer class="compliance-footer">
+    <footer class="compliance-footer" id="compliance-footer">
       For educational purposes only. Not financial advice.
     </footer>
   </body>

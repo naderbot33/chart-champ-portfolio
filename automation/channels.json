@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "guildId": "1178077469505486868",
+  "guildName": "ChartChamp",
+  "webhookName": "ChartChamp Market Bot",
+  "keychainService": "chartchamp-discord-webhook",
+  "messageCharacterLimit": 1900,
+  "channels": [
+    {
+      "key": "public-portfolio",
+      "channelId": "1483112393109409903",
+      "url": "https://discord.com/channels/1178077469505486868/1483112393109409903",
+      "keychainAccount": "public-portfolio",
+      "source": "Yahoo quote history and the deployed ChartChamp portfolio",
+      "contentContract": "Portfolio value, total and day return, top contributor and detractor, quote timestamp, and https://chartchamp.web.app/.",
+      "limits": {
+        "messageCharacters": 1900
+      }
+    },
+    {
+      "key": "trending-tickers",
+      "channelId": "1495941558741106889",
+      "url": "https://discord.com/channels/1178077469505486868/1495941558741106889",
+      "keychainAccount": "trending-tickers",
+      "source": "Yahoo Finance trending tickers plus independent catalyst verification",
+      "contentContract": "No more than four tickers, each with a concise and verified reason it is trending; distinguish observed facts from inference.",
+      "limits": {
+        "messageCharacters": 1900,
+        "itemCount": 4
+      }
+    },
+    {
+      "key": "market-briefs",
+      "channelId": "1495941654828548156",
+      "url": "https://discord.com/channels/1178077469505486868/1495941654828548156",
+      "keychainAccount": "market-briefs",
+      "source": "TrendSpider Sidekick with source verification where practical",
+      "contentContract": "Only material stocks, rates and FX, commodities, crypto, and calendar items; omit filler and avoid predictions.",
+      "limits": {
+        "messageCharacters": 1900,
+        "itemCount": 6
+      }
+    },
+    {
+      "key": "market-scanners",
+      "channelId": "1495962636016160778",
+      "url": "https://discord.com/channels/1178077469505486868/1495962636016160778",
+      "keychainAccount": "market-scanners",
+      "source": "Actual saved or subscribed TrendSpider scanner results, followed by Sidekick analysis",
+      "contentContract": "No more than five bullish standouts from scanners that were actually run; explain setup evidence and risk without buy or sell instructions.",
+      "limits": {
+        "messageCharacters": 1900,
+        "itemCount": 5
+      }
+    },
+    {
+      "key": "economic-data",
+      "channelId": "1289312459378917386",
+      "url": "https://discord.com/channels/1178077469505486868/1289312459378917386",
+      "keychainAccount": "economic-data",
+      "source": "TrendSpider Sidekick plus official statistical or central-bank releases",
+      "contentContract": "Material releases only, with actual versus forecast and prior when available, why the result matters, and an official-source verification.",
+      "limits": {
+        "messageCharacters": 1900,
+        "itemCount": 6
+      }
+    },
+    {
+      "key": "options-flow",
+      "channelId": "1493981552005353616",
+      "url": "https://discord.com/channels/1178077469505486868/1493981552005353616",
+      "keychainAccount": "options-flow",
+      "source": "TrendSpider Sidekick options-flow data",
+      "contentContract": "Up to three significant bullish and three bearish observations; label that opening versus closing and hedge intent is uncertain.",
+      "limits": {
+        "messageCharacters": 1900,
+        "bullishCount": 3,
+        "bearishCount": 3
+      }
+    },
+    {
+      "key": "insider-trades",
+      "channelId": "1209208579115057243",
+      "url": "https://discord.com/channels/1178077469505486868/1209208579115057243",
+      "keychainAccount": "insider-trades",
+      "source": "TrendSpider Sidekick plus SEC Form 4 filings",
+      "contentContract": "Prior seven days, no more than five notable items, prioritizing verified open-market and cluster activity; explain that insider activity alone is not predictive.",
+      "limits": {
+        "messageCharacters": 1900,
+        "itemCount": 5
+      }
+    }
+  ]
+}

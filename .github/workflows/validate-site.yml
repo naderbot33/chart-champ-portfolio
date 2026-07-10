@@ -1,12 +1,14 @@
-name: Validate Static Site
+name: Validate ChartChamp site and automation
 
 on:
   workflow_dispatch:
   pull_request:
   push:
     paths:
+      - ".github/workflows/**"
       - "assets/**"
       - "data/**"
+      - "firebase.json"
       - "scripts/**"
       - "watchlists/**"
       - "index.html"
@@ -22,8 +24,15 @@ jobs:
       - name: Syntax check JavaScript
         run: |
           node --check assets/app.js
+          node --check data/app-data.js
           node --check data/portfolio-data.js
           node --check data/live-prices.js
+          node --check scripts/update-quotes.mjs
+          node --check scripts/validate-portfolio-snapshot.mjs
+          node --check scripts/portfolio-summary.mjs
+          node --check scripts/dispatch-discord-draft.mjs
+          node --check scripts/export-paused-automations.mjs
+          node --check scripts/verify-discord-webhooks.mjs
           node --check scripts/update-portfolio-quotes.mjs
           node --check scripts/watchlist-csv-utils.mjs
           node --check scripts/validate-watchlist-data.mjs
@@ -32,3 +41,11 @@ jobs:
           node --check watchlists/data/watchlist-data.js
       - name: Validate watchlist tracker
         run: node scripts/validate-watchlist-data.mjs
+      - name: Run automation safety tests
+        run: node --test tests/*.test.mjs
+      - name: Validate portfolio snapshot structure and dry-run summary
+        shell: bash
+        run: |
+          snapshot_now=$(node -e 'const s=require("./data/live-prices.json"); const fallback=Date.parse(s.sourceTimestamp||s.generatedAt); const t=Math.min(...Object.values(s.prices).map(q=>Number.isFinite(Date.parse(q.asOf))?Date.parse(q.asOf):fallback)); console.log(new Date(t+60000).toISOString())')
+          node scripts/validate-portfolio-snapshot.mjs --strict --session auto --now "$snapshot_now" --max-age-minutes 45
+          node scripts/portfolio-summary.mjs --dry-run --session auto --now "$snapshot_now" --max-age-minutes 60

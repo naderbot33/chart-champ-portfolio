@@ -1,5 +1,5 @@
 window.PORTFOLIO_LIVE_PRICES = {
-  "generatedAt": "2026-07-21T20:48:00.189Z",
+  "generatedAt": "2026-07-21T22:00:38.410Z",
   "provider": "Yahoo Finance chart API",
   "prices": {
     "SQQQ": {

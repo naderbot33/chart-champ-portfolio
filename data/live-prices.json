@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-07-27T22:41:02.323Z",
+  "generatedAt": "2026-07-27T23:44:27.505Z",
   "provider": "Yahoo Finance chart API",
   "prices": {
     "SQQQ": {
       "symbol": "SQQQ",
       "latestPrice": 45.22,
-      "previousClose": 44.79,
+      "previousClose": 0,
       "latestDate": "2026-07-27",
       "priceTimestamp": "2026-07-27T20:00:00.000Z",
       "currency": "USD",
@@ -17,7 +17,7 @@
         },
         {
           "datetime": "2026-07-24",
-          "close": 44.79
+          "close": 0
         },
         {
           "datetime": "2026-07-23",

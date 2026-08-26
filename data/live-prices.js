@@ -1,19 +1,19 @@
 window.PORTFOLIO_LIVE_PRICES = {
-  "generatedAt": "2026-08-26T14:39:04.836Z",
+  "generatedAt": "2026-08-26T16:04:52.989Z",
   "provider": "Yahoo Finance chart API",
   "prices": {
     "SQQQ": {
       "symbol": "SQQQ",
-      "latestPrice": 39.693,
+      "latestPrice": 39.716,
       "previousClose": 39.46,
       "latestDate": "2026-08-26",
-      "priceTimestamp": "2026-08-26T14:39:02.000Z",
+      "priceTimestamp": "2026-08-26T16:04:50.000Z",
       "currency": "USD",
       "exchangeName": "NGM",
       "history": [
         {
           "datetime": "2026-08-26",
-          "close": 39.693
+          "close": 39.716
         },
         {
           "datetime": "2026-08-25",

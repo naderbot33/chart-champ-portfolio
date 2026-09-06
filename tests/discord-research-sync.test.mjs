@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { runInNewContext } from "node:vm";
+import { createHash } from "node:crypto";
 import { loadResearchTickers } from "../scripts/research-intake-proposal.mjs";
 
 const ROOT = new URL("../", import.meta.url);
@@ -47,9 +48,9 @@ test("the live Discord layer preserves the portfolio and dated baseline context"
 
 test("published setup imports are historical ideas with unknown outcomes, not simulated fills", async () => {
   const site = await loadSite();
-  const reviews = site.DISCORD_RESEARCH_SYNC.setupReviews;
+  const reviews = site.DISCORD_RESEARCH_SYNC.setupReviews.filter(review => review.date >= "2026-08-25");
   assert.equal(reviews.length, 24);
-  assert.equal(site.TRADE_SETUP_REVIEWS.reviews.length, 30);
+  assert.equal(site.TRADE_SETUP_REVIEWS.reviews.length, 39);
   assert.equal(new Set(reviews.map(review => review.id)).size, reviews.length);
   for (const review of reviews) {
     assert.equal(review.statusCode, "REVIEW_PENDING");
@@ -69,6 +70,39 @@ test("published setup imports are historical ideas with unknown outcomes, not si
   assert.match(reviews.find(review => review.ticker === "CRM").setup.plannedStopAfterEntry, /weekly/i);
   assert.match(reviews.find(review => review.ticker === "NVDA" && review.horizon === "Long-term idea").setup.plannedStopAfterEntry, /daily/i);
   assert.equal(reviews.some(review => ["PLTR", "CLH", "BAC"].includes(review.ticker)), false);
+});
+
+test("recovered historical setup bodies retain exact sent-payload hashes without inferred outcomes", async () => {
+  const site = await loadSite();
+  const recovered = site.DISCORD_RESEARCH_SYNC.setupReviews.filter(review => review.sourceVerification);
+  assert.deepEqual(recovered.map(review => review.ticker), ["COIN", "NDSN", "WMT", "BJ", "ROST", "V", "STZ", "CLF", "AXON"]);
+  assert.equal(site.DISCORD_RESEARCH_SYNC.setupReviews.length, 33);
+  assert.equal(site.DISCORD_RESEARCH_SYNC.coverage.setupPostsAwaitingReadback, 0);
+  assert.equal(site.DISCORD_RESEARCH_SYNC.coverage.recoveredSetupNativeDiscordReadbacks, 0);
+  assert.equal(new Set(site.TRADE_SETUP_REVIEWS.reviews.map(review => review.id)).size, 39);
+  assert.equal(site.APP_DATA.meta.updatedAt, "2026-09-04", "recovering old setup bodies must not redate research");
+  assert.equal(site.TRADE_SETUP_REVIEWS.updatedAt, site.DISCORD_RESEARCH_SYNC.setupReviewedAt);
+  for (const review of recovered) {
+    const payload = "<@&1533604231389380770>\n\n" + review.sourceText.replace(/\r\n?/gu, "\n").trim();
+    assert.equal(createHash("sha256").update(payload).digest("hex"), review.sourceSha256, review.ticker);
+    assert.equal(review.sourceVerification.receiptStatus, 200);
+    assert.equal(review.sourceVerification.nativeDiscordReadback, false);
+    assert.equal(review.statusCode, "REVIEW_PENDING");
+    assert.equal(review.outcome.type, "UNKNOWN");
+    assert.match(review.outcome.summary, /retained draft/);
+    assert.match(review.sourceMessageUrl, /^https:\/\/discord\.com\/channels\/1178077469505486868\/\d+\/\d+$/u);
+    assert.ok(review.date >= "2026-08-20" && review.date <= "2026-08-24");
+    assert.ok(review.sourcePostedAt.startsWith(review.date));
+    assert.equal(review.setup.takeProfitLevels.length, 2);
+    for (const value of [review.setup.entryCondition, review.setup.plannedStopAfterEntry, ...review.setup.takeProfitLevels, review.rationale.technicals, review.rationale.fundamentals, review.riskReward]) {
+      assert.ok(review.sourceText.includes(value), `${review.ticker}: preserve original wording`);
+    }
+    if (["COIN", "NDSN", "WMT"].includes(review.ticker)) {
+      assert.match(review.chartUrl, /^https:\/\/www\.tradingview\.com\/x\/[A-Za-z0-9]+\/$/u);
+      assert.ok(review.sourceText.includes(review.chartUrl));
+    } else assert.equal(review.chartUrl, undefined, "do not invent a missing chart link");
+    assert.doesNotMatch(JSON.stringify(review), /"(?:shares|fillPrice|realizedPnl|unrealizedPnl|portfolioValue|costBasis|marketValue|position)"\s*:/u);
+  }
 });
 
 test("the intake helper and site use the same current research view", async () => {

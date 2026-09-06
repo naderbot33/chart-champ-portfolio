@@ -2,6 +2,7 @@
  * Source dates are preserved; this layer never changes the portfolio ledger. */
 window.DISCORD_RESEARCH_SYNC = {
   "schemaVersion": 1,
+  "setupReviewedAt": "2026-09-06T16:14:15.084Z",
   "reviewedAt": "2026-09-04T16:26:15.501Z",
   "reviewedDate": "2026-09-04",
   "sourceWindowStart": "2026-08-07",
@@ -49,8 +50,10 @@ window.DISCORD_RESEARCH_SYNC = {
     ],
     "researchTickersUpdated": 31,
     "researchTickersAdded": 22,
-    "setupPostsImported": 24,
-    "setupPostsAwaitingReadback": 9
+    "setupPostsImported": 33,
+    "setupPostsAwaitingReadback": 0,
+    "setupBodiesRecoveredFromReceipts": 9,
+    "recoveredSetupNativeDiscordReadbacks": 0
   },
   "researchUpdates": [
     {
@@ -1755,6 +1758,405 @@ window.DISCORD_RESEARCH_SYNC = {
   ],
   "setupReviews": [
     {
+      "id": "2026-08-20-coin-day",
+      "date": "2026-08-20",
+      "reviewedAt": "2026-09-06T16:14:15.084Z",
+      "sourcePostedAt": "2026-08-20T15:48:37.549Z",
+      "ticker": "COIN",
+      "horizon": "Day trade",
+      "direction": "Long",
+      "statusCode": "REVIEW_PENDING",
+      "statusLabel": "Historical idea · outcome unverified",
+      "setup": {
+        "entryCondition": "I would buy only at $174.50 after a new completed 5-minute close above $174.50 and a subsequent retest of $173.75 that holds before 10:30 AM PT; maximum entry is $175.25, and I would not chase.",
+        "entryZone": "$174.50",
+        "preEntryInvalidation": "No entry unless all original confirmation, timing, and maximum-entry conditions are met.",
+        "plannedStopAfterEntry": "$169.75.",
+        "takeProfitLevels": [
+          "$181.65.",
+          "$188.75."
+        ]
+      },
+      "rationale": {
+        "technicals": "COIN is holding near session VWAP around $170.50, with 5-minute RSI near neutral and ATR around $1.50. A confirmed $174.50 close would clear today's $174.25 high; the retest avoids chasing the first spike.",
+        "fundamentals": "Coinbase's Q2 update reported record 10.3% crypto trading-volume share, a 14th straight positive adjusted-EBITDA quarter, and 48% of net revenue from subscriptions and services. BTC near $72,200 supports beta, but a crypto reversal is the main risk."
+      },
+      "outcome": {
+        "type": "UNKNOWN",
+        "summary": "The original published setup was recovered from a retained draft and matched to its successful delivery receipt. Subsequent entry, stop, and target events have not been verified. No trade result or P&L is assigned.",
+        "sequence": [
+          "Published on 2026-08-20; these figures and conditions are historical, not current instructions.",
+          "The original day-trade window has ended. That does not establish whether an entry or exit happened."
+        ]
+      },
+      "lesson": "Preserve the original confirmation sequence and cancellation rules. A later price touch cannot establish an executed fill or a complete trade outcome.",
+      "riskReward": "Buying at $174.50 with a $169.75 stop risks $4.75 per share. Level 1 offers $7.15 of upside, or approximately 1.5 times the risk. Level 2 offers $14.25, or approximately 3.0 times the risk.",
+      "chartUrl": "https://www.tradingview.com/x/Q0rby8Fq/",
+      "sourceMessageUrl": "https://discord.com/channels/1178077469505486868/1533595975392952582/1540024765002153986",
+      "sourceSha256": "156028a578da34dd23718ce1034fb8cf9148b961d9d6f768f1ad5da8a5358923",
+      "sourceText": "**🔥 DAY TRADE SETUP — COIN**\n\n- **BUY** — I would buy only at $174.50 after a new completed 5-minute close above $174.50 and a subsequent retest of $173.75 that holds before 10:30 AM PT; maximum entry is $175.25, and I would not chase.\n- **STOP LOSS** — $169.75.\n- **TAKE PROFIT LEVEL 1** — $181.65.\n- **TAKE PROFIT LEVEL 2** — $188.75.\n- **TECHNICALS** — COIN is holding near session VWAP around $170.50, with 5-minute RSI near neutral and ATR around $1.50. A confirmed $174.50 close would clear today's $174.25 high; the retest avoids chasing the first spike.\n- **FUNDAMENTALS** — Coinbase's Q2 update reported record 10.3% crypto trading-volume share, a 14th straight positive adjusted-EBITDA quarter, and 48% of net revenue from subscriptions and services. BTC near $72,200 supports beta, but a crypto reversal is the main risk.\n- **RISK/REWARD** — Buying at $174.50 with a $169.75 stop risks $4.75 per share. Level 1 offers $7.15 of upside, or approximately 1.5 times the risk. Level 2 offers $14.25, or approximately 3.0 times the risk.\n\nhttps://www.tradingview.com/x/Q0rby8Fq/",
+      "sourceVerification": {
+        "method": "retained-draft-matched-to-successful-delivery-receipt",
+        "verifiedAt": "2026-09-06T16:14:15.084Z",
+        "receiptStatus": 200,
+        "nativeDiscordReadback": false
+      }
+    },
+    {
+      "id": "2026-08-20-ndsn-swing",
+      "date": "2026-08-20",
+      "reviewedAt": "2026-09-06T16:14:15.084Z",
+      "sourcePostedAt": "2026-08-20T15:48:51.179Z",
+      "ticker": "NDSN",
+      "horizon": "Swing trade",
+      "direction": "Long",
+      "statusCode": "REVIEW_PENDING",
+      "statusLabel": "Historical idea · outcome unverified",
+      "setup": {
+        "entryCondition": "I would buy only at $326.00 after a full daily close in $318.00-$323.00, followed by a later reclaim of $326.00 from below; no entry if $313.00 trades first or the reclaim opens above $329.00.",
+        "entryZone": "$326.00",
+        "preEntryInvalidation": "no entry if $313.00 trades first or the reclaim opens above $329.00.",
+        "plannedStopAfterEntry": "$313.00.",
+        "takeProfitLevels": [
+          "$352.00.",
+          "$365.00."
+        ]
+      },
+      "rationale": {
+        "technicals": "NDSN is above its rising 20-, 50-, and 200-day averages near $307, $297, and $274. Daily RSI near 75 and ATR near $7.27 show strong but extended momentum, so the pullback-and-reclaim is mandatory.",
+        "fundamentals": "Fiscal Q3 sales reached a record $818M (+10%), adjusted EPS was $3.25 (+19%), backlog rose 35%, and management raised full-year guidance. Risk: the stock trades near 35 times trailing earnings and the catalyst gap can fade."
+      },
+      "outcome": {
+        "type": "UNKNOWN",
+        "summary": "The original published setup was recovered from a retained draft and matched to its successful delivery receipt. Subsequent entry, stop, and target events have not been verified. No trade result or P&L is assigned.",
+        "sequence": [
+          "Published on 2026-08-20; these figures and conditions are historical, not current instructions.",
+          "Publication alone does not establish that the conditional entry triggered."
+        ]
+      },
+      "lesson": "Preserve the original confirmation sequence and cancellation rules. A later price touch cannot establish an executed fill or a complete trade outcome.",
+      "riskReward": "Buying at $326.00 with a $313.00 stop risks $13.00 per share. Level 1 offers $26.00 of upside, or approximately 2.0 times the risk. Level 2 offers $39.00, or approximately 3.0 times the risk.",
+      "chartUrl": "https://www.tradingview.com/x/gMMZPcWD/",
+      "sourceMessageUrl": "https://discord.com/channels/1178077469505486868/1533596238564561007/1540024824964063277",
+      "sourceSha256": "8fde7f3253faef9e58a065d30ddf02c19019407011843a0699784ff2b773ca27",
+      "sourceText": "**🔥 SWING TRADE SETUP — NDSN**\n\n- **BUY** — I would buy only at $326.00 after a full daily close in $318.00-$323.00, followed by a later reclaim of $326.00 from below; no entry if $313.00 trades first or the reclaim opens above $329.00.\n- **STOP LOSS** — $313.00.\n- **TAKE PROFIT LEVEL 1** — $352.00.\n- **TAKE PROFIT LEVEL 2** — $365.00.\n- **TECHNICALS** — NDSN is above its rising 20-, 50-, and 200-day averages near $307, $297, and $274. Daily RSI near 75 and ATR near $7.27 show strong but extended momentum, so the pullback-and-reclaim is mandatory.\n- **FUNDAMENTALS** — Fiscal Q3 sales reached a record $818M (+10%), adjusted EPS was $3.25 (+19%), backlog rose 35%, and management raised full-year guidance. Risk: the stock trades near 35 times trailing earnings and the catalyst gap can fade.\n- **RISK/REWARD** — Buying at $326.00 with a $313.00 stop risks $13.00 per share. Level 1 offers $26.00 of upside, or approximately 2.0 times the risk. Level 2 offers $39.00, or approximately 3.0 times the risk.\n\nhttps://www.tradingview.com/x/gMMZPcWD/",
+      "sourceVerification": {
+        "method": "retained-draft-matched-to-successful-delivery-receipt",
+        "verifiedAt": "2026-09-06T16:14:15.084Z",
+        "receiptStatus": 200,
+        "nativeDiscordReadback": false
+      }
+    },
+    {
+      "id": "2026-08-20-wmt-long-term",
+      "date": "2026-08-20",
+      "reviewedAt": "2026-09-06T16:14:15.084Z",
+      "sourcePostedAt": "2026-08-20T15:49:02.849Z",
+      "ticker": "WMT",
+      "horizon": "Long-term idea",
+      "direction": "Long",
+      "statusCode": "REVIEW_PENDING",
+      "statusLabel": "Historical idea · outcome unverified",
+      "setup": {
+        "entryCondition": "I would buy only at $119.00 after a daily close above it, a $117.50-$119.00 retest within five sessions that holds $117.50, and a move back through $119.00; do not chase above $121.00.",
+        "entryZone": "$119.00",
+        "preEntryInvalidation": "No entry unless all original confirmation, timing, and maximum-entry conditions are met.",
+        "plannedStopAfterEntry": "$109.00.",
+        "takeProfitLevels": [
+          "$139.00.",
+          "$149.00."
+        ]
+      },
+      "rationale": {
+        "technicals": "Bearish now: WMT is below its 20-, 50-, and 200-day averages near $113, $114, and $119 after a high-volume gap down. RSI near 29 is oversold and ATR near $3.06 signals wide swings; reclaiming $119 is required.",
+        "fundamentals": "Q2 revenue grew 5.9%, eCommerce 23%, and advertising 38%; Walmart raised full-year sales and adjusted-EPS guidance. Risks: tariff refunds boosted profit, inventory rose 6.7%, and free cash flow fell $1.4B year over year."
+      },
+      "outcome": {
+        "type": "UNKNOWN",
+        "summary": "The original published setup was recovered from a retained draft and matched to its successful delivery receipt. Subsequent entry, stop, and target events have not been verified. No trade result or P&L is assigned.",
+        "sequence": [
+          "Published on 2026-08-20; these figures and conditions are historical, not current instructions.",
+          "Publication alone does not establish that the conditional entry triggered."
+        ]
+      },
+      "lesson": "Preserve the original confirmation sequence and cancellation rules. A later price touch cannot establish an executed fill or a complete trade outcome.",
+      "riskReward": "Buying at $119.00 with a $109.00 stop risks $10.00 per share. Level 1 offers $20.00 of upside, or approximately 2.0 times the risk. Level 2 offers $30.00, or approximately 3.0 times the risk.",
+      "chartUrl": "https://www.tradingview.com/x/ygJqhtQQ/",
+      "sourceMessageUrl": "https://discord.com/channels/1178077469505486868/1533596268146720889/1540024873076920351",
+      "sourceSha256": "61d374822a94a647e8dae08d1153b404952293ad4aff6880537a8e21f5078dcc",
+      "sourceText": "**🔥 LONG-TERM TRADE SETUP — WMT**\n\n- **BUY** — I would buy only at $119.00 after a daily close above it, a $117.50-$119.00 retest within five sessions that holds $117.50, and a move back through $119.00; do not chase above $121.00.\n- **STOP LOSS** — $109.00.\n- **TAKE PROFIT LEVEL 1** — $139.00.\n- **TAKE PROFIT LEVEL 2** — $149.00.\n- **TECHNICALS** — Bearish now: WMT is below its 20-, 50-, and 200-day averages near $113, $114, and $119 after a high-volume gap down. RSI near 29 is oversold and ATR near $3.06 signals wide swings; reclaiming $119 is required.\n- **FUNDAMENTALS** — Q2 revenue grew 5.9%, eCommerce 23%, and advertising 38%; Walmart raised full-year sales and adjusted-EPS guidance. Risks: tariff refunds boosted profit, inventory rose 6.7%, and free cash flow fell $1.4B year over year.\n- **RISK/REWARD** — Buying at $119.00 with a $109.00 stop risks $10.00 per share. Level 1 offers $20.00 of upside, or approximately 2.0 times the risk. Level 2 offers $30.00, or approximately 3.0 times the risk.\n\nhttps://www.tradingview.com/x/ygJqhtQQ/",
+      "sourceVerification": {
+        "method": "retained-draft-matched-to-successful-delivery-receipt",
+        "verifiedAt": "2026-09-06T16:14:15.084Z",
+        "receiptStatus": 200,
+        "nativeDiscordReadback": false
+      }
+    },
+    {
+      "id": "2026-08-21-bj-day",
+      "date": "2026-08-21",
+      "reviewedAt": "2026-09-06T16:14:15.084Z",
+      "sourcePostedAt": "2026-08-21T13:50:40.505Z",
+      "ticker": "BJ",
+      "horizon": "Day trade",
+      "direction": "Long",
+      "statusCode": "REVIEW_PENDING",
+      "statusLabel": "Historical idea · outcome unverified",
+      "setup": {
+        "entryCondition": "I would buy only at $96.25 after a new completed 5-minute close above $96.25 and a successful $95.90-$96.25 retest; do not chase above $96.50. Cancel if a completed 5-minute bar closes below $94.25 first or if untriggered by 9:30 AM PT.",
+        "entryZone": "$96.25",
+        "preEntryInvalidation": "Cancel if a completed 5-minute bar closes below $94.25 first or if untriggered by 9:30 AM PT.",
+        "plannedStopAfterEntry": "$94.55.",
+        "takeProfitLevels": [
+          "$98.80.",
+          "$100.50."
+        ]
+      },
+      "rationale": {
+        "technicals": "At setup creation, BJ was $95.53 above session VWAP near $94.25, and the $95.99 high had not reached the trigger. Five-minute RSI14 near 86.9 and ATR14 near $0.77 show strong but extended momentum, so the confirmed close and retest are mandatory.",
+        "fundamentals": "Fiscal Q2 revenue grew 15.7%, adjusted EPS rose 19.3% to $1.36, membership reached a record 8.5M, and management raised full-year adjusted-EPS guidance to $4.60-$4.80. Risk: merchandise gross margin fell about 20 basis points."
+      },
+      "outcome": {
+        "type": "UNKNOWN",
+        "summary": "The original published setup was recovered from a retained draft and matched to its successful delivery receipt. Subsequent entry, stop, and target events have not been verified. No trade result or P&L is assigned.",
+        "sequence": [
+          "Published on 2026-08-21; these figures and conditions are historical, not current instructions.",
+          "The original day-trade window has ended. That does not establish whether an entry or exit happened."
+        ]
+      },
+      "lesson": "Preserve the original confirmation sequence and cancellation rules. A later price touch cannot establish an executed fill or a complete trade outcome.",
+      "riskReward": "Buying at $96.25 with a $94.55 stop risks $1.70 per share. Level 1 offers $2.55 of upside, or approximately 1.5 times the risk. Level 2 offers $4.25, or approximately 2.5 times the risk.",
+      "sourceMessageUrl": "https://discord.com/channels/1178077469505486868/1533595975392952582/1540357468285042781",
+      "sourceSha256": "8b9fa776ccbca73c6586709496d6b6584f8e0d3292fa50c174abdcd629468d5e",
+      "sourceText": "**🔥 DAY TRADE SETUP — BJ**\n\n- **BUY** — I would buy only at $96.25 after a new completed 5-minute close above $96.25 and a successful $95.90-$96.25 retest; do not chase above $96.50. Cancel if a completed 5-minute bar closes below $94.25 first or if untriggered by 9:30 AM PT.\n- **STOP LOSS** — $94.55.\n- **TAKE PROFIT LEVEL 1** — $98.80.\n- **TAKE PROFIT LEVEL 2** — $100.50.\n- **TECHNICALS** — At setup creation, BJ was $95.53 above session VWAP near $94.25, and the $95.99 high had not reached the trigger. Five-minute RSI14 near 86.9 and ATR14 near $0.77 show strong but extended momentum, so the confirmed close and retest are mandatory.\n- **FUNDAMENTALS** — Fiscal Q2 revenue grew 15.7%, adjusted EPS rose 19.3% to $1.36, membership reached a record 8.5M, and management raised full-year adjusted-EPS guidance to $4.60-$4.80. Risk: merchandise gross margin fell about 20 basis points.\n- **RISK/REWARD** — Buying at $96.25 with a $94.55 stop risks $1.70 per share. Level 1 offers $2.55 of upside, or approximately 1.5 times the risk. Level 2 offers $4.25, or approximately 2.5 times the risk.",
+      "sourceVerification": {
+        "method": "retained-draft-matched-to-successful-delivery-receipt",
+        "verifiedAt": "2026-09-06T16:14:15.084Z",
+        "receiptStatus": 200,
+        "nativeDiscordReadback": false
+      }
+    },
+    {
+      "id": "2026-08-21-rost-swing",
+      "date": "2026-08-21",
+      "reviewedAt": "2026-09-06T16:14:15.084Z",
+      "sourcePostedAt": "2026-08-21T13:51:00.883Z",
+      "ticker": "ROST",
+      "horizon": "Swing trade",
+      "direction": "Long",
+      "statusCode": "REVIEW_PENDING",
+      "statusLabel": "Historical idea · outcome unverified",
+      "setup": {
+        "entryCondition": "I would buy only at $244.00 after a daily close above $244.00, a later pullback into $238.00-$241.00 that holds $238.00, and a subsequent $244.00 reclaim; cancel if $233.00 trades first or no trigger appears by September 4.",
+        "entryZone": "$244.00",
+        "preEntryInvalidation": "cancel if $233.00 trades first or no trigger appears by September 4.",
+        "plannedStopAfterEntry": "$233.00.",
+        "takeProfitLevels": [
+          "$266.00.",
+          "$277.00."
+        ]
+      },
+      "rationale": {
+        "technicals": "ROST is above its 50- and 200-day averages near $234.47 and $209.05, but below the 20-day EMA near $241.32 after its earnings gap faded from $243.86. RSI near 48 is neutral and ATR near $6.35 is elevated, so the close-pullback-reclaim sequence is mandatory.",
+        "fundamentals": "Fiscal Q2 sales rose 13% to $6.3B, comparable sales grew 10% on customer traffic, EPS reached $2.66, and management raised its second-half and fiscal-2026 outlook. Risks include roughly $0.60 of EPS from tariff refunds and inventory growth of about 18% year over year."
+      },
+      "outcome": {
+        "type": "UNKNOWN",
+        "summary": "The original published setup was recovered from a retained draft and matched to its successful delivery receipt. Subsequent entry, stop, and target events have not been verified. No trade result or P&L is assigned.",
+        "sequence": [
+          "Published on 2026-08-21; these figures and conditions are historical, not current instructions.",
+          "Publication alone does not establish that the conditional entry triggered."
+        ]
+      },
+      "lesson": "Preserve the original confirmation sequence and cancellation rules. A later price touch cannot establish an executed fill or a complete trade outcome.",
+      "riskReward": "Buying at $244.00 with a $233.00 stop risks $11.00 per share. Level 1 offers $22.00 of upside, or approximately 2.0 times the risk. Level 2 offers $33.00, or approximately 3.0 times the risk.",
+      "sourceMessageUrl": "https://discord.com/channels/1178077469505486868/1533596238564561007/1540357556915150969",
+      "sourceSha256": "441b1c8326d27c2c20ac1b47b60c425d8b1eaf49d9e637041f310f25110e1911",
+      "sourceText": "**🔥 SWING TRADE SETUP — ROST**\n\n- **BUY** — I would buy only at $244.00 after a daily close above $244.00, a later pullback into $238.00-$241.00 that holds $238.00, and a subsequent $244.00 reclaim; cancel if $233.00 trades first or no trigger appears by September 4.\n- **STOP LOSS** — $233.00.\n- **TAKE PROFIT LEVEL 1** — $266.00.\n- **TAKE PROFIT LEVEL 2** — $277.00.\n- **TECHNICALS** — ROST is above its 50- and 200-day averages near $234.47 and $209.05, but below the 20-day EMA near $241.32 after its earnings gap faded from $243.86. RSI near 48 is neutral and ATR near $6.35 is elevated, so the close-pullback-reclaim sequence is mandatory.\n- **FUNDAMENTALS** — Fiscal Q2 sales rose 13% to $6.3B, comparable sales grew 10% on customer traffic, EPS reached $2.66, and management raised its second-half and fiscal-2026 outlook. Risks include roughly $0.60 of EPS from tariff refunds and inventory growth of about 18% year over year.\n- **RISK/REWARD** — Buying at $244.00 with a $233.00 stop risks $11.00 per share. Level 1 offers $22.00 of upside, or approximately 2.0 times the risk. Level 2 offers $33.00, or approximately 3.0 times the risk.",
+      "sourceVerification": {
+        "method": "retained-draft-matched-to-successful-delivery-receipt",
+        "verifiedAt": "2026-09-06T16:14:15.084Z",
+        "receiptStatus": 200,
+        "nativeDiscordReadback": false
+      }
+    },
+    {
+      "id": "2026-08-21-v-long-term",
+      "date": "2026-08-21",
+      "reviewedAt": "2026-09-06T16:14:15.084Z",
+      "sourcePostedAt": "2026-08-21T13:51:22.795Z",
+      "ticker": "V",
+      "horizon": "Long-term idea",
+      "direction": "Long",
+      "statusCode": "REVIEW_PENDING",
+      "statusLabel": "Historical idea · outcome unverified",
+      "setup": {
+        "entryCondition": "I would buy only at $376.00 after a close above $376.00, a retest of $369.00-$376.00 within 10 sessions that holds $366.00, then a reclaim of $376.00; do not chase above $381.00. Cancel below $355.00 before entry or after September 30.",
+        "entryZone": "$376.00",
+        "preEntryInvalidation": "Cancel below $355.00 before entry or after September 30.",
+        "plannedStopAfterEntry": "$355.00.",
+        "takeProfitLevels": [
+          "$418.00.",
+          "$439.00."
+        ]
+      },
+      "rationale": {
+        "technicals": "V is above its daily 20-day EMA, 50-day SMA, and 200-day SMA near $362.91, $352.69, and $331.86, plus its weekly 20-, 50-, and 200-period averages near $344.53, $333.79, and $289.83. Daily and weekly RSI are 58.5 and 64.4; resistance at $374-$376 makes the breakout and retest mandatory.",
+        "fundamentals": "Visa's fiscal Q3 revenue rose 14% to $11.6B, payments volume grew 10%, cross-border volume excluding intra-Europe rose 12%, and processed transactions grew 10%. It returned $6.2B through buybacks and dividends; consumer weakness and regulatory pressure are the main risks."
+      },
+      "outcome": {
+        "type": "UNKNOWN",
+        "summary": "The original published setup was recovered from a retained draft and matched to its successful delivery receipt. Subsequent entry, stop, and target events have not been verified. No trade result or P&L is assigned.",
+        "sequence": [
+          "Published on 2026-08-21; these figures and conditions are historical, not current instructions.",
+          "Publication alone does not establish that the conditional entry triggered."
+        ]
+      },
+      "lesson": "Preserve the original confirmation sequence and cancellation rules. A later price touch cannot establish an executed fill or a complete trade outcome.",
+      "riskReward": "Buying at $376.00 with a $355.00 stop risks $21.00 per share. Level 1 offers $42.00 of upside, or approximately 2.0 times the risk. Level 2 offers $63.00, or approximately 3.0 times the risk.",
+      "sourceMessageUrl": "https://discord.com/channels/1178077469505486868/1533596268146720889/1540357650233950288",
+      "sourceSha256": "cccfdd29170477dbb12a06663ed22927b73b63262c2ec0fee78af43deac205e2",
+      "sourceText": "**🔥 LONG-TERM TRADE SETUP — V**\n\n- **BUY** — I would buy only at $376.00 after a close above $376.00, a retest of $369.00-$376.00 within 10 sessions that holds $366.00, then a reclaim of $376.00; do not chase above $381.00. Cancel below $355.00 before entry or after September 30.\n- **STOP LOSS** — $355.00.\n- **TAKE PROFIT LEVEL 1** — $418.00.\n- **TAKE PROFIT LEVEL 2** — $439.00.\n- **TECHNICALS** — V is above its daily 20-day EMA, 50-day SMA, and 200-day SMA near $362.91, $352.69, and $331.86, plus its weekly 20-, 50-, and 200-period averages near $344.53, $333.79, and $289.83. Daily and weekly RSI are 58.5 and 64.4; resistance at $374-$376 makes the breakout and retest mandatory.\n- **FUNDAMENTALS** — Visa's fiscal Q3 revenue rose 14% to $11.6B, payments volume grew 10%, cross-border volume excluding intra-Europe rose 12%, and processed transactions grew 10%. It returned $6.2B through buybacks and dividends; consumer weakness and regulatory pressure are the main risks.\n- **RISK/REWARD** — Buying at $376.00 with a $355.00 stop risks $21.00 per share. Level 1 offers $42.00 of upside, or approximately 2.0 times the risk. Level 2 offers $63.00, or approximately 3.0 times the risk.",
+      "sourceVerification": {
+        "method": "retained-draft-matched-to-successful-delivery-receipt",
+        "verifiedAt": "2026-09-06T16:14:15.084Z",
+        "receiptStatus": 200,
+        "nativeDiscordReadback": false
+      }
+    },
+    {
+      "id": "2026-08-24-stz-day",
+      "date": "2026-08-24",
+      "reviewedAt": "2026-09-06T16:14:15.084Z",
+      "sourcePostedAt": "2026-08-24T14:39:32.402Z",
+      "ticker": "STZ",
+      "horizon": "Day trade",
+      "direction": "Long",
+      "statusCode": "REVIEW_PENDING",
+      "statusLabel": "Historical idea · outcome unverified",
+      "setup": {
+        "entryCondition": "I would buy only at $139.35 after a completed 5-minute close above $139.30 and a $139.00-$139.35 retest that holds; do not chase above $139.60. Cancel below $137.80 before entry or if untriggered by 11:00 AM PT today.",
+        "entryZone": "$139.35",
+        "preEntryInvalidation": "Cancel below $137.80 before entry or if untriggered by 11:00 AM PT today.",
+        "plannedStopAfterEntry": "$138.55.",
+        "takeProfitLevels": [
+          "$140.55.",
+          "$141.35."
+        ]
+      },
+      "rationale": {
+        "technicals": "At 7:33 AM PT, STZ was about $138.85 (+2.3%) across Yahoo and Nasdaq, above session VWAP near $137.83. TrendSpider's authenticated 4-hour OBV breakout was active, but completed-bar 5-minute RSI14 near 87 and $139.26 prior-swing resistance make the close-and-retest mandatory.",
+        "fundamentals": "Q1 FY2027 comparable EPS rose 7%, beer net sales and operating income each rose 2%, and free cash flow rose 9% to $485M; management reaffirmed $11.20-$11.90 comparable-EPS guidance. Total reported net sales fell 3%, and no same-day company catalyst was verified."
+      },
+      "outcome": {
+        "type": "UNKNOWN",
+        "summary": "The original published setup was recovered from a retained draft and matched to its successful delivery receipt. Subsequent entry, stop, and target events have not been verified. No trade result or P&L is assigned.",
+        "sequence": [
+          "Published on 2026-08-24; these figures and conditions are historical, not current instructions.",
+          "The original day-trade window has ended. That does not establish whether an entry or exit happened."
+        ]
+      },
+      "lesson": "Preserve the original confirmation sequence and cancellation rules. A later price touch cannot establish an executed fill or a complete trade outcome.",
+      "riskReward": "Buying at $139.35 with a $138.55 stop risks $0.80 per share. Level 1 offers $1.20 of upside, or approximately 1.5 times the risk. Level 2 offers $2.00, or approximately 2.5 times the risk.",
+      "sourceMessageUrl": "https://discord.com/channels/1178077469505486868/1533595975392952582/1541456933406384198",
+      "sourceSha256": "3c081ff6bb6c2564fb1d0446a207f07d1074436647134f474706dd5a3e209bcd",
+      "sourceText": "**🔥 DAY TRADE SETUP — STZ**\n\n- **BUY** — I would buy only at $139.35 after a completed 5-minute close above $139.30 and a $139.00-$139.35 retest that holds; do not chase above $139.60. Cancel below $137.80 before entry or if untriggered by 11:00 AM PT today.\n- **STOP LOSS** — $138.55.\n- **TAKE PROFIT LEVEL 1** — $140.55.\n- **TAKE PROFIT LEVEL 2** — $141.35.\n- **TECHNICALS** — At 7:33 AM PT, STZ was about $138.85 (+2.3%) across Yahoo and Nasdaq, above session VWAP near $137.83. TrendSpider's authenticated 4-hour OBV breakout was active, but completed-bar 5-minute RSI14 near 87 and $139.26 prior-swing resistance make the close-and-retest mandatory.\n- **FUNDAMENTALS** — Q1 FY2027 comparable EPS rose 7%, beer net sales and operating income each rose 2%, and free cash flow rose 9% to $485M; management reaffirmed $11.20-$11.90 comparable-EPS guidance. Total reported net sales fell 3%, and no same-day company catalyst was verified.\n- **RISK/REWARD** — Buying at $139.35 with a $138.55 stop risks $0.80 per share. Level 1 offers $1.20 of upside, or approximately 1.5 times the risk. Level 2 offers $2.00, or approximately 2.5 times the risk.",
+      "sourceVerification": {
+        "method": "retained-draft-matched-to-successful-delivery-receipt",
+        "verifiedAt": "2026-09-06T16:14:15.084Z",
+        "receiptStatus": 200,
+        "nativeDiscordReadback": false
+      }
+    },
+    {
+      "id": "2026-08-24-clf-swing",
+      "date": "2026-08-24",
+      "reviewedAt": "2026-09-06T16:14:15.084Z",
+      "sourcePostedAt": "2026-08-24T14:39:38.157Z",
+      "ticker": "CLF",
+      "horizon": "Swing trade",
+      "direction": "Long",
+      "statusCode": "REVIEW_PENDING",
+      "statusLabel": "Historical idea · outcome unverified",
+      "setup": {
+        "entryCondition": "I would buy only at $12.10 after a 30-minute close above $12.10, a pullback that holds $11.85-$12.00, and a subsequent $12.10 reclaim; cancel if $11.35 trades first or no trigger appears by September 4.",
+        "entryZone": "$12.10",
+        "preEntryInvalidation": "cancel if $11.35 trades first or no trigger appears by September 4.",
+        "plannedStopAfterEntry": "$11.35.",
+        "takeProfitLevels": [
+          "$13.25.",
+          "$14.00."
+        ]
+      },
+      "rationale": {
+        "technicals": "CLF is above its 20-day EMA near $11.61, 50-day SMA near $11.09, and 200-day SMA near $11.36 after holding $11.75; daily RSI is near 54 and ATR near $0.74. The close-pullback-reclaim sequence avoids chasing today's gap.",
+        "fundamentals": "The DOE announced a $500M award supporting a $1B Middletown Works modernization. Q2 revenue was $5.2B, adjusted EBITDA improved to $286M from $95M in Q1, and management guided Q3 EBITDA to about $575M; steel cyclicality and execution remain risks."
+      },
+      "outcome": {
+        "type": "UNKNOWN",
+        "summary": "The original published setup was recovered from a retained draft and matched to its successful delivery receipt. Subsequent entry, stop, and target events have not been verified. No trade result or P&L is assigned.",
+        "sequence": [
+          "Published on 2026-08-24; these figures and conditions are historical, not current instructions.",
+          "Publication alone does not establish that the conditional entry triggered."
+        ]
+      },
+      "lesson": "Preserve the original confirmation sequence and cancellation rules. A later price touch cannot establish an executed fill or a complete trade outcome.",
+      "riskReward": "Buying at $12.10 with a $11.35 stop risks $0.75 per share. Level 1 offers $1.15 of upside, or approximately 1.5 times the risk. Level 2 offers $1.90, or approximately 2.5 times the risk.",
+      "sourceMessageUrl": "https://discord.com/channels/1178077469505486868/1533596238564561007/1541456955300778085",
+      "sourceSha256": "88461f5dfbff1db6d6ca9512e5a9b6017cc2dcd22cc40cd2ed2c87730aa92c84",
+      "sourceText": "**🔥 SWING TRADE SETUP — CLF**\n\n- **BUY** — I would buy only at $12.10 after a 30-minute close above $12.10, a pullback that holds $11.85-$12.00, and a subsequent $12.10 reclaim; cancel if $11.35 trades first or no trigger appears by September 4.\n- **STOP LOSS** — $11.35.\n- **TAKE PROFIT LEVEL 1** — $13.25.\n- **TAKE PROFIT LEVEL 2** — $14.00.\n- **TECHNICALS** — CLF is above its 20-day EMA near $11.61, 50-day SMA near $11.09, and 200-day SMA near $11.36 after holding $11.75; daily RSI is near 54 and ATR near $0.74. The close-pullback-reclaim sequence avoids chasing today's gap.\n- **FUNDAMENTALS** — The DOE announced a $500M award supporting a $1B Middletown Works modernization. Q2 revenue was $5.2B, adjusted EBITDA improved to $286M from $95M in Q1, and management guided Q3 EBITDA to about $575M; steel cyclicality and execution remain risks.\n- **RISK/REWARD** — Buying at $12.10 with a $11.35 stop risks $0.75 per share. Level 1 offers $1.15 of upside, or approximately 1.5 times the risk. Level 2 offers $1.90, or approximately 2.5 times the risk.",
+      "sourceVerification": {
+        "method": "retained-draft-matched-to-successful-delivery-receipt",
+        "verifiedAt": "2026-09-06T16:14:15.084Z",
+        "receiptStatus": 200,
+        "nativeDiscordReadback": false
+      }
+    },
+    {
+      "id": "2026-08-24-axon-long-term",
+      "date": "2026-08-24",
+      "reviewedAt": "2026-09-06T16:14:15.084Z",
+      "sourcePostedAt": "2026-08-24T14:39:44.489Z",
+      "ticker": "AXON",
+      "horizon": "Long-term idea",
+      "direction": "Long",
+      "statusCode": "REVIEW_PENDING",
+      "statusLabel": "Historical idea · outcome unverified",
+      "setup": {
+        "entryCondition": "I would buy only at $652.00 after a daily close above it, a pullback into $630.00-$652.00 that holds $620.00, then a $652.00 reclaim; do not chase above $665.00. Cancel below $584.00 before entry or if no trigger appears by October 2.",
+        "entryZone": "$652.00",
+        "preEntryInvalidation": "Cancel below $584.00 before entry or if no trigger appears by October 2.",
+        "plannedStopAfterEntry": "$584.00.",
+        "takeProfitLevels": [
+          "$788.00.",
+          "$856.00."
+        ]
+      },
+      "rationale": {
+        "technicals": "AXON qualified in today's saved 30% Revenue Growth TrendSpider scan. Price is above its completed daily 20-, 50-, and 200-day averages near $586, $540, and $507, plus its completed weekly 20- and 50-week averages near $475 and $540. Daily RSI near 57 supports momentum, while weekly RSI near 71 makes a confirmed $652 breakout and retest preferable to chasing.",
+        "fundamentals": "Q2 revenue rose 35% to $904M, annual recurring revenue grew 39% to $1.6B, and future contracted bookings grew 41% to $15.1B. Axon raised its 2026 revenue-growth outlook to 32%-34%. Risks include a 3.3% GAAP net margin, near-breakeven free cash flow, heavy investment, and premium-valuation volatility."
+      },
+      "outcome": {
+        "type": "UNKNOWN",
+        "summary": "The original published setup was recovered from a retained draft and matched to its successful delivery receipt. Subsequent entry, stop, and target events have not been verified. No trade result or P&L is assigned.",
+        "sequence": [
+          "Published on 2026-08-24; these figures and conditions are historical, not current instructions.",
+          "Publication alone does not establish that the conditional entry triggered."
+        ]
+      },
+      "lesson": "Preserve the original confirmation sequence and cancellation rules. A later price touch cannot establish an executed fill or a complete trade outcome.",
+      "riskReward": "Buying at $652.00 with a $584.00 stop risks $68.00 per share. Level 1 offers $136.00 of upside, or approximately 2.0 times the risk. Level 2 offers $204.00, or approximately 3.0 times the risk.",
+      "sourceMessageUrl": "https://discord.com/channels/1178077469505486868/1533596268146720889/1541456980495835236",
+      "sourceSha256": "2815ade014b89a3520dd08e02a26d8a4267e2a4bbc32daa336d3c5b367239bcf",
+      "sourceText": "**🔥 LONG-TERM TRADE SETUP — AXON**\n\n- **BUY** — I would buy only at $652.00 after a daily close above it, a pullback into $630.00-$652.00 that holds $620.00, then a $652.00 reclaim; do not chase above $665.00. Cancel below $584.00 before entry or if no trigger appears by October 2.\n- **STOP LOSS** — $584.00.\n- **TAKE PROFIT LEVEL 1** — $788.00.\n- **TAKE PROFIT LEVEL 2** — $856.00.\n- **TECHNICALS** — AXON qualified in today's saved 30% Revenue Growth TrendSpider scan. Price is above its completed daily 20-, 50-, and 200-day averages near $586, $540, and $507, plus its completed weekly 20- and 50-week averages near $475 and $540. Daily RSI near 57 supports momentum, while weekly RSI near 71 makes a confirmed $652 breakout and retest preferable to chasing.\n- **FUNDAMENTALS** — Q2 revenue rose 35% to $904M, annual recurring revenue grew 39% to $1.6B, and future contracted bookings grew 41% to $15.1B. Axon raised its 2026 revenue-growth outlook to 32%-34%. Risks include a 3.3% GAAP net margin, near-breakeven free cash flow, heavy investment, and premium-valuation volatility.\n- **RISK/REWARD** — Buying at $652.00 with a $584.00 stop risks $68.00 per share. Level 1 offers $136.00 of upside, or approximately 2.0 times the risk. Level 2 offers $204.00, or approximately 3.0 times the risk.",
+      "sourceVerification": {
+        "method": "retained-draft-matched-to-successful-delivery-receipt",
+        "verifiedAt": "2026-09-06T16:14:15.084Z",
+        "receiptStatus": 200,
+        "nativeDiscordReadback": false
+      }
+    },
+    {
       "id": "2026-08-25-smci-day",
       "date": "2026-08-25",
       "reviewedAt": "2026-09-04T16:26:15.501Z",
@@ -2647,6 +3049,6 @@ window.DISCORD_RESEARCH_SYNC = {
     sync.setupReviews.forEach(function (review) {
       if (!journal.reviews.some(function (existing) { return existing.id === review.id; })) journal.reviews.push(review);
     });
-    journal.updatedAt = sync.reviewedAt;
+    journal.updatedAt = sync.setupReviewedAt || sync.reviewedAt;
   }
 })(window);

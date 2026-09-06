@@ -63,15 +63,42 @@ automated schedules were introduced.
 - No new browser visual QA was performed for this data-only update. The Mac
   was locked; prior design-release visual QA is not a new test result.
 
+## Subsequent same-day setup source recovery
+
+Nine exact missing bodies were subsequently recovered from retained pre-send
+drafts. Root independently normalized each body, restored its original role
+prefix, and reproduced the full SHA-256 in both its reservation and successful
+HTTP 200 delivery receipt. The message ID, channel, and permalink also matched.
+
+- August 20: COIN (day), NDSN (swing), WMT (long term).
+- August 21: BJ (day), ROST (swing), V (long term).
+- August 24: STZ (day), CLF (swing), AXON (long term).
+
+`data/discord-research-sync.js` now imports these original plans with exact buy,
+stop, targets, technical/fundamental rationale, risk/reward, source body, source
+link, and receipt hash. Three chart URLs actually present in the source bodies
+were retained; no charts were invented for the other six. All nine are
+`REVIEW_PENDING` / `UNKNOWN`, explicitly historical, and not portfolio holdings.
+The exact recovery method and lack of fresh native Discord readback are retained.
+
+The journal has 39 records: 38 need lifecycle follow-up, while the previously
+resolved AMLX invalidation remains unchanged. Recovery of source text does not
+establish a fill, stop, target hit, or win rate. Research dates stay September 4;
+setup source verification has its own September 6 timestamp.
+
+Additional verification: all 96 tests passed, including source hash reproduction,
+verbatim field matching, idempotent identities, preserved portfolio data, and
+no inferred trade-execution fields. All nine new static pages were checked for
+their source links and unverified-outcome labels. The 134-file public build was
+deployed only to chartchamp, and every remote file hash matched at
+`2026-09-06T16:17:07.330Z`. Friday closing quote timestamps remained unchanged.
+
+The source queue and full exact bodies are preserved in the Discord Automations
+project at `research/2026-09-06-setup-source-readback-queue.md`.
+
 ## Remaining work and no-send boundary
 
-Nine older Discord setup bodies still require authenticated readback. Existing
-delivery receipts prove successful posting but cannot establish their tickers,
-trade conditions, or outcomes. Keep them unverified; do not infer fills from
-price movements. Research dates and setup outcomes were not advanced by this
-quote refresh.
-
-Discord instruction edits, detailed archive/VIP checks, and naturally arriving
-RSS delivery verification remain pending Mac unlock and source access in the
+Outcome follow-ups, Discord instruction edits, detailed archive/VIP checks,
+and naturally arriving RSS delivery verification remain pending Mac unlock in the
 Discord Automations project. No test, announcement, replay, or other Discord
 message was sent. The combined announcement remains a separate draft.

@@ -29,19 +29,23 @@ Generated output and private runtime receipts are ignored by Git.
   preserved. These are dated closing prices, not live Sunday quotes.
   The source timestamp determines the session label, not retrieval time.
 - Research merges the August baseline and reviewed Discord sync: 82 tickers.
-- 30 setup records: unverified or overdue states are explicit. Missing outcome
+- 39 setup records: unverified or overdue states are explicit. Missing outcome
   evidence must never be replaced with inferred fills or a synthetic win rate.
-- Nine older setup source bodies await readback. Many chart updates lack a
-  Discord permalink; retained transcription hashes are identified as such.
+- Nine older setup source bodies were recovered and hash-matched to their
+  successful delivery receipts. The journal now includes COIN/NDSN/WMT (Aug 20),
+  BJ/ROST/V (Aug 21), and STZ/CLF/AXON (Aug 24), with original source links and
+  explicitly unknown outcomes. Live Discord follow-up readback is still pending.
+  Many research chart updates still lack a Discord permalink; retained
+  transcription hashes are identified as such.
 - Chart return starts at the June 25 close; headline return starts May 22.
 - Retired AI portfolio artifacts and raw Watchlists tracker are excluded from
   publication. Old Watchlists URLs redirect to Research.
 
 ## September 6 closing-price follow-up
 
-The user-authorized dated closing snapshot is published and all 125 public
-file hashes were verified at 2026-09-06T16:08:42Z. All 95 tests passed. See
-`docs/2026-09-06-closing-price-refresh.md` for validation and remaining gaps.
+The user-authorized closing snapshot and nine recovered setups are published.
+All 134 public file hashes were verified at 2026-09-06T16:17:07Z. All 96 tests
+passed. See `docs/2026-09-06-closing-price-refresh.md` for validation and gaps.
 The normal actual-time release validator correctly returned a weekend skip;
 its safeguards and the retired posting schedules were not changed. Do not
 treat the historical Friday-close validation as current-day freshness.

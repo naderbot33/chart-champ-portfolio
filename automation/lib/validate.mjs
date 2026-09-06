@@ -27,6 +27,29 @@ function validateDraftShape(draft, channel, issues) {
   if (!draft.content || !draft.content.trim()) {
     issues.push(issue("MESSAGE_EMPTY", "Discord content cannot be empty."));
   }
+  if (
+    channel?.notificationRoleId &&
+    !draft.content?.trimStart().startsWith(`<@&${channel.notificationRoleId}>`)
+  ) {
+    issues.push(
+      issue(
+        "ROLE_MENTION_MISSING",
+        `Discord content must begin with the configured ${channel.key} notification role.`
+      )
+    );
+  }
+  if (
+    draft.dryRun === false &&
+    channel?.notificationRoleName &&
+    !channel?.notificationRoleId
+  ) {
+    issues.push(
+      issue(
+        "ROLE_CONFIGURATION_MISSING",
+        `Live delivery requires a verified role ID for @${channel.notificationRoleName}.`
+      )
+    );
+  }
   const contentLimit = channel?.limits?.messageCharacters || DISCORD_CONTENT_LIMIT;
   const characterCount = discordCharacterCount(draft.content || "");
   if (characterCount > contentLimit) {
@@ -150,6 +173,18 @@ function validateSidekick(validation, defaults, context, issues) {
   }
 }
 
+function validateTrendSpiderSession(validation, context, issues) {
+  if (!validation.requiresTrendSpiderSession) return;
+  if (context.trendspider?.tabCount !== 1) {
+    issues.push(
+      issue(
+        "TRENDSPIDER_SESSION_CONFLICT",
+        "Exactly one TrendSpider Chrome tab must be active for this dispatch."
+      )
+    );
+  }
+}
+
 function validateScanner(validation, context, issues) {
   if (!validation.requiresScannerSafety) return;
   if (context.scanner?.unsavedChangesWarning !== false) {
@@ -160,6 +195,14 @@ function validateScanner(validation, context, issues) {
   }
   if (!Array.isArray(context.scanner?.scannersRun) || context.scanner.scannersRun.length === 0) {
     issues.push(issue("SCANNER_RUNS_MISSING", "The scanners actually run must be recorded."));
+  }
+  if (context.scanner?.trendspiderTabCount !== 1) {
+    issues.push(
+      issue(
+        "TRENDSPIDER_SESSION_CONFLICT",
+        "Exactly one TrendSpider Chrome tab must be active for a scanner dispatch."
+      )
+    );
   }
 }
 
@@ -184,6 +227,7 @@ export function validateForDispatch({
   validateMarket(draft, validation, context, timezone, issues);
   validateSource(validation, context, issues);
   validateSidekick(validation, defaults, context, issues);
+  validateTrendSpiderSession(validation, context, issues);
   validateScanner(validation, context, issues);
   return { ok: issues.length === 0, issues };
 }

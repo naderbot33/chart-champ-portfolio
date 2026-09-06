@@ -5,52 +5,104 @@
     {
       "channel": "public-portfolio",
       "owner": "github-actions",
-      "days": ["MO", "TU", "WE", "TH", "FR"],
-      "times": ["06:35", "13:05"],
+      "days": [
+        "MO",
+        "TU",
+        "WE",
+        "TH",
+        "FR"
+      ],
+      "times": [
+        "06:35",
+        "13:05"
+      ],
       "skipWhenUsEquityMarketClosed": true
     },
     {
       "channel": "trending-tickers",
       "owner": "codex-browser",
-      "days": ["MO", "TU", "WE", "TH", "FR"],
-      "times": ["06:45", "13:15"],
+      "days": [
+        "MO",
+        "TU",
+        "WE",
+        "TH",
+        "FR"
+      ],
+      "times": [
+        "06:45",
+        "13:15"
+      ],
       "skipWhenUsEquityMarketClosed": true
     },
     {
       "channel": "market-briefs",
       "owner": "codex-browser",
-      "days": ["MO", "TU", "WE", "TH", "FR"],
-      "times": ["07:00"],
+      "days": [
+        "MO",
+        "TU",
+        "WE",
+        "TH",
+        "FR"
+      ],
+      "times": [
+        "07:00"
+      ],
       "skipWhenUsEquityMarketClosed": false,
       "closedMarketRule": "Post only when material non-U.S. or global information exists."
     },
     {
       "channel": "market-scanners",
       "owner": "codex-browser",
-      "days": ["MO", "TU", "WE", "TH", "FR"],
-      "times": ["07:20", "13:30"],
+      "days": [
+        "MO",
+        "TU",
+        "WE",
+        "TH",
+        "FR"
+      ],
+      "times": [
+        "07:20"
+      ],
       "skipWhenUsEquityMarketClosed": true
     },
     {
       "channel": "economic-data",
       "owner": "codex-browser",
-      "days": ["MO", "WE", "FR"],
-      "times": ["07:40"],
+      "days": [
+        "MO",
+        "WE",
+        "FR"
+      ],
+      "times": [
+        "07:40"
+      ],
       "skipWhenUsEquityMarketClosed": false,
       "closedMarketRule": "Post only when a material release exists."
     },
     {
       "channel": "options-flow",
       "owner": "codex-browser",
-      "days": ["MO", "TU", "WE", "TH", "FR"],
-      "times": ["10:00"],
+      "days": [
+        "MO",
+        "TU",
+        "WE",
+        "TH",
+        "FR"
+      ],
+      "times": [
+        "10:00"
+      ],
       "skipWhenUsEquityMarketClosed": true
     },
     {
       "channel": "insider-trades",
       "owner": "codex-browser",
-      "days": ["FR"],
-      "times": ["13:45"],
+      "days": [
+        "FR"
+      ],
+      "times": [
+        "13:45"
+      ],
       "skipWhenUsEquityMarketClosed": true
     }
   ],
@@ -61,13 +113,23 @@
         "Minervini VCP Base Breakout",
         "Darvas Box Breakout"
       ],
-      "mondayWednesdayFriday": ["Turtle Long Entry"]
+      "mondayWednesdayFriday": [
+        "Turtle Long Entry"
+      ]
     },
     "closing": {
-      "everyRun": ["Minervini VCP Detector"],
-      "tuesdayThursday": ["Trend Template Perfect Score"],
-      "mondayWednesdayFriday": ["CAN SLIM NYSE"],
-      "fridayOnly": ["Quality Compounder"]
+      "everyRun": [
+        "Minervini VCP Detector"
+      ],
+      "tuesdayThursday": [
+        "Trend Template Perfect Score"
+      ],
+      "mondayWednesdayFriday": [
+        "CAN SLIM NYSE"
+      ],
+      "fridayOnly": [
+        "Quality Compounder"
+      ]
     },
     "safety": "Use saved or subscribed scanners only. Never edit definitions or continue through an unsaved-changes warning."
   }

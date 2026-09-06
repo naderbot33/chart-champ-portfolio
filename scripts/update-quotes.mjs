@@ -26,6 +26,7 @@ const USER_AGENT =
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 const roundPrice = (value) => Math.round(Number(value) * 10000) / 10000;
 const isFiniteNumber = (value) => Number.isFinite(Number(value));
+const isPositiveNumber = (value) => isFiniteNumber(value) && Number(value) > 0;
 const isoDay = (unixSeconds) => new Date(unixSeconds * 1000).toISOString().slice(0, 10);
 
 function loadAppData() {
@@ -111,7 +112,7 @@ function normalizeYahooChart(ticker, result) {
   const rows = new Map();
 
   timestamps.forEach((timestamp, index) => {
-    if (!isFiniteNumber(timestamp) || !isFiniteNumber(closes[index])) return;
+    if (!isFiniteNumber(timestamp) || !isPositiveNumber(closes[index])) return;
     rows.set(isoDay(timestamp), {
       date: isoDay(timestamp),
       close: roundPrice(closes[index])
@@ -120,7 +121,7 @@ function normalizeYahooChart(ticker, result) {
 
   const marketTime = Number(meta.regularMarketTime ?? timestamps.at(-1));
   const last = Number(meta.regularMarketPrice ?? closes.at(-1));
-  if (!isFiniteNumber(marketTime) || !isFiniteNumber(last)) {
+  if (!isFiniteNumber(marketTime) || !isPositiveNumber(last)) {
     throw new Error(`Yahoo Finance returned no current regular-market quote for ${ticker}`);
   }
 
@@ -128,7 +129,12 @@ function normalizeYahooChart(ticker, result) {
   rows.set(lastDay, { date: lastDay, close: roundPrice(last) });
   const history = Array.from(rows.values()).sort((a, b) => a.date.localeCompare(b.date));
   const precedingClose = [...history].reverse().find((row) => row.date < lastDay)?.close;
-  const prevClose = Number(meta.previousClose ?? precedingClose ?? meta.chartPreviousClose ?? last);
+  const prevClose = [
+    meta.previousClose,
+    precedingClose,
+    meta.chartPreviousClose,
+    last
+  ].map(Number).find(isPositiveNumber);
 
   return {
     ticker: String(meta.symbol || ticker).toUpperCase(),
@@ -158,12 +164,28 @@ async function main() {
   const holdings = portfolio.holdings ?? [];
   const tickers = [...new Set(
     holdings
-      .filter((holding) => holding?.ticker && holding.assetClass !== "Cash")
+      .filter((holding) =>
+        holding?.ticker &&
+        holding.assetClass !== "Cash" &&
+        holding.closed !== true &&
+        Number(holding.shares) > 0
+      )
+      .map((holding) => String(holding.ticker).toUpperCase())
+  )];
+  const closedTickers = [...new Set(
+    holdings
+      .filter((holding) =>
+        holding?.ticker &&
+        holding.assetClass !== "Cash" &&
+        (holding.closed === true || Number(holding.shares) <= 0)
+      )
       .map((holding) => String(holding.ticker).toUpperCase())
   )];
   const benchmarkTicker = String(portfolio.benchmarkTicker || "").toUpperCase();
 
-  if (!tickers.length) throw new Error("No quote-enabled holdings were found in data/app-data.js");
+  if (!tickers.length) {
+    throw new Error("No quote-enabled holdings were found in the community portfolio");
+  }
 
   const prices = {};
   const failures = [];
@@ -183,6 +205,13 @@ async function main() {
       } else {
         console.warn(`${ticker}: ${error.message}; no previous quote is available`);
       }
+    }
+  }
+
+  for (const ticker of closedTickers) {
+    if (previous.prices[ticker]) {
+      prices[ticker] = { ...previous.prices[ticker], closed: true };
+      console.log(`${ticker}: retained historical quote series for closed position`);
     }
   }
 
@@ -207,7 +236,7 @@ async function main() {
   }
 
   const holdingSourceTimes = Object.values(prices)
-    .filter((quote) => !quote.stale && Number.isFinite(Date.parse(quote.asOf)))
+    .filter((quote) => !quote.stale && !quote.closed && Number.isFinite(Date.parse(quote.asOf)))
     .map((quote) => Date.parse(quote.asOf));
   const sourceTimestamp = holdingSourceTimes.length
     ? new Date(Math.min(...holdingSourceTimes)).toISOString()

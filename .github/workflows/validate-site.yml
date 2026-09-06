@@ -25,6 +25,8 @@ jobs:
         run: |
           node --check assets/app.js
           node --check data/app-data.js
+          node --check data/trade-setup-reviews.js
+          node --check data/discord-research-sync.js
           node --check data/portfolio-data.js
           node --check data/live-prices.js
           node --check scripts/update-quotes.mjs
@@ -43,6 +45,8 @@ jobs:
         run: node scripts/validate-watchlist-data.mjs
       - name: Run automation safety tests
         run: node --test tests/*.test.mjs
+      - name: Build explicit public release
+        run: node scripts/build-site.mjs
       - name: Validate portfolio snapshot structure and dry-run summary
         shell: bash
         run: |

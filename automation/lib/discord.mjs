@@ -40,13 +40,18 @@ export async function verifyWebhookBinding(
   return { ok: issues.length === 0, issues, metadata };
 }
 
-export async function postDiscordWebhook(webhookUrl, content, { fetchImpl = fetch } = {}) {
+export async function postDiscordWebhook(
+  webhookUrl,
+  content,
+  { fetchImpl = fetch, allowedRoleIds = [] } = {}
+) {
   const target = new URL(webhookUrl);
   target.searchParams.set("wait", "true");
+  const roles = [...new Set(allowedRoleIds.map(String))].filter((id) => /^\d{17,20}$/.test(id));
   const response = await fetchImpl(target.toString(), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content, allowed_mentions: { parse: [] } }),
+    body: JSON.stringify({ content, allowed_mentions: { parse: [], roles } }),
     signal: requestSignal()
   });
   if (!response.ok) throw await responseError(response, "Discord delivery");

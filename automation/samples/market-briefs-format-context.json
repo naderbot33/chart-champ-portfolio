@@ -1,0 +1,22 @@
+{
+  "chrome": {
+    "connected": true,
+    "extensionAvailable": true,
+    "signedIn": { "trendspider": true }
+  },
+  "trendspider": {
+    "tabCount": 1
+  },
+  "market": {
+    "sessionDate": "2026-07-10",
+    "materialNonUs": true
+  },
+  "source": {
+    "itemCount": 5,
+    "materialItemsOnly": true,
+    "timeSensitiveClaimsCrossChecked": true
+  },
+  "sidekick": {
+    "messagesRemaining": 485
+  }
+}

@@ -15,15 +15,21 @@
       "name": "ChartChamp Trending Tickers - Open",
       "channel": "trending-tickers",
       "rrule": "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;BYHOUR=6;BYMINUTE=45",
-      "promptFile": "prompts/trending-tickers-open.md",
+      "promptFile": "../../../automation/prompts/trending-tickers-open.md",
       "model": "gpt-5.6-terra",
       "reasoningEffort": "medium",
       "validation": {
         "freshnessMinutes": 30,
         "marketDependent": true,
-        "requiredSites": ["yahoo"],
-        "sourceMaximums": {"itemCount": 4},
-        "requiredSourceFlags": ["catalystsVerified"]
+        "requiredSites": [
+          "yahoo"
+        ],
+        "sourceMaximums": {
+          "itemCount": 4
+        },
+        "requiredSourceFlags": [
+          "catalystsVerified"
+        ]
       }
     },
     {
@@ -31,15 +37,21 @@
       "name": "ChartChamp Trending Tickers - Close",
       "channel": "trending-tickers",
       "rrule": "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;BYHOUR=13;BYMINUTE=15",
-      "promptFile": "prompts/trending-tickers-close.md",
+      "promptFile": "../../../automation/prompts/trending-tickers-close.md",
       "model": "gpt-5.6-terra",
       "reasoningEffort": "medium",
       "validation": {
         "freshnessMinutes": 30,
         "marketDependent": true,
-        "requiredSites": ["yahoo"],
-        "sourceMaximums": {"itemCount": 4},
-        "requiredSourceFlags": ["catalystsVerified"]
+        "requiredSites": [
+          "yahoo"
+        ],
+        "sourceMaximums": {
+          "itemCount": 4
+        },
+        "requiredSourceFlags": [
+          "catalystsVerified"
+        ]
       }
     },
     {
@@ -47,18 +59,26 @@
       "name": "ChartChamp Global Market Brief",
       "channel": "market-briefs",
       "rrule": "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;BYHOUR=7;BYMINUTE=0",
-      "promptFile": "prompts/market-briefs-daily.md",
+      "promptFile": "../../../automation/prompts/market-briefs-daily.md",
       "model": "gpt-5.6-terra",
       "reasoningEffort": "high",
       "validation": {
         "freshnessMinutes": 90,
         "marketDependent": true,
         "allowClosedMarketWhenMaterial": true,
-        "requiredSites": ["trendspider"],
+        "requiredSites": [
+          "trendspider"
+        ],
         "requiresSidekick": true,
         "estimatedSidekickMessages": 1,
-        "sourceMaximums": {"itemCount": 6},
-        "requiredSourceFlags": ["materialItemsOnly"]
+        "sourceMaximums": {
+          "itemCount": 6
+        },
+        "requiredSourceFlags": [
+          "materialItemsOnly",
+          "timeSensitiveClaimsCrossChecked"
+        ],
+        "requiresTrendSpiderSession": true
       }
     },
     {
@@ -66,37 +86,51 @@
       "name": "ChartChamp Market Scanners - Open",
       "channel": "market-scanners",
       "rrule": "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;BYHOUR=7;BYMINUTE=20",
-      "promptFile": "prompts/market-scanners-open.md",
+      "promptFile": "../../../automation/prompts/market-scanners-open.md",
       "model": "gpt-5.6-terra",
       "reasoningEffort": "high",
       "validation": {
         "freshnessMinutes": 30,
         "marketDependent": true,
-        "requiredSites": ["trendspider"],
+        "requiredSites": [
+          "trendspider"
+        ],
         "requiresSidekick": true,
         "estimatedSidekickMessages": 1,
         "requiresScannerSafety": true,
-        "sourceMaximums": {"itemCount": 5},
-        "requiredSourceFlags": ["actualScannerResults"]
-      }
+        "sourceMaximums": {
+          "itemCount": 5
+        },
+        "requiredSourceFlags": [
+          "actualScannerResults"
+        ]
+      },
+      "status": "ACTIVE",
+      "deliveryMode": "live"
     },
     {
       "id": "market-scanners-close",
       "name": "ChartChamp Market Scanners - Close",
       "channel": "market-scanners",
       "rrule": "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;BYHOUR=13;BYMINUTE=30",
-      "promptFile": "prompts/market-scanners-close.md",
+      "promptFile": "../../../automation/prompts/market-scanners-close.md",
       "model": "gpt-5.6-terra",
       "reasoningEffort": "high",
       "validation": {
         "freshnessMinutes": 30,
         "marketDependent": true,
-        "requiredSites": ["trendspider"],
+        "requiredSites": [
+          "trendspider"
+        ],
         "requiresSidekick": true,
         "estimatedSidekickMessages": 1,
         "requiresScannerSafety": true,
-        "sourceMaximums": {"itemCount": 5},
-        "requiredSourceFlags": ["actualScannerResults"]
+        "sourceMaximums": {
+          "itemCount": 5
+        },
+        "requiredSourceFlags": [
+          "actualScannerResults"
+        ]
       }
     },
     {
@@ -104,18 +138,25 @@
       "name": "ChartChamp Economic Data - MWF",
       "channel": "economic-data",
       "rrule": "FREQ=WEEKLY;BYDAY=MO,WE,FR;BYHOUR=7;BYMINUTE=40",
-      "promptFile": "prompts/economic-data-mwf.md",
+      "promptFile": "../../../automation/prompts/economic-data-mwf.md",
       "model": "gpt-5.6-terra",
       "reasoningEffort": "high",
       "validation": {
         "freshnessMinutes": 180,
         "marketDependent": true,
         "allowClosedMarketWhenMaterial": true,
-        "requiredSites": ["trendspider"],
+        "requiredSites": [
+          "trendspider"
+        ],
         "requiresSidekick": true,
         "estimatedSidekickMessages": 1,
-        "sourceMaximums": {"itemCount": 6},
-        "requiredSourceFlags": ["officialReleaseVerified", "materialItemsOnly"]
+        "sourceMaximums": {
+          "itemCount": 6
+        },
+        "requiredSourceFlags": [
+          "officialReleaseVerified",
+          "materialItemsOnly"
+        ]
       }
     },
     {
@@ -123,17 +164,24 @@
       "name": "ChartChamp Options Flow",
       "channel": "options-flow",
       "rrule": "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;BYHOUR=10;BYMINUTE=0",
-      "promptFile": "prompts/options-flow-daily.md",
+      "promptFile": "../../../automation/prompts/options-flow-daily.md",
       "model": "gpt-5.6-terra",
       "reasoningEffort": "high",
       "validation": {
         "freshnessMinutes": 30,
         "marketDependent": true,
-        "requiredSites": ["trendspider"],
+        "requiredSites": [
+          "trendspider"
+        ],
         "requiresSidekick": true,
         "estimatedSidekickMessages": 1,
-        "sourceMaximums": {"bullishCount": 3, "bearishCount": 3},
-        "requiredSourceFlags": ["intentUncertaintyLabeled"]
+        "sourceMaximums": {
+          "bullishCount": 3,
+          "bearishCount": 3
+        },
+        "requiredSourceFlags": [
+          "intentUncertaintyLabeled"
+        ]
       }
     },
     {
@@ -141,17 +189,24 @@
       "name": "ChartChamp Insider Trades - Weekly",
       "channel": "insider-trades",
       "rrule": "FREQ=WEEKLY;BYDAY=FR;BYHOUR=13;BYMINUTE=45",
-      "promptFile": "prompts/insider-trades-weekly.md",
+      "promptFile": "../../../automation/prompts/insider-trades-weekly.md",
       "model": "gpt-5.6-terra",
       "reasoningEffort": "high",
       "validation": {
         "freshnessMinutes": 180,
         "marketDependent": true,
-        "requiredSites": ["trendspider"],
+        "requiredSites": [
+          "trendspider"
+        ],
         "requiresSidekick": true,
         "estimatedSidekickMessages": 1,
-        "sourceMaximums": {"itemCount": 5},
-        "requiredSourceFlags": ["form4sVerified", "sevenDayWindow"]
+        "sourceMaximums": {
+          "itemCount": 5
+        },
+        "requiredSourceFlags": [
+          "form4sVerified",
+          "sevenDayWindow"
+        ]
       }
     }
   ]

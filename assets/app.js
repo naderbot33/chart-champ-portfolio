@@ -2,6 +2,7 @@
   "use strict";
 
   var DATA = window.APP_DATA;
+  var MODEL = window.ChartChampModel;
   if (!DATA) {
     console.error("APP_DATA failed to load.");
     return;
@@ -20,6 +21,11 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
   };
+
+  var BASE_PORTFOLIO = DATA.portfolio;
+  var REVIEW_DATA = window.TRADE_SETUP_REVIEWS;
+  var SETUP_REVIEWS = REVIEW_DATA && REVIEW_DATA.schemaVersion === 1 &&
+    Array.isArray(REVIEW_DATA.reviews) ? REVIEW_DATA.reviews : [];
   var money = function (v) {
     return new Intl.NumberFormat("en-US", {
       style: "currency", currency: "USD", maximumFractionDigits: 2
@@ -29,6 +35,23 @@
     if (Math.abs(v) < 0.005) v = 0; // snap sub-rounding noise to flat
     var s = v > 0 ? "+" : "";
     return s + v.toFixed(2) + "%";
+  };
+  var monthlyPct = function (v) {
+    if (Math.abs(v) < 0.005) v = 0;
+    var digits = Math.abs(v) < 0.1 ? 2 : 1;
+    return (v > 0 ? "+" : "") + v.toFixed(digits) + "%";
+  };
+  var monthlyPrice = function (update) {
+    if (!update || typeof update.lastClose !== "number") return "—";
+    if (update.sourceSymbol === "^VIX") {
+      return new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(update.lastClose);
+    }
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: update.lastClose < 0.1 ? 4 : 2,
+      maximumFractionDigits: update.lastClose < 0.1 ? 4 : 2
+    }).format(update.lastClose);
   };
   var tone = function (v) {
     if (Math.abs(v) < 0.005) return "neutral";
@@ -45,6 +68,15 @@
   var tradingViewUrl = function (value) {
     var url = String(value || "").trim();
     return /^https:\/\/(?:www\.)?tradingview\.com\//i.test(url) ? url : "";
+  };
+  var postedChartChannel = function (value) {
+    var channel = String(value || "stocks").toLowerCase();
+    return [
+      "stocks", "crypto", "bonds", "commodities",
+      "ai-day-trading", "ai-swing-trading", "ai-long-term-investing"
+    ].indexOf(channel) !== -1
+      ? channel
+      : "stocks";
   };
   var dateInZone = function (value, timeZone) {
     var d = value instanceof Date ? value : new Date(value);
@@ -77,7 +109,8 @@
 
   function applyLivePrices() {
     if (!LIVE || !LIVE.prices) return;
-    (DATA.portfolio.holdings || []).forEach(function (h) {
+    (BASE_PORTFOLIO.holdings || []).forEach(function (h) {
+      if (h.closed === true) return;
       var q = LIVE.prices[h.ticker];
       if (!q || typeof q.last !== "number") return;
       h.hasQuote = true;
@@ -94,7 +127,7 @@
     if (isNaN(d.getTime())) return "";
     return new Intl.DateTimeFormat("en-US", {
       month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
-      timeZone: "America/New_York", timeZoneName: "short"
+      timeZone: "America/Los_Angeles", timeZoneName: "short"
     }).format(d);
   }
 
@@ -261,8 +294,9 @@
     var first = points[0];
     var last = points[points.length - 1];
 
-    caption.textContent = "Cash-aware daily closes from " + fmtDate(series.start) +
-      ". Positions added later remain cash until entry. " +
+    caption.textContent = "Daily-close return since " + fmtDate(series.start) +
+      " (starting chart value " + money(first ? first.portfolio : p.startingValue) +
+      "). The summary above measures return since inception, a different period. Positions added later remain cash until entry. " +
       (series.hasBenchmark
         ? series.benchmarkTicker + " is normalized to the portfolio's starting chart value."
         : series.benchmarkTicker + " data is unavailable in this snapshot, so the portfolio is shown alone.");
@@ -281,7 +315,7 @@
       : 0;
     legend.innerHTML =
       '<span class="series-key portfolio"><span class="series-swatch" aria-hidden="true"></span>' +
-        '<span><strong>Portfolio</strong><span>' + money(last.portfolio) + " · " + pct(portfolioChange) + "</span></span></span>" +
+        '<span><strong>Portfolio · chart period</strong><span>' + money(last.portfolio) + " · " + pct(portfolioChange) + "</span></span></span>" +
       (series.hasBenchmark
         ? '<span class="series-key benchmark"><span class="series-swatch" aria-hidden="true"></span>' +
           '<span><strong>' + esc(series.benchmarkTicker) + "</strong><span>" +
@@ -456,6 +490,7 @@
     var p = DATA.portfolio;
     var holdings = p.holdings || [];
 
+    $("#portfolio-title").textContent = "Community Portfolio";
     $("#portfolio-lead").textContent = p.displayNote || "";
     $("#portfolio-disclaimer").textContent = p.disclaimer || "";
 
@@ -468,7 +503,10 @@
     var totalReturnAbs = snapMoney(totalValue - p.startingValue);
     var totalReturnPct = p.startingValue ? (totalReturnAbs / p.startingValue) * 100 : 0;
 
-    var investedHoldings = holdings.filter(function (h) { return h.assetClass !== "Cash"; });
+    var investedHoldings = holdings.filter(function (h) {
+      return h.assetClass !== "Cash" && h.closed !== true && Number(h.shares) > 0;
+    });
+    var cashHoldings = holdings.filter(function (h) { return h.assetClass === "Cash"; });
     // Day change weighted by previous-close value: recover each position's prior
     // value from its day % (mv / (1 + day%)), then measure the sleeve's move.
     var dayWeighted = 0;
@@ -505,7 +543,7 @@
 
     $("#m-positions").textContent = String(investedHoldings.length);
     $("#m-positions-sub").textContent =
-      investedHoldings.length + " active · " + (holdings.length - investedHoldings.length) + " cash reserve";
+      investedHoldings.length + " active · " + cashHoldings.length + " cash reserve";
 
     // split bar
     var invPct = totalValue ? (investedValue / totalValue) * 100 : 0;
@@ -532,13 +570,13 @@
       '<span class="pct">' + cashPct.toFixed(1) + "% of portfolio · dry powder</span></div>";
 
     renderPerformanceChart(p, holdings);
-    renderContributionChart(investedHoldings);
+    renderContributionChart(holdings);
 
     // positions card grid (hero: % since entry)
     var noteEl = $("#snapshot-note");
     if (noteEl) {
       noteEl.textContent = quoteSourceTimestamp
-        ? "Prices as of " + fmtSnapshotTime(quoteSourceTimestamp) + " · refreshed twice each weekday"
+        ? "Market snapshot · " + fmtSnapshotTime(quoteSourceTimestamp) + " · not a live quote feed"
         : "Prices shown at entry until the first quote snapshot runs.";
     }
     // Label day moves "today" only when the snapshot is from today (US-Eastern).
@@ -603,6 +641,7 @@
       var rpct = holdingReturnPct(h);
       var weight = totalValue ? (mv / totalValue) * 100 : 0;
       var isCash = h.assetClass === "Cash";
+      var isClosed = h.closed === true || (!isCash && Number(h.shares) <= 0);
       var linkable = !!h.researchKey;
       var classTag = isCash ? "tag cash" : (h.marketSegment === "Hedge" ? "tag hedge" : "tag");
 
@@ -620,7 +659,7 @@
         '<td class="num">' + (isCash ? "—" : money(h.latestPrice)) + "</td>" +
         '<td class="num">' + money(mv) + "</td>" +
         '<td class="num ' + tone(h.dayChangePct || 0) + '">' +
-          (isCash || !h.hasQuote ? "—" : pct(h.dayChangePct || 0)) + "</td>" +
+          (isCash || isClosed || !h.hasQuote ? "—" : pct(h.dayChangePct || 0)) + "</td>" +
         '<td class="num ' + tone(rpct) + '">' + (isCash ? "—" : pct(rpct)) + "</td>" +
         '<td class="num">' + weight.toFixed(1) + "%</td>" +
         '<td class="cell-note">' + esc(h.note || "") + "</td>";
@@ -629,6 +668,8 @@
 
     // decisions
     var dl = $("#decision-list");
+    var latestDecision = (p.decisions || []).slice().sort(function (a, b) { return b.date.localeCompare(a.date); })[0];
+    if (latestDecision) $("#latest-decision").innerHTML = '<span class="eyebrow">Latest recorded decision · ' + esc(fmtDate(latestDecision.date)) + '</span><p>' + esc(latestDecision.summary) + '</p>';
     dl.innerHTML = "";
     var pendingDecisions = (p.pendingOrders || []).map(function (order) {
       return {
@@ -732,15 +773,16 @@
   }
 
   function wireSparkTips(grid) {
-    if (grid.dataset.sparkTipsWired === "1") return; // delegated listeners persist across re-renders
-    grid.dataset.sparkTipsWired = "1";
     var holdingsByTicker = {};
     (DATA.portfolio.holdings || []).forEach(function (h) { holdingsByTicker[h.ticker] = h; });
+    grid._holdingsByTicker = holdingsByTicker;
+    if (grid.dataset.sparkTipsWired === "1") return; // delegated listeners persist across re-renders
+    grid.dataset.sparkTipsWired = "1";
     grid.addEventListener("pointermove", function (e) {
       var wrap = e.target.closest ? e.target.closest(".pos-spark") : null;
       if (!wrap) return;
       var card = wrap.closest(".pos-card");
-      var h = card && holdingsByTicker[card.getAttribute("data-ticker")];
+      var h = card && (grid._holdingsByTicker || {})[card.getAttribute("data-ticker")];
       var hist = h && h.history;
       var tip = wrap.querySelector(".spark-tip");
       if (!hist || hist.length < 2 || !tip) return;
@@ -765,19 +807,39 @@
   }
 
   /* ----------------------------- render: research ----------------------------- */
-  var TICKERS = (DATA.research && DATA.research.tickers) || [];
+  var TICKERS = ((DATA.research && DATA.research.tickers) || []).slice().sort(function (a, b) {
+    var dateOrder = String(b.postedChartDate || "").localeCompare(String(a.postedChartDate || ""));
+    return dateOrder || String(a.ticker || "").localeCompare(String(b.ticker || ""));
+  });
   var BY_KEY = {};
   TICKERS.forEach(function (t) { BY_KEY[t.ticker.toUpperCase()] = t; });
 
+  var researchLimit = 12;
   function renderResearchStatics() {
-    $("#research-lead").textContent = DATA.research.intro || "";
-    $("#research-disclaimer").textContent = DATA.research.disclaimer || "";
+    $("#research-lead").textContent = "Recent chart updates and dated research, with the levels and context from each original post.";
+    $("#research-disclaimer").textContent = "Chart updates do not refresh fundamentals. Check the source date before using any level.";
     var row = $("#research-chiprow");
     row.innerHTML = "";
-    TICKERS.forEach(function (t) {
+    var market = $("#research-market").value;
+    var days = $("#research-age").value;
+    var coverage = $("#research-coverage").value;
+    var matches = TICKERS.filter(function (t) {
+      var view = MODEL.tickerView(t);
+      return (market === "all" || view.market === market) &&
+        (coverage === "all" || view.coverage === coverage) &&
+        (days === "all" || MODEL.age(view.chartPostedAt) <= Number(days));
+    });
+    $("#research-count").textContent = matches.length + " tickers · newest first";
+    $("#research-more").hidden = matches.length <= researchLimit;
+    if (!matches.length) row.innerHTML = '<p class="section-note">No notes match these filters. Try a wider date range.</p>';
+    matches.slice(0, researchLimit).forEach(function (t) {
+      var view = MODEL.tickerView(t);
       var b = el("button", "browse-chip");
       b.type = "button";
-      b.innerHTML = '<span class="c-sym">' + esc(t.ticker) + '</span><span class="c-nm">' + esc(t.name) + "</span>";
+      b.innerHTML = '<span class="research-card-head"><span class="c-sym">' + esc(t.ticker) +
+        '</span><span class="card-date">' + esc(fmtDate(t.postedChartDate)) + '</span></span><span class="c-nm">' + esc(t.name) +
+        '</span><span class="coverage-label">' + esc(view.coverageLabel) + (view.stale ? ' · older than 14 days' : '') +
+        '</span><span class="research-excerpt">' + esc(String(t.sourceText || t.summary || "Open dated research").slice(0, 180)) + '</span>';
       b.addEventListener("click", function () { goResearch(t.ticker); });
       row.appendChild(b);
     });
@@ -922,8 +984,8 @@
             container_id: id,
             autosize: true,
             symbol: sym,
-            interval: "D",
-            timezone: "Etc/UTC",
+            interval: MODEL.chartInterval(t.analysisTimeframe),
+            timezone: "America/Los_Angeles",
             theme: "light",
             style: "1",
             locale: "en",
@@ -951,6 +1013,7 @@
 
   function renderDetail(t) {
     var detail = $("#ticker-detail");
+    var record = MODEL.tickerView(t);
     var rclass = "r-" + slug(t.risk);
     var rank = (DATA.meta.riskScale || []).indexOf(t.risk) + 1;
 
@@ -968,6 +1031,55 @@
       return '<div class="fund-metric"><span class="k">' + esc(m.label) +
         '</span><span class="v">' + esc(m.value) + "</span></div>";
     }).join("");
+    var ai = t.aiAnalysis || null;
+    var aiCard = ai && ai.rating && ai.why
+      ? '<section class="ai-analysis-card ai-' + slug(ai.rating) +
+          '" aria-label="Historical analysis: ' + esc(ai.rating) + '">' +
+          '<div class="ai-analysis-head">' +
+            '<span class="ai-analysis-label">Historical analysis:</span>' +
+            '<span class="ai-analysis-rating">' + esc(ai.rating) + "</span>" +
+          "</div>" +
+          '<p class="ai-analysis-why"><strong>Rationale:</strong> ' + esc(ai.why) + "</p>" +
+          '<p class="ai-analysis-meta">As of ' + esc(fmtDate(ai.asOf || t.postedChartDate)) +
+            " · Educational view, not financial advice.</p>" +
+        "</section>"
+      : "";
+    var monthly = ((DATA.research && DATA.research.monthlyUpdates) || {})[t.ticker] ||
+      t.monthlyUpdate || null;
+    var monthlyReady = monthly && monthly.period && monthly.asOf && monthly.momentum &&
+      typeof monthly.julyReturnPct === "number" && typeof monthly.lastClose === "number" &&
+      typeof monthly.shortReturnPct === "number" && monthly.shortWindow &&
+      typeof monthly.versusSma20Pct === "number" && typeof monthly.versusSma50Pct === "number" &&
+      typeof monthly.rsi14 === "number" && monthly.summary && monthly.watch && monthly.sourceSymbol;
+    var monthlyCard = monthlyReady
+      ? '<section class="monthly-outlook-card momentum-' + slug(monthly.momentum) +
+          '" aria-label="' + esc(monthly.period) + ' monthly outlook: ' + esc(monthly.momentum) + ' momentum">' +
+          '<div class="monthly-outlook-head">' +
+            '<div><span class="monthly-kicker">' + esc(monthly.period) + ' monthly update</span>' +
+              '<strong>Historical momentum snapshot</strong></div>' +
+            '<span class="momentum-badge">' + esc(monthly.momentum) + '</span>' +
+          '</div>' +
+          '<div class="monthly-metrics" aria-label="Monthly price momentum metrics">' +
+            '<div class="monthly-metric"><span>July</span><strong class="' + tone(monthly.julyReturnPct) + '">' +
+              esc(monthlyPct(monthly.julyReturnPct)) + '</strong></div>' +
+            '<div class="monthly-metric"><span>Jul 31 close</span><strong>' +
+              esc(monthlyPrice(monthly)) + '</strong></div>' +
+            '<div class="monthly-metric"><span>' + esc(monthly.shortWindow) + '</span><strong class="' +
+              tone(monthly.shortReturnPct) + '">' + esc(monthlyPct(monthly.shortReturnPct)) + '</strong></div>' +
+            '<div class="monthly-metric"><span>vs. 20D / 50D</span><strong>' +
+              esc(monthlyPct(monthly.versusSma20Pct)) + ' / ' +
+              esc(monthlyPct(monthly.versusSma50Pct)) + '</strong></div>' +
+            '<div class="monthly-metric"><span>RSI (14)</span><strong>' +
+              esc(String(monthly.rsi14)) + '</strong></div>' +
+          '</div>' +
+          '<p class="monthly-summary">' + esc(monthly.summary) + '</p>' +
+          '<p class="monthly-watch"><strong>Watch:</strong> ' + esc(monthly.watch) + '</p>' +
+          '<p class="monthly-meta">As of ' + esc(fmtDate(monthly.asOf)) +
+            ' · Yahoo Finance daily closes (' + esc(monthly.sourceSymbol) + ')' +
+            (monthly.sourceNote ? ' · ' + esc(monthly.sourceNote) : '') +
+            ' · Price momentum only; educational, not financial advice.</p>' +
+        '</section>'
+      : "";
 
     var tvSym = t.tvSymbol || t.ticker;
     var replayUrl = tradingViewUrl(t.chartUrl) ||
@@ -979,19 +1091,25 @@
           (postedChartUrl
             ? '<a class="posted-chart-btn" href="' + esc(postedChartUrl) +
               '" target="_blank" rel="noopener noreferrer">' +
-              '<span class="ic">↗</span>Open latest #stocks chart' +
+              '<span class="ic">↗</span>Open latest #' + esc(postedChartChannel(t.postedChartChannel)) + ' chart' +
               (t.postedChartDate ? '<span class="posted-date">' + esc(fmtDate(t.postedChartDate)) + "</span>" : "") +
               "</a>"
             : "") +
           '<a class="replay-btn" href="' + esc(replayUrl) + '" target="_blank" rel="noopener noreferrer">' +
             '<span class="ic">⏵</span>Open Bar Replay on TradingView</a>' +
         "</div>"
-      : '<span class="chart-status">Chart pending analysis</span>';
+      : postedChartUrl
+        ? '<a class="posted-chart-btn" href="' + esc(postedChartUrl) +
+          '" target="_blank" rel="noopener noreferrer">Open latest #' +
+          esc(postedChartChannel(t.postedChartChannel)) + ' chart · ' + esc(fmtDate(t.postedChartDate)) + '</a>'
+        : '<span class="chart-status">Chart pending analysis</span>';
     var chartHint = chartReady
       ? '<p class="chart-hint">Tip: on TradingView, click the <strong>Replay</strong> button in the top toolbar to step through the chart bar by bar.</p>'
       : "";
 
     detail.innerHTML =
+      '<a class="text-link back-link" href="#research">← All research</a>' +
+      '<a class="text-link back-link share-link" href="/research/' + encodeURIComponent(t.ticker) + '">Shareable page ↗</a>' +
       '<div class="detail-top">' +
         '<div class="detail-id">' +
           '<div class="detail-sym-row">' +
@@ -999,18 +1117,27 @@
             '<span class="detail-name">' + esc(t.name) + "</span>" +
           "</div>" +
           (t.summary ? '<p class="detail-summary">' + esc(t.summary) + "</p>" : "") +
-          '<div class="detail-tags"><span class="tag">' + esc(t.assetClass || "") + "</span>" +
+          (t.sourceReviewDate ? '<p class="disclaimer-note">Discord post: ' + esc(fmtDate(t.postedChartDate)) +
+            ' · Reviewed ' + esc(fmtDate(t.sourceReviewDate)) + '. Levels are from the dated post, not live quotes.' +
+            (t.sourceCaveat ? ' ' + esc(t.sourceCaveat) : '') + '</p>' : '') +
+          '<div class="detail-tags"><span class="tag">' + esc(record.coverageLabel) + '</span>' +
+            (record.stale ? '<span class="tag stale">Historical · older than 14 days</span>' : '') +
+            '<span class="tag">' + esc(t.assetClass === "Security" ? "Market classification pending" : t.assetClass || "") + "</span>" +
             (t.sector ? '<span class="tag">' + esc(t.sector) + "</span>" : "") + tags + "</div>" +
         "</div>" +
         '<div class="risk-badge ' + rclass + '">' +
           '<span class="k">Risk</span>' +
           '<span class="v">' + esc(t.risk) + "</span>" +
-          '<span class="risk-dots">' + "<i></i><i></i><i></i><i></i><i></i>" + "</span>" +
+          (rank > 0 ? '<span class="risk-dots">' + "<i></i><i></i><i></i><i></i><i></i>" + "</span>" : '') +
         "</div>" +
       "</div>" +
 
       '<div class="detail-grid">' +
-        '<div class="case-grid">' +
+        (t.sourceText ? '<section class="detail-block"><div class="block-title">Original Discord commentary</div>' +
+          '<p class="detail-summary">' + esc(t.sourceText).replace(/\n/g, '<br>') + '</p></section>' : '') +
+        (record.sourceMessageUrl && /^https:\/\/discord\.com\/channels\/\d+\/\d+\/\d+$/.test(record.sourceMessageUrl)
+          ? '<a class="text-link" href="' + esc(record.sourceMessageUrl) + '" target="_blank" rel="noopener noreferrer">Read original Discord post ↗</a>' : '') +
+        (bull || bear ? '<div class="case-grid">' +
           '<div class="case-card bull">' +
             '<div class="case-head"><span class="case-icon">▲</span>Bullish case</div>' +
             "<ul>" + (bull || "<li>—</li>") + "</ul>" +
@@ -1019,7 +1146,7 @@
             '<div class="case-head"><span class="case-icon">▼</span>Bearish case</div>' +
             "<ul>" + (bear || "<li>—</li>") + "</ul>" +
           "</div>" +
-        "</div>" +
+        "</div>" : '') +
 
         '<div class="detail-block">' +
           '<div class="block-title"><span class="dot" style="background:var(--green)"></span>Key price levels</div>' +
@@ -1029,15 +1156,17 @@
           "</div></div>" +
         "</div>" +
 
-        '<div class="detail-block">' +
+        '<details class="detail-block historical-context"><summary>Historical fundamentals & analysis</summary>' +
           '<div class="block-title"><span class="dot" style="background:var(--blue)"></span>Fundamentals</div>' +
           '<div class="fund-card">' +
             '<div class="fund-head"><span class="rating-badge r-' + slug(f.rating) + '">' + esc(f.rating || "—") +
               '</span><span class="lbl">Fundamental read</span></div>' +
             (metrics ? '<div class="fund-metrics">' + metrics + "</div>" : "") +
             (f.rationale ? '<p class="fund-rationale">' + esc(f.rationale) + "</p>" : "") +
+            (f.asOf ? '<p class="disclaimer-note">Historical fundamentals as of ' + esc(fmtDate(f.asOf)) +
+              '; not reverified by this chart-post update.</p>' : '') +
           "</div>" +
-        "</div>" +
+        aiCard + monthlyCard + '</details>' +
 
         '<div class="chart-card">' +
           '<div class="chart-head">' +
@@ -1062,20 +1191,116 @@
     return '<div class="level-row"><span class="level-desc">No levels noted.</span></div>';
   }
 
+  /* ----------------------------- render: setup reviews ----------------------------- */
+  function canonicalSnapshotUrl(value) {
+    var url = String(value || "").trim();
+    return /^https:\/\/(?:www\.)?tradingview\.com\/x\/[A-Za-z0-9]+\/$/u.test(url) ? url : "";
+  }
+
+  var setupLimit = 6;
+  function renderSetupReviews(selectedId) {
+    var grid = $("#setup-review-grid");
+    var empty = $("#setup-review-empty");
+    if (!grid || !empty) return;
+
+    var all = MODEL.newestSetups(SETUP_REVIEWS);
+    var counts = { active: 0, closed: 0, expired: 0, review: 0 };
+    all.forEach(function (review) { counts[MODEL.setupState(review).group] += 1; });
+    $("#journal-summary").innerHTML = '<div><strong>' + counts.active + '</strong><span>Recently reviewed active</span></div>' +
+      '<div><strong>' + (counts.closed + counts.expired) + '</strong><span>Closed / invalidated / expired</span></div>' +
+      '<div><strong>' + counts.review + '</strong><span>Outcome review needed</span></div>';
+    var status = $("#setup-status").value;
+    var horizon = $("#setup-horizon").value;
+    var query = $("#setup-search").value.trim().toUpperCase();
+    var reviews = all.filter(function (review) {
+      return (!selectedId || review.id === selectedId) && (status === "all" || MODEL.setupState(review).group === status) &&
+        (horizon === "all" || MODEL.horizon(review) === horizon) && (!query || review.ticker.indexOf(query) !== -1);
+    });
+    $("#setup-count").textContent = reviews.length + ' setups · newest first';
+    $("#setup-more").hidden = reviews.length <= setupLimit;
+    empty.hidden = reviews.length > 0;
+    grid.hidden = reviews.length === 0;
+    grid.innerHTML = reviews.slice(0, setupLimit).map(function (review) {
+      var setup = review.setup || {};
+      var outcome = review.outcome || {};
+      var rationale = review.rationale || {};
+      var targets = Array.isArray(setup.takeProfitLevels) ? setup.takeProfitLevels : [];
+      var sequence = (Array.isArray(outcome.sequence) ? outcome.sequence : []).map(function (item) {
+        return "<li>" + esc(item) + "</li>";
+      }).join("");
+      var chartUrl = canonicalSnapshotUrl(review.chartUrl);
+      var state = MODEL.setupState(review);
+      var statusClass = review.statusCode === "INVALIDATED_BEFORE_ENTRY"
+        ? "is-invalidated"
+        : review.statusCode === "WATCHING"
+          ? "is-watching"
+          : review.statusCode === "COMPLETED" ? "is-complete" : "";
+
+      return '<article id="setup-' + esc(review.id) + '" class="setup-review-card ' + statusClass + '">' +
+        '<div class="setup-review-head">' +
+          '<div><span class="setup-review-horizon">' + esc(review.horizon) + '</span>' +
+            '<h2><a href="#setups/' + esc(review.id) + '">' + esc(review.ticker) + '</a></h2><span class="card-date">Posted ' + esc(fmtDate(review.date)) + '</span></div>' +
+          '<span class="setup-status state-' + state.group + '">' + esc(state.label) + '</span>' +
+        '</div>' +
+        '<p class="setup-state-note">' + esc(state.note) + '</p>' +
+        '<div class="setup-level-grid" aria-label="Original setup levels">' +
+          '<div><span>Entry</span><strong>' + esc(setup.entryZone || "—") + '</strong></div>' +
+          '<div><span>Planned stop</span><strong>' + esc(setup.plannedStopAfterEntry || "—") + '</strong></div>' +
+          '<div><span>Take profit level 1</span><strong>' + esc(targets[0] || "—") + '</strong></div>' +
+          '<div><span>Take profit level 2</span><strong>' + esc(targets[1] || "—") + '</strong></div>' +
+        '</div>' +
+        '<details class="setup-expanded"' + (selectedId ? ' open' : '') + '><summary>Entry rules, rationale & outcome</summary>' +
+        '<section class="setup-review-section"><h3>Entry plan</h3><p>' +
+          esc(setup.entryCondition || "—") + '</p></section>' +
+        '<section class="setup-review-section"><h3>Pre-entry invalidation</h3><p>' + esc(setup.preEntryInvalidation || "—") + '</p></section>' +
+        '<div class="setup-rationale-grid">' +
+          '<section class="setup-review-section"><h3>Technicals</h3><p>' +
+            esc(rationale.technicals || "—") + '</p></section>' +
+          '<section class="setup-review-section"><h3>Fundamentals</h3><p>' +
+            esc(rationale.fundamentals || "—") + '</p></section>' +
+        '</div>' +
+        '<section class="setup-review-section setup-outcome"><h3>Outcome</h3><p>' +
+          esc(outcome.summary || "—") + '</p>' +
+          (sequence ? '<ol>' + sequence + '</ol>' : '') +
+        '</section>' +
+        (review.riskReward ? '<section class="setup-review-section"><h3>Risk / reward in the original plan</h3><p>' +
+          esc(review.riskReward) + '</p></section>' : '') +
+        '<section class="setup-review-section setup-lesson"><h3>' +
+          (outcome.type === "UNKNOWN" ? 'Review note' : 'Lesson') + '</h3><p>' +
+          esc(review.lesson || "—") + '</p></section>' +
+        '<div class="setup-review-foot"><span>Review as of ' +
+          esc(fmtDate(String(review.reviewedAt || review.date).slice(0, 10))) + '</span>' +
+          '<a class="text-link" href="/setups/' + esc(review.id) + '">Shareable setup page ↗</a>' +
+          (review.sourceMessageUrl && /^https:\/\/discord\.com\/channels\/\d+\/\d+\/\d+$/u.test(review.sourceMessageUrl)
+            ? '<a class="posted-chart-btn" href="' + esc(review.sourceMessageUrl) +
+              '" target="_blank" rel="noopener noreferrer">Open original Discord setup</a>' : '') +
+          (chartUrl ? '<a class="posted-chart-btn" href="' + esc(chartUrl) +
+            '" target="_blank" rel="noopener noreferrer"><span class="ic">↗</span>Open TradingView snapshot</a>' : '') +
+        '</div></details>' +
+      '</article>';
+    }).join("");
+  }
+
   /* ----------------------------- navigation ----------------------------- */
   function showView(view) {
-    var isResearch = view === "research";
-    $("#view-portfolio").classList.toggle("active", !isResearch);
-    $("#view-portfolio").hidden = isResearch;
-    $("#view-research").classList.toggle("active", isResearch);
-    $("#view-research").hidden = !isResearch;
+    var labels = {
+      portfolio: "Educational portfolio",
+      research: "Ticker research",
+      setups: "Setup reviews & lessons"
+    };
+    ["portfolio", "research", "setups"].forEach(function (name) {
+      var section = $("#view-" + name);
+      var on = name === view;
+      section.classList.toggle("active", on);
+      section.hidden = !on;
+    });
     Array.prototype.forEach.call(document.querySelectorAll(".view-tab"), function (tab) {
       var on = tab.getAttribute("data-view") === view;
       tab.classList.toggle("active", on);
       tab.setAttribute("aria-pressed", on ? "true" : "false");
     });
-    $("#brand-tag").textContent = isResearch ? "Ticker research" : "Educational portfolio";
-    if (!isResearch) {
+    $("#brand-tag").textContent = labels[view] || labels.portfolio;
+    if (view === "portfolio") {
       window.requestAnimationFrame(function () {
         renderPerformanceChart(DATA.portfolio, DATA.portfolio.holdings || []);
       });
@@ -1090,10 +1315,21 @@
   function applyHash() {
     var raw = (location.hash || "").replace(/^#\/?/, "");
     var parts = raw.split("/");
-    var view = parts[0] === "research" ? "research" : "portfolio";
+    var view = ["research", "setups"].indexOf(parts[0]) !== -1 ? parts[0] : "portfolio";
     showView(view);
+    window.scrollTo({ top: 0, behavior: "auto" });
+    var heading = $("#view-" + view + " h1");
+    if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+    $("#view-announcement").textContent = view === "setups" ? "Trade Setups" : view === "research" ? "Research" : "Portfolio";
+    document.title = "ChartChamp — " + (view === "setups" ? "Trade Setups" : view === "research" ? "Research" : "Portfolio");
+    if (view === "portfolio") renderPortfolio();
+    if (view === "setups") {
+      if (parts[1]) { $("#setup-status").value = "all"; $("#setup-horizon").value = "all"; $("#setup-search").value = ""; }
+      renderSetupReviews(parts[1] || null);
+    }
 
     if (view === "research") {
+      renderResearchStatics();
       var key = parts[1] ? parts[1].toUpperCase() : null;
       var t = key && BY_KEY[key];
       var input = $("#ticker-search");
@@ -1117,15 +1353,23 @@
     // is shown separately in the positions band so it can't vouch for the notes.
     $("#app-updated").textContent = fmtDate(DATA.meta.updatedAt);
     $("#compliance-footer").textContent = DATA.meta.complianceFooter;
-    $("#portfolio-title").textContent = "Portfolio";
 
     renderPortfolio();
-    renderResearchStatics();
+    ["research-market", "research-age", "research-coverage"].forEach(function (id) {
+      $("#" + id).addEventListener("change", function () { researchLimit = 12; renderResearchStatics(); });
+    });
+    $("#research-more").addEventListener("click", function () { researchLimit += 12; renderResearchStatics(); });
+    ["setup-status", "setup-horizon", "setup-search"].forEach(function (id) {
+      $("#" + id).addEventListener(id === "setup-search" ? "input" : "change", function () {
+        setupLimit = 6; if (location.hash.indexOf("#setups/") === 0) history.replaceState(null, "", "#setups"); renderSetupReviews();
+      });
+    });
+    $("#setup-more").addEventListener("click", function () { setupLimit += 6; renderSetupReviews(); });
 
     Array.prototype.forEach.call(document.querySelectorAll(".view-tab"), function (tab) {
       tab.addEventListener("click", function () {
         var v = tab.getAttribute("data-view");
-        location.hash = v === "research" ? "research" : "portfolio";
+        location.hash = ["research", "setups"].indexOf(v) !== -1 ? v : "portfolio";
       });
     });
 

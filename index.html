@@ -3,18 +3,29 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Chart Champ</title>
+    <title>ChartChamp — Portfolio, Research & Trade Setups</title>
     <meta
       name="description"
       content="Chart Champ — educational portfolio holdings and community ticker research: bullish and bearish factors, fundamentals, key price levels, and live charts."
     >
-    <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="assets/styles.css?v=20260710-3">
-    <script src="data/app-data.js?v=20260710-3" defer></script>
-    <script src="data/live-prices.js?v=20260710-3" defer></script>
-    <script src="assets/app.js?v=20260710-3" defer></script>
+    <link rel="canonical" href="https://chartchamp.web.app/">
+    <meta property="og:title" content="ChartChamp — Research & Trade Setups">
+    <meta property="og:description" content="Community portfolio, dated chart research, and conditional trade setups with reviewed outcomes.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://chartchamp.web.app/">
+    <meta name="twitter:card" content="summary">
+    <meta name="theme-color" content="#16745f">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css?v=20260906-refresh">
+    <script src="data/app-data.js?v=20260904-discord-sync" defer></script>
+    <script src="data/trade-setup-reviews.js?v=20260904-discord-sync" defer></script>
+    <script src="data/discord-research-sync.js?v=20260904-discord-sync" defer></script>
+    <script src="data/live-prices.js?v=20260904-discord-sync" defer></script>
+    <script src="assets/research-model.js?v=20260906-refresh" defer></script>
+    <script src="assets/app.js?v=20260906-refresh" defer></script>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <main class="page-shell">
       <header class="app-bar">
         <div class="brand">
@@ -31,12 +42,18 @@
           <button class="view-tab" type="button" data-view="research" aria-pressed="false">
             Research
           </button>
+          <button class="view-tab" type="button" data-view="setups" aria-pressed="false">
+            Trade Setups
+          </button>
         </nav>
         <div class="app-bar-meta">
-          <span class="status-label">Updated</span>
+          <span class="status-label">Research updated</span>
           <strong id="app-updated">—</strong>
+          <a class="discord-link" href="https://discord.com/channels/1178077469505486868" target="_blank" rel="noopener noreferrer">Open Discord ↗</a>
         </div>
       </header>
+      <div id="main-content" tabindex="-1"></div>
+      <p class="sr-only" id="view-announcement" role="status" aria-live="polite"></p>
 
       <!-- ============================ PORTFOLIO ============================ -->
       <section class="view view-portfolio active" id="view-portfolio" aria-label="Portfolio">
@@ -73,6 +90,7 @@
           </article>
         </section>
 
+        <aside class="latest-decision" id="latest-decision" aria-label="Latest recorded portfolio decision"></aside>
         <section class="dashboard-band split-band" aria-label="Cash versus invested">
           <div class="section-heading compact">
             <div>
@@ -100,7 +118,8 @@
           <p class="chart-caption" id="performance-caption"></p>
         </section>
 
-        <section class="dashboard-band contribution-band" aria-labelledby="contribution-heading">
+        <details class="dashboard-band contribution-band">
+          <summary>Gain / loss contribution</summary>
           <div class="section-heading">
             <div>
               <p class="eyebrow">Return drivers</p>
@@ -109,7 +128,7 @@
             <p class="section-note">Open plus realized gain or loss, sorted by holding.</p>
           </div>
           <div class="contribution-chart" id="contribution-chart"></div>
-        </section>
+        </details>
 
         <section class="dashboard-band positions-band" aria-labelledby="positions-heading">
           <div class="section-heading">
@@ -122,7 +141,8 @@
           <div class="positions-grid" id="positions-grid"></div>
         </section>
 
-        <section class="dashboard-band" aria-labelledby="holdings-heading">
+        <details class="dashboard-band">
+          <summary>Detailed holdings and closed positions</summary>
           <div class="section-heading">
             <div>
               <p class="eyebrow">Holdings</p>
@@ -148,9 +168,10 @@
               <tbody id="holdings-body"></tbody>
             </table>
           </div>
-        </section>
+        </details>
 
-        <section class="dashboard-band" aria-labelledby="decision-heading">
+        <details class="dashboard-band">
+          <summary>Portfolio decisions and history</summary>
           <div class="section-heading">
             <div>
               <p class="eyebrow">Decision log</p>
@@ -159,7 +180,7 @@
             <p class="section-note">What was done and why — for community review.</p>
           </div>
           <div class="decision-list" id="decision-list"></div>
-        </section>
+        </details>
       </section>
 
       <!-- ============================ RESEARCH ============================ -->
@@ -193,14 +214,51 @@
         <p class="disclaimer-note" id="research-disclaimer"></p>
 
         <div class="research-empty" id="research-empty">
-          <p class="eyebrow">Browse</p>
-          <h2>Pick a ticker to open the note</h2>
+          <div class="section-heading"><div><p class="eyebrow">Latest from the community</p>
+          <h2>Research updates</h2></div><span id="research-count" class="section-note"></span></div>
+          <div class="filter-bar">
+            <label>Market<select id="research-market"><option value="all">All markets</option><option value="stocks">Stocks & ETFs</option><option value="crypto">Crypto</option><option value="commodities">Commodities</option><option value="bonds">Bonds</option></select></label>
+            <label>Updated<select id="research-age"><option value="all">Any time</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select></label>
+            <label>Coverage<select id="research-coverage"><option value="all">All notes</option><option value="chart">Chart updates</option><option value="thesis">Research notes</option></select></label>
+          </div>
           <div class="chip-row" id="research-chiprow"></div>
+          <button id="research-more" class="load-more" type="button">Show more tickers</button>
         </div>
 
         <article class="ticker-detail" id="ticker-detail" hidden></article>
       </section>
+
+      <!-- ========================= TRADE SETUPS ========================= -->
+      <section class="view view-setups" id="view-setups" aria-label="Trade setups" hidden>
+        <div class="page-intro setup-review-intro">
+          <div>
+            <p class="eyebrow">Plans, follow-ups & lessons</p>
+            <h1>Trade Setups</h1>
+            <p class="lead">
+              Conditional trade plans, dated follow-ups, and lessons. Separate from the Community Portfolio.
+            </p>
+          </div>
+        </div>
+
+        <p class="disclaimer-note">
+          Historical plans are not current buy alerts. Entry, target, and stop outcomes require dated evidence.
+        </p>
+        <div class="journal-summary" id="journal-summary"></div>
+        <div class="filter-bar">
+          <label>Status<select id="setup-status"><option value="all">All setups</option><option value="active">Active · recently reviewed</option><option value="closed">Closed / invalidated</option><option value="expired">Expired without entry</option><option value="review">Outcome unverified / overdue</option></select></label>
+          <label>Timeframe<select id="setup-horizon"><option value="all">All timeframes</option><option value="day">Day trade</option><option value="swing">Swing trade</option><option value="long">Long-term idea</option></select></label>
+          <label>Ticker<input id="setup-search" type="search" placeholder="Search ticker" autocomplete="off"></label>
+        </div>
+        <p class="section-note" id="setup-count" aria-live="polite"></p>
+        <div class="setup-review-grid" id="setup-review-grid"></div>
+        <button id="setup-more" class="load-more" type="button">Show more setups</button>
+        <div class="setup-review-empty" id="setup-review-empty" hidden>
+          No setups match these filters. An old or unreviewed idea is never shown as an active signal.
+        </div>
+      </section>
     </main>
+
+    <details class="methodology"><summary>How to read ChartChamp</summary><p>Scanner hits are candidates. Setups are conditional plans. The Community Portfolio records confirmed decisions separately. A later price touch does not prove that an entry condition or exit happened in the required order.</p><p>Research keeps the date and context of each source. Chart updates do not refresh company fundamentals. Historical and incomplete reviews are labeled; unverified outcomes are excluded from performance claims.</p><p>Setup follow-ups should record Watching, Triggered, Take profit level 1, Take profit level 2, Stopped, or Expired with dated evidence. A review-overdue label asks for follow-up; it does not invent a trade result.</p></details>
 
     <footer class="compliance-footer" id="compliance-footer">
       For educational purposes only. Not financial advice.

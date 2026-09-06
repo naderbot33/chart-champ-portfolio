@@ -41,14 +41,14 @@ export async function exportPausedJobDefinitions(root = AUTOMATION_ROOT) {
       prompt: (await loadJobPrompt(job, root)).trim(),
       rrule: job.rrule,
       timezone: jobRegistry.timezone,
-      status: jobRegistry.defaults.status,
+      status: job.status || jobRegistry.defaults.status,
       executionEnvironment: jobRegistry.defaults.executionEnvironment,
       model: job.model,
       reasoningEffort: job.reasoningEffort,
       metadata: {
         chartChampJobId: job.id,
         channel: job.channel,
-        deliveryMode: jobRegistry.defaults.deliveryMode
+        deliveryMode: job.deliveryMode || jobRegistry.defaults.deliveryMode
       }
     }))
   );

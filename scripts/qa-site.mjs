@@ -1,0 +1,56 @@
+import { createRequire } from "node:module";
+import assert from "node:assert/strict";
+import { mkdir } from "node:fs/promises";
+const require = createRequire(import.meta.url);
+const { chromium } = require("playwright");
+const base = process.env.CHARTCHAMP_QA_URL || "http://127.0.0.1:8765";
+const browser = await chromium.launch({ channel: "chrome", headless: true });
+const errors = [];
+await mkdir("runtime/qa", { recursive: true });
+try {
+  for (const width of [390, 1280]) {
+    const page = await browser.newPage({ viewport: { width, height: 900 } });
+    page.on("pageerror", error => errors.push(error.message));
+    await page.goto(base + "/#portfolio");
+    await page.locator("#m-total-value").filter({ hasText: "$11,613.71" }).waitFor();
+    assert.equal(await page.locator("#setup-review-grid > article").count(), 0, "hidden journal is lazy rendered");
+    await page.getByRole("button", { name: "Research", exact: true }).click();
+    await page.locator("#research-chiprow .browse-chip").first().waitFor();
+    assert.equal(await page.locator("#research-chiprow .browse-chip").count(), 12);
+    await page.selectOption("#research-market", "crypto");
+    assert.match(await page.locator("#research-count").innerText(), /tickers/);
+    await page.selectOption("#research-market", "all");
+    await page.locator("#research-more").click();
+    assert.equal(await page.locator("#research-chiprow .browse-chip").count(), 24);
+    await page.locator("#ticker-search").fill("BTC");
+    await page.locator("#ticker-search").press("Enter");
+    await page.locator("#ticker-detail").waitFor({ state: "visible" });
+    assert.equal(await page.locator(".historical-context").getAttribute("open"), null);
+    assert.equal(await page.locator(".levels-card").isVisible(), true, "current levels stay visible outside history");
+    await page.evaluate(() => scrollTo(0, 500));
+    await page.getByRole("button", { name: "Trade Setups", exact: true }).click();
+    await page.locator("#setup-review-grid > article").first().waitFor();
+    assert.equal(await page.evaluate(() => scrollY), 0);
+    assert.equal(await page.locator("#setup-review-grid > article").count(), 6);
+    assert.match(await page.locator("#setup-review-grid > article").first().innerText(), /Sep 3, 2026/);
+    await page.selectOption("#setup-status", "active");
+    assert.equal(await page.locator("#setup-review-grid > article").count(), 0);
+    await page.selectOption("#setup-status", "all");
+    await page.locator("#setup-search").fill("AMLX");
+    assert.equal(await page.locator("#setup-review-grid > article").count(), 1);
+    await page.locator(".setup-expanded > summary").click();
+    assert.equal(await page.locator(".setup-outcome").isVisible(), true);
+    await page.locator("#setup-search").fill("");
+    await page.evaluate(() => { document.activeElement.blur(); scrollTo(0, 0); });
+    const size = await page.evaluate(() => ({ viewport: innerWidth, content: document.documentElement.scrollWidth }));
+    assert.ok(size.content <= size.viewport + 1, `no overflow at ${width}: ${JSON.stringify(size)}`);
+    await page.screenshot({ path: `runtime/qa/setups-${width}.png`, fullPage: false, animations: "disabled" });
+    await page.getByRole("button", { name: "Research", exact: true }).click();
+    await page.locator("#view-research").waitFor({ state: "visible" });
+    await page.locator("#research-chiprow .browse-chip").first().waitFor({ state: "visible" });
+    await page.screenshot({ path: `runtime/qa/research-${width}.png`, fullPage: false, animations: "disabled" });
+    await page.close();
+  }
+  assert.deepEqual(errors, []);
+  console.log("Browser QA passed: 390px + 1280px, navigation, pagination, filters, collapsed history, visible levels, empty active state, outcome expansion, overflow, and zero page errors.");
+} finally { await browser.close(); }

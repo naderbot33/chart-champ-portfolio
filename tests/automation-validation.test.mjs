@@ -1,13 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { loadAutomationConfig, findChannel, findJob } from "../automation/lib/config.mjs";
+import { LEGACY_AUTOMATION_ROOT } from "./helpers/legacy-automation-fixture.mjs";
 import { normalizeDraft } from "../automation/lib/draft.mjs";
 import { validateForDispatch } from "../automation/lib/validate.mjs";
 
 const NOW = new Date("2026-07-10T13:46:00.000Z");
 
 async function fixture(jobId = "trending-tickers-open") {
-  const { channelRegistry, jobRegistry } = await loadAutomationConfig();
+  const { channelRegistry, jobRegistry } = await loadAutomationConfig(LEGACY_AUTOMATION_ROOT);
   const job = findJob(jobRegistry, jobId);
   const channel = findChannel(channelRegistry, job.channel);
   const draft = normalizeDraft({
@@ -109,10 +111,16 @@ test("closed market skips market jobs but permits a material global brief", asyn
   const brief = await fixture("market-briefs-daily");
   brief.draft.generatedAt = "2026-07-03T14:00:00.000Z";
   brief.draft.sourceTimestamp = "2026-07-03T13:55:00.000Z";
+  brief.draft.content = "<@&1498152504817483927>\n\n🌎 **Global Market Brief — Friday, July 3rd at 7:00 AM PT**\n\n**Stocks:** Material global context.";
   brief.context = {
     chrome: { connected: true, extensionAvailable: true, signedIn: { trendspider: true } },
+    trendspider: { tabCount: 1 },
     market: { sessionDate: "2026-07-03", materialNonUs: true },
-    source: { itemCount: 2, materialItemsOnly: true },
+    source: {
+      itemCount: 2,
+      materialItemsOnly: true,
+      timeSensitiveClaimsCrossChecked: true
+    },
     sidekick: { messagesRemaining: 490 }
   };
   report = validateForDispatch({
@@ -121,6 +129,69 @@ test("closed market skips market jobs but permits a material global brief", asyn
     now: () => new Date(brief.draft.generatedAt)
   });
   assert.equal(report.ok, true);
+});
+
+test("market brief sample locks format and uses the verified BRIEFS role ID", async () => {
+  const [draft, context] = await Promise.all([
+    readFile(new URL("../automation/samples/market-briefs-format.json", import.meta.url), "utf8").then(
+      JSON.parse
+    ),
+    readFile(
+      new URL("../automation/samples/market-briefs-format-context.json", import.meta.url),
+      "utf8"
+    ).then(JSON.parse)
+  ]);
+  const { channelRegistry, jobRegistry } = await loadAutomationConfig(LEGACY_AUTOMATION_ROOT);
+  const job = findJob(jobRegistry, "market-briefs-daily");
+  const channel = findChannel(channelRegistry, job.channel);
+  let report = validateForDispatch({
+    draft,
+    context,
+    job,
+    channel,
+    defaults: jobRegistry.defaults,
+    now: () => new Date(draft.generatedAt)
+  });
+  assert.deepEqual(report, { ok: true, issues: [] });
+  assert.ok(
+    draft.content.startsWith(
+      "<@&1498152504817483927>\n\n🌎 **Global Market Brief — Friday, July 10th"
+    )
+  );
+  assert.match(draft.content, /\*\*Stocks\*\*\n•/);
+  assert.match(draft.content, /\*\*Macro & Rates\*\*/);
+  assert.match(draft.content, /\*\*What Matters Next\*\*/);
+  assert.doesNotMatch(draft.content, /Source:|Educational market context only/i);
+
+  report = validateForDispatch({
+    draft: { ...draft, dryRun: false },
+    context,
+    job,
+    channel,
+    defaults: jobRegistry.defaults,
+    now: () => new Date(draft.generatedAt)
+  });
+  assert.deepEqual(report, { ok: true, issues: [] });
+
+  report = validateForDispatch({
+    draft: { ...draft, dryRun: false },
+    context,
+    job,
+    channel: { ...channel, notificationRoleId: undefined },
+    defaults: jobRegistry.defaults,
+    now: () => new Date(draft.generatedAt)
+  });
+  assert.ok(codes(report).includes("ROLE_CONFIGURATION_MISSING"));
+
+  report = validateForDispatch({
+    draft,
+    context: { ...context, trendspider: { tabCount: 2 } },
+    job,
+    channel,
+    defaults: jobRegistry.defaults,
+    now: () => new Date(draft.generatedAt)
+  });
+  assert.ok(codes(report).includes("TRENDSPIDER_SESSION_CONFLICT"));
 });
 
 test("Sidekick allowance and scanner warning gates fail closed", async () => {
@@ -133,7 +204,8 @@ test("Sidekick allowance and scanner warning gates fail closed", async () => {
     scanner: {
       unsavedChangesWarning: true,
       savedOrSubscribedOnly: false,
-      scannersRun: ["Weinstein Stage 2"]
+      scannersRun: ["Weinstein Stage 2"],
+      trendspiderTabCount: 2
     }
   };
   const report = validateForDispatch({
@@ -144,6 +216,8 @@ test("Sidekick allowance and scanner warning gates fail closed", async () => {
   assert.ok(codes(report).includes("SIDEKICK_LIMIT"));
   assert.ok(codes(report).includes("SCANNER_WARNING"));
   assert.ok(codes(report).includes("SCANNER_SOURCE_UNSAFE"));
+  assert.ok(codes(report).includes("ROLE_MENTION_MISSING"));
+  assert.ok(codes(report).includes("TRENDSPIDER_SESSION_CONFLICT"));
 });
 
 test("an old generated draft is rejected even when its source matches", async () => {

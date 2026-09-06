@@ -1,149 +1,26 @@
-name: Refresh, deploy, and post ChartChamp portfolio
+name: Build ChartChamp preview
 
 on:
-  schedule:
-    - cron: "35 6 * * 1-5"
-      timezone: "America/Los_Angeles"
-    - cron: "5 13 * * 1-5"
-      timezone: "America/Los_Angeles"
   workflow_dispatch:
-    inputs:
-      session:
-        description: "Expected market session for validation"
-        required: true
-        default: "auto"
-        type: choice
-        options:
-          - auto
-          - open
-          - close
-      deploy_preview:
-        description: "Deploy a seven-day Firebase preview (never posts to Discord)"
-        required: true
-        default: true
-        type: boolean
 
 permissions:
   contents: read
-  checks: write
-
-concurrency:
-  group: chartchamp-portfolio-${{ github.ref }}
-  cancel-in-progress: false
 
 jobs:
-  refresh:
+  preview:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    env:
-      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-
-      - name: Determine run mode
-        id: context
-        shell: bash
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          SCHEDULE_CRON: ${{ github.event.schedule }}
-          MANUAL_SESSION: ${{ inputs.session }}
-        run: |
-          session="${MANUAL_SESSION:-auto}"
-          if [[ "$EVENT_NAME" == "schedule" ]]; then
-            if [[ "$SCHEDULE_CRON" == "35 6 * * 1-5" ]]; then
-              session="open"
-            else
-              session="close"
-            fi
-          fi
-          echo "session=$session" >> "$GITHUB_OUTPUT"
-          echo "event_name=$EVENT_NAME" >> "$GITHUB_OUTPUT"
-
-      - name: Refresh Yahoo Finance quotes
-        shell: bash
-        run: |
-          mkdir -p runtime
-          node scripts/update-quotes.mjs 2>&1 | tee runtime/quote-refresh.log
-
-      - name: Validate market session and freshness
-        id: validate
-        shell: bash
-        run: |
-          node scripts/validate-portfolio-snapshot.mjs \
-            --session "${{ steps.context.outputs.session }}" \
-            --max-age-minutes 45
-
-      - name: Build no-send Discord draft
-        if: steps.validate.outputs.should_proceed == 'true'
-        shell: bash
-        run: |
-          node scripts/portfolio-summary.mjs \
-            --dry-run \
-            --session "${{ steps.context.outputs.session }}" \
-            --max-age-minutes 60
-
-      - name: Restore Discord delivery dedupe state
-        if: github.event_name == 'schedule' && steps.validate.outputs.should_proceed == 'true'
-        id: delivery-cache
-        uses: actions/cache/restore@v4
+      - run: node --test tests/*.test.mjs
+      - run: node scripts/build-site.mjs
+      - uses: actions/upload-artifact@v4
         with:
-          path: runtime/portfolio-delivery-state.json
-          key: chartchamp-portfolio-delivery-${{ github.run_id }}
-          restore-keys: |
-            chartchamp-portfolio-delivery-
+          name: chartchamp-public-preview
+          path: dist/
+          retention-days: 14
 
-      - name: Deploy live site
-        if: github.event_name == 'schedule' && steps.validate.outputs.should_proceed == 'true'
-        id: live-deploy
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
-          channelId: live
-
-      - name: Deploy manual preview
-        if: github.event_name == 'workflow_dispatch' && inputs.deploy_preview && steps.validate.outputs.snapshot_valid == 'true'
-        id: preview-deploy
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
-          channelId: preview-${{ github.run_id }}
-          expires: 7d
-
-      - name: Deliver portfolio update to Discord
-        if: github.event_name == 'schedule' && steps.validate.outputs.should_proceed == 'true'
-        shell: bash
-        env:
-          DISCORD_PORTFOLIO_WEBHOOK: ${{ secrets.DISCORD_PORTFOLIO_WEBHOOK }}
-        run: |
-          node scripts/portfolio-summary.mjs \
-            --session "${{ steps.context.outputs.session }}" \
-            --max-age-minutes 60
-
-      - name: Save Discord delivery dedupe state
-        if: always() && github.event_name == 'schedule' && steps.validate.outputs.should_proceed == 'true' && hashFiles('runtime/portfolio-delivery-state.json') != ''
-        uses: actions/cache/save@v4
-        with:
-          path: runtime/portfolio-delivery-state.json
-          key: chartchamp-portfolio-delivery-${{ github.run_id }}
-
-      - name: Upload validation and delivery records
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: chartchamp-portfolio-run-${{ github.run_id }}
-          path: |
-            runtime/quote-refresh.log
-            runtime/portfolio-validation.json
-            runtime/portfolio-draft.json
-            runtime/portfolio-delivery.jsonl
-            runtime/portfolio-delivery-state.json
-          if-no-files-found: warn
-          retention-days: 90
+# Publication and Discord delivery remain deliberate actions. This workflow
+# cannot refresh financial data, deploy, post, or restore retired schedules.

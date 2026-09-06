@@ -101,8 +101,14 @@ function validateLedger(portfolio, errors) {
 
     const configuredShares = Number(holding.shares);
     const configuredBasis = Number(holding.costBasis);
-    if (!Number.isFinite(configuredShares) || configuredShares <= 0) {
-      errors.push(`${ticker} shares must be a positive finite number`);
+    if (!Number.isFinite(configuredShares) || configuredShares < 0) {
+      errors.push(`${ticker} shares must be a non-negative finite number`);
+    }
+    if (holding.closed === true && configuredShares > 0.000001) {
+      errors.push(`${ticker} is marked closed but still has configured shares`);
+    }
+    if (holding.closed !== true && configuredShares <= 0) {
+      errors.push(`${ticker} has no shares but is not marked closed`);
     }
     if (!Number.isFinite(configuredBasis) || configuredBasis < 0) {
       errors.push(`${ticker} cost basis must be a non-negative finite number`);
@@ -257,17 +263,23 @@ function main() {
 
   const portfolio = appData.portfolio;
   const holdings = (portfolio.holdings ?? []).filter(
-    (holding) => holding?.ticker && holding.assetClass !== "Cash"
+    (holding) =>
+      holding?.ticker &&
+      holding.assetClass !== "Cash" &&
+      holding.closed !== true &&
+      Number(holding.shares) > 0
   );
   const errors = [];
   const warnings = [];
 
-  validateLedger(portfolio, errors);
+  const ledgerErrors = [];
+  validateLedger(portfolio, ledgerErrors);
+  errors.push(...ledgerErrors.map((error) => `community portfolio: ${error}`));
+  if (!validDateKey(portfolio?.chartStartDate)) {
+    errors.push("community portfolio: chartStartDate must be a YYYY-MM-DD date");
+  }
 
   if (!holdings.length) errors.push("No non-cash holdings are configured");
-  if (!validDateKey(portfolio.chartStartDate)) {
-    errors.push("portfolio.chartStartDate must be a YYYY-MM-DD date");
-  }
   if (snapshot.chartStartDate && snapshot.chartStartDate !== portfolio.chartStartDate) {
     errors.push("Snapshot chartStartDate does not match app-data.js");
   }

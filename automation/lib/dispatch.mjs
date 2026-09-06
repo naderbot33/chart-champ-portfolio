@@ -114,7 +114,10 @@ export async function dispatchDraft({
       return safeResult({ status: "webhook-mismatch", draft, jobId, hash, issues });
     }
 
-    const delivery = await postDiscordWebhook(webhookUrl, draft.content, { fetchImpl });
+    const delivery = await postDiscordWebhook(webhookUrl, draft.content, {
+      fetchImpl,
+      allowedRoleIds: channel.notificationRoleId ? [channel.notificationRoleId] : []
+    });
     if (delivery.channelId && delivery.channelId !== channel.channelId) {
       throw new Error("Discord response channel id did not match the configured channel.");
     }

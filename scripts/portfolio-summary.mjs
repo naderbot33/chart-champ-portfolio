@@ -9,13 +9,13 @@ import {
   writeFileSync
 } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DEFAULT_CHANNEL_ID = "1483112393109409903";
 const DEFAULT_WEBHOOK_NAME = "ChartChamp Market Bot";
 
-function parseArguments(argv) {
+export function parseArguments(argv) {
   const options = {
     dryRun: false,
     channelId: DEFAULT_CHANNEL_ID,
@@ -26,7 +26,8 @@ function parseArguments(argv) {
     draft: join(ROOT, "runtime", "portfolio-draft.json"),
     now: null,
     maxAgeMinutes: 60,
-    messageLimit: 1900
+    messageLimit: 1900,
+    confirmedNoNewActions: false
   };
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
@@ -40,6 +41,7 @@ function parseArguments(argv) {
     else if (argument === "--now") options.now = argv[++index];
     else if (argument === "--max-age-minutes") options.maxAgeMinutes = Number(argv[++index]);
     else if (argument === "--message-limit") options.messageLimit = Number(argv[++index]);
+    else if (argument === "--confirmed-no-new-actions") options.confirmedNoNewActions = true;
     else throw new Error(`Unknown argument: ${argument}`);
   }
   if (!["auto", "open", "close"].includes(options.session)) {
@@ -209,6 +211,14 @@ function calculatePortfolio(portfolio, snapshot) {
       continue;
     }
 
+    if (holding.closed === true || shares <= 0) {
+      const contribution = Number(holding.realizedPnl ?? 0) - costBasis;
+      if (Number.isFinite(contribution) && contribution !== 0) {
+        positions.push({ ticker: String(holding.ticker).toUpperCase(), contribution });
+      }
+      continue;
+    }
+
     const ticker = String(holding.ticker).toUpperCase();
     const quote = snapshot.prices?.[ticker];
     if (!quote || quote.stale === true) throw new Error(`${ticker} is missing a fresh quote`);
@@ -257,8 +267,64 @@ function calculatePortfolio(portfolio, snapshot) {
   };
 }
 
-function buildContent(metrics, session) {
-  const label = session === "open" ? "Market Open" : "Market Close";
+function postTimestamp(date) {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Los_Angeles",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true
+    })
+      .formatToParts(date)
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value])
+  );
+  return `${parts.month} ${parts.day}, ${parts.year} · ${parts.hour}:${parts.minute} ${parts.dayPeriod} PT`;
+}
+
+function quoteFreshness(timestamp) {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Los_Angeles",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true
+    })
+      .formatToParts(new Date(timestamp))
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value])
+  );
+  return `${parts.month} ${parts.day}, ${parts.year} at ${parts.hour}:${parts.minute} ${parts.dayPeriod} PT`;
+}
+
+export function recentDecisionSummary(portfolio, now, confirmedNoNewActions = false) {
+  if (confirmedNoNewActions) return "No portfolio actions were taken since the last update.";
+  const currentDate = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Los_Angeles"
+  }).format(now);
+  const summaries = (Array.isArray(portfolio.decisions) ? portfolio.decisions : [])
+    .filter((decision) => (
+      decision
+      && /^\d{4}-\d{2}-\d{2}$/u.test(decision.date || "")
+      && decision.date === currentDate
+      && typeof decision.summary === "string"
+      && decision.summary.trim()
+    ))
+    .toSorted((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 3)
+    .map((decision) => decision.summary.trim());
+  return summaries.length
+    ? summaries.join(" ")
+    : "No portfolio actions were taken since the last update.";
+}
+
+export function buildContent(metrics, portfolio, now, confirmedNoNewActions = false) {
   const contributor = metrics.contributor
     ? `${metrics.contributor.ticker} (${signedMoney(metrics.contributor.contribution)})`
     : "None — no holding is above cost basis";
@@ -267,15 +333,18 @@ function buildContent(metrics, session) {
     : "None — no holding is below cost basis";
 
   return [
-    `📊 **ChartChamp Portfolio — ${label}**`,
-    `**Value:** ${money(metrics.currentValue)}`,
-    `**Total return:** ${signedMoney(metrics.totalReturn)} (${signedPercent(metrics.totalReturnPct)})`,
-    `**Today:** ${signedMoney(metrics.dayReturn)} (${signedPercent(metrics.dayReturnPct)})`,
-    `**Top contributor:** ${contributor}`,
-    `**Top detractor:** ${detractor}`,
-    `_Yahoo Finance quotes as of ${formatTimestamp(metrics.sourceTimestamp)}._`,
-    "🔗 https://chartchamp.web.app/",
-    "*Educational portfolio tracking only — not financial advice.*"
+    `**📊 PUBLIC PORTFOLIO — ${postTimestamp(now)}**`,
+    "",
+    `- **VALUE** — ${money(metrics.currentValue)}.`,
+    `- **TOTAL RETURN** — ${signedMoney(metrics.totalReturn)} (${signedPercent(metrics.totalReturnPct)}).`,
+    `- **TODAY** — ${signedMoney(metrics.dayReturn)} (${signedPercent(metrics.dayReturnPct)}).`,
+    `- **REALIZED P/L** — ${signedMoney(Number(portfolio.realizedPnl) || 0)}.`,
+    `- **RECENT DECISIONS** — ${recentDecisionSummary(portfolio, now, confirmedNoNewActions)}`,
+    `- **TOP CONTRIBUTOR** — ${contributor}.`,
+    `- **TOP DETRACTOR** — ${detractor}.`,
+    "- **PORTFOLIO** — https://chartchamp.web.app/",
+    "",
+    `_Quotes reflect ${quoteFreshness(metrics.sourceTimestamp)}. Educational tracking only — not financial advice._`
   ].join("\n");
 }
 
@@ -370,7 +439,8 @@ async function main() {
   const snapshot = JSON.parse(readFileSync(options.snapshot, "utf8"));
   const metrics = calculatePortfolio(appData.portfolio, snapshot);
   assertFreshSource(metrics.sourceTimestamp, now, options.maxAgeMinutes);
-  const content = buildContent(metrics, session);
+  const decisionSummaryMode = options.confirmedNoNewActions ? "confirmed-none" : "same-day";
+  const content = buildContent(metrics, appData.portfolio, now, options.confirmedNoNewActions);
   if (content.length > options.messageLimit) {
     throw new Error(`Discord content is ${content.length} characters (limit ${options.messageLimit})`);
   }
@@ -383,6 +453,7 @@ async function main() {
     channelId: options.channelId,
     generatedAt: now.toISOString(),
     sourceTimestamp: metrics.sourceTimestamp,
+    decisionSummaryMode,
     content,
     dedupeKey,
     dryRun: options.dryRun
@@ -393,6 +464,7 @@ async function main() {
     timestamp: now.toISOString(),
     channelId: options.channelId,
     sourceTimestamp: metrics.sourceTimestamp,
+    decisionSummaryMode,
     contentHash,
     dedupeKey,
     dryRun: options.dryRun
@@ -438,7 +510,9 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  console.error(error.stack || error.message);
-  process.exitCode = 1;
-});
+if (import.meta.url === pathToFileURL(process.argv[1] || "").href) {
+  main().catch((error) => {
+    console.error(error.stack || error.message);
+    process.exitCode = 1;
+  });
+}

@@ -808,7 +808,7 @@
 
   /* ----------------------------- render: research ----------------------------- */
   var TICKERS = ((DATA.research && DATA.research.tickers) || []).slice().sort(function (a, b) {
-    var dateOrder = String(b.postedChartDate || "").localeCompare(String(a.postedChartDate || ""));
+    var dateOrder = String(b.sourcePostedAt || b.postedChartDate || "").localeCompare(String(a.sourcePostedAt || a.postedChartDate || ""));
     return dateOrder || String(a.ticker || "").localeCompare(String(b.ticker || ""));
   });
   var BY_KEY = {};

@@ -64,6 +64,7 @@ const SITE_TEST_FILES = [
   "tests/research-data.test.mjs",
   "tests/research-intake-proposal.test.mjs",
   "tests/discord-research-sync.test.mjs",
+  "tests/research-model.test.mjs",
   "tests/trade-setup-reviews.test.mjs"
 ];
 

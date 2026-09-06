@@ -14,7 +14,7 @@ import {
   writeFileSync
 } from "node:fs";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA_JS = join(ROOT, "data", "app-data.js");
@@ -52,7 +52,12 @@ function loadPreviousSnapshot() {
   }
 }
 
-function sessionLabel(date = new Date()) {
+export function sessionLabel(sourceTimestamp) {
+  if (sourceTimestamp === null || sourceTimestamp === undefined || sourceTimestamp === "") {
+    throw new Error("Quote source timestamp is invalid");
+  }
+  const date = new Date(sourceTimestamp);
+  if (!Number.isFinite(date.getTime())) throw new Error("Quote source timestamp is invalid");
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "America/New_York",
     hour: "numeric",
@@ -245,7 +250,7 @@ async function main() {
   const snapshot = {
     generatedAt,
     sourceTimestamp,
-    session: sessionLabel(new Date()),
+    session: sessionLabel(sourceTimestamp),
     provider: "Yahoo Finance chart API",
     chartStartDate: portfolio.chartStartDate || null,
     benchmarkTicker: benchmarkTicker || null,
@@ -263,7 +268,9 @@ async function main() {
   );
 }
 
-main().catch((error) => {
-  console.error(error.stack || error.message);
-  process.exitCode = 1;
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((error) => {
+    console.error(error.stack || error.message);
+    process.exitCode = 1;
+  });
+}

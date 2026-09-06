@@ -1,20 +1,16 @@
 {
-  "generatedAt": "2026-09-04T16:34:42.434Z",
-  "sourceTimestamp": "2026-09-04T16:34:34.000Z",
-  "session": "intraday",
+  "generatedAt": "2026-09-06T16:03:43.337Z",
+  "sourceTimestamp": "2026-09-04T20:00:00.000Z",
+  "session": "close",
   "provider": "Yahoo Finance chart API",
   "chartStartDate": "2026-06-25",
   "benchmarkTicker": "SPY",
   "prices": {
     "AAPL": {
       "ticker": "AAPL",
-      "last": 321.035,
+      "last": 319.97,
       "prevClose": 328.21,
       "history": [
-        {
-          "date": "2025-09-04",
-          "close": 239.78
-        },
         {
           "date": "2025-09-05",
           "close": 239.69
@@ -1021,22 +1017,18 @@
         },
         {
           "date": "2026-09-04",
-          "close": 321.035
+          "close": 319.97
         }
       ],
-      "asOf": "2026-09-04T16:34:37.000Z",
+      "asOf": "2026-09-04T20:00:01.000Z",
       "currency": "USD",
       "exchangeName": "NMS"
     },
     "NFLX": {
       "ticker": "NFLX",
-      "last": 79.315,
+      "last": 78.25,
       "prevClose": 82.67,
       "history": [
-        {
-          "date": "2025-09-04",
-          "close": 125.748
-        },
         {
           "date": "2025-09-05",
           "close": 124.382
@@ -2043,22 +2035,18 @@
         },
         {
           "date": "2026-09-04",
-          "close": 79.315
+          "close": 78.25
         }
       ],
-      "asOf": "2026-09-04T16:34:35.000Z",
+      "asOf": "2026-09-04T20:00:00.000Z",
       "currency": "USD",
       "exchangeName": "NMS"
     },
     "PLTR": {
       "ticker": "PLTR",
-      "last": 174.9,
+      "last": 174.33,
       "prevClose": 182.53,
       "history": [
-        {
-          "date": "2025-09-04",
-          "close": 156.14
-        },
         {
           "date": "2025-09-05",
           "close": 153.11
@@ -3065,22 +3053,18 @@
         },
         {
           "date": "2026-09-04",
-          "close": 174.9
+          "close": 174.33
         }
       ],
-      "asOf": "2026-09-04T16:34:35.000Z",
+      "asOf": "2026-09-04T20:00:00.000Z",
       "currency": "USD",
       "exchangeName": "NMS"
     },
     "MSFT": {
       "ticker": "MSFT",
-      "last": 501.41,
+      "last": 499.7,
       "prevClose": 510.12,
       "history": [
-        {
-          "date": "2025-09-04",
-          "close": 507.97
-        },
         {
           "date": "2025-09-05",
           "close": 495
@@ -4087,22 +4071,18 @@
         },
         {
           "date": "2026-09-04",
-          "close": 501.41
+          "close": 499.7
         }
       ],
-      "asOf": "2026-09-04T16:34:38.000Z",
+      "asOf": "2026-09-04T20:00:01.000Z",
       "currency": "USD",
       "exchangeName": "NMS"
     },
     "META": {
       "ticker": "META",
-      "last": 612.6,
+      "last": 616.77,
       "prevClose": 610.68,
       "history": [
-        {
-          "date": "2025-09-04",
-          "close": 748.65
-        },
         {
           "date": "2025-09-05",
           "close": 752.45
@@ -5109,22 +5089,18 @@
         },
         {
           "date": "2026-09-04",
-          "close": 612.6
+          "close": 616.77
         }
       ],
-      "asOf": "2026-09-04T16:34:38.000Z",
+      "asOf": "2026-09-04T20:00:01.000Z",
       "currency": "USD",
       "exchangeName": "NMS"
     },
     "BABA": {
       "ticker": "BABA",
-      "last": 113.205,
+      "last": 113.24,
       "prevClose": 111.81,
       "history": [
-        {
-          "date": "2025-09-04",
-          "close": 130.92
-        },
         {
           "date": "2025-09-05",
           "close": 135.58
@@ -6131,22 +6107,18 @@
         },
         {
           "date": "2026-09-04",
-          "close": 113.205
+          "close": 113.24
         }
       ],
-      "asOf": "2026-09-04T16:34:37.000Z",
+      "asOf": "2026-09-04T20:01:10.000Z",
       "currency": "USD",
       "exchangeName": "NYQ"
     },
     "TSM": {
       "ticker": "TSM",
-      "last": 427.355,
+      "last": 428.91,
       "prevClose": 417.01,
       "history": [
-        {
-          "date": "2025-09-04",
-          "close": 235.21
-        },
         {
           "date": "2025-09-05",
           "close": 243.41
@@ -7153,22 +7125,18 @@
         },
         {
           "date": "2026-09-04",
-          "close": 427.355
+          "close": 428.91
         }
       ],
-      "asOf": "2026-09-04T16:34:40.000Z",
+      "asOf": "2026-09-04T20:00:02.000Z",
       "currency": "USD",
       "exchangeName": "NYQ"
     },
     "NVO": {
       "ticker": "NVO",
-      "last": 46.715,
+      "last": 46.6,
       "prevClose": 47.51,
       "history": [
-        {
-          "date": "2025-09-04",
-          "close": 56.14
-        },
         {
           "date": "2025-09-05",
           "close": 55.23
@@ -8175,22 +8143,18 @@
         },
         {
           "date": "2026-09-04",
-          "close": 46.715
+          "close": 46.6
         }
       ],
-      "asOf": "2026-09-04T16:34:34.000Z",
+      "asOf": "2026-09-04T20:00:03.000Z",
       "currency": "USD",
       "exchangeName": "NYQ"
     },
     "TQQQ": {
       "ticker": "TQQQ",
-      "last": 72.364,
+      "last": 72.37,
       "prevClose": 72.03,
       "history": [
-        {
-          "date": "2025-09-04",
-          "close": 45.76
-        },
         {
           "date": "2025-09-05",
           "close": 45.91
@@ -9197,10 +9161,10 @@
         },
         {
           "date": "2026-09-04",
-          "close": 72.364
+          "close": 72.37
         }
       ],
-      "asOf": "2026-09-04T16:34:41.000Z",
+      "asOf": "2026-09-04T20:00:00.000Z",
       "currency": "USD",
       "exchangeName": "NGM"
     },
@@ -10226,13 +10190,9 @@
   },
   "benchmark": {
     "ticker": "SPY",
-    "last": 770.91,
+    "last": 770.19,
     "prevClose": 773.17,
     "history": [
-      {
-        "date": "2025-09-04",
-        "close": 649.12
-      },
       {
         "date": "2025-09-05",
         "close": 647.24
@@ -11239,10 +11199,10 @@
       },
       {
         "date": "2026-09-04",
-        "close": 770.91
+        "close": 770.19
       }
     ],
-    "asOf": "2026-09-04T16:34:41.000Z",
+    "asOf": "2026-09-04T20:00:00.000Z",
     "currency": "USD",
     "exchangeName": "PCX"
   },

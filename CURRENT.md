@@ -23,8 +23,11 @@ Generated output and private runtime receipts are ignored by Git.
 
 ## Data truth
 
-- Market quote snapshot remains September 4, 2026, 9:34 AM PT. A design deploy
-  does not refresh quotes or promote historical opinions into current advice.
+- Market quotes were refreshed September 6 to the September 4, 2026 regular
+  close (source times 1:00:00–1:01:10 PM PT). Nine open holdings and SPY were
+  verified; ORCL's closed-position history and the transaction ledger were
+  preserved. These are dated closing prices, not live Sunday quotes.
+  The source timestamp determines the session label, not retrieval time.
 - Research merges the August baseline and reviewed Discord sync: 82 tickers.
 - 30 setup records: unverified or overdue states are explicit. Missing outcome
   evidence must never be replaced with inferred fills or a synthetic win rate.
@@ -33,6 +36,15 @@ Generated output and private runtime receipts are ignored by Git.
 - Chart return starts at the June 25 close; headline return starts May 22.
 - Retired AI portfolio artifacts and raw Watchlists tracker are excluded from
   publication. Old Watchlists URLs redirect to Research.
+
+## September 6 closing-price follow-up
+
+The user-authorized dated closing snapshot is published and all 125 public
+file hashes were verified at 2026-09-06T16:08:42Z. All 95 tests passed. See
+`docs/2026-09-06-closing-price-refresh.md` for validation and remaining gaps.
+The normal actual-time release validator correctly returned a weekend skip;
+its safeguards and the retired posting schedules were not changed. Do not
+treat the historical Friday-close validation as current-day freshness.
 
 ## Discord ownership
 
